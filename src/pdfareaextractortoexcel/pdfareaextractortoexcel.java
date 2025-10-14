@@ -4,6 +4,8 @@
  */
 package pdfareaextractortoexcel;
 
+import java.awt.image.BufferedImage;
+
 /**
  *
  * @author Ivan
@@ -15,14 +17,27 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
      */
     public pdfareaextractortoexcel() {
         initComponents();
-        
-        // Configuración del panel principal
+
+        // Configuración del frame principal
         setTitle("PDF Area Extractor to Excel (Java)");
         setExtendedState(pdfareaextractortoexcel.MAXIMIZED_BOTH);
         splMain.setResizeWeight(0.5);
         splMain.setEnabled(false);
         
+        splRightPanel.setResizeWeight(0.5);
+        splRightPanel.setEnabled(false);
+
+        // Imagen en blanco temporal (por ejemplo, 1x1 píxel para evitar NullPointer)
+        BufferedImage placeholderImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+
+        // Crear el PDFPagePanel con la imagen vacía
+        PDFPagePanel pagePanel = new PDFPagePanel(placeholderImage);
+        pagePanel.setZoom(1.0);
+        pagePanel.setCanSelect(false);
+
+        scrPdfViewer.setViewportView(pagePanel);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,6 +51,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         splMain = new javax.swing.JSplitPane();
         pnlLeft = new javax.swing.JPanel();
         pnlRight = new javax.swing.JPanel();
+        scrPdfViewer = new javax.swing.JScrollPane();
+        splRightPanel = new javax.swing.JSplitPane();
+        tglPag1 = new javax.swing.JToggleButton();
+        tglPag2 = new javax.swing.JToggleButton();
+        sldRightPanel = new javax.swing.JSlider();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,15 +76,37 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         splMain.setLeftComponent(pnlLeft);
 
+        tglPag1.setLabel("Pag. 1");
+        splRightPanel.setLeftComponent(tglPag1);
+
+        tglPag2.setLabel("Pag. 2");
+        splRightPanel.setRightComponent(tglPag2);
+
         javax.swing.GroupLayout pnlRightLayout = new javax.swing.GroupLayout(pnlRight);
         pnlRight.setLayout(pnlRightLayout);
         pnlRightLayout.setHorizontalGroup(
             pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGroup(pnlRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrPdfViewer)
+                    .addGroup(pnlRightLayout.createSequentialGroup()
+                        .addComponent(splRightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                        .addComponent(sldRightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                        .addGap(9, 9, 9)))
+                .addContainerGap())
         );
         pnlRightLayout.setVerticalGroup(
             pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGroup(pnlRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(scrPdfViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .addGap(8, 8, 8)
+                .addGroup(pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(splRightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sldRightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         splMain.setRightComponent(pnlRight);
@@ -73,7 +115,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(splMain, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,9 +160,16 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         });
     }
 
+    // Declaración de variables 
+    private PDFPagePanel pdfPanel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlRight;
+    private javax.swing.JScrollPane scrPdfViewer;
+    private javax.swing.JSlider sldRightPanel;
     private javax.swing.JSplitPane splMain;
+    private javax.swing.JSplitPane splRightPanel;
+    private javax.swing.JToggleButton tglPag1;
+    private javax.swing.JToggleButton tglPag2;
     // End of variables declaration//GEN-END:variables
 }
