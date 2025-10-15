@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="splMain" alignment="1" pref="1000" max="32767" attributes="0"/>
+          <Component id="splMain" alignment="1" pref="1400" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -35,7 +35,7 @@
   <SubComponents>
     <Container class="javax.swing.JSplitPane" name="splMain">
       <Properties>
-        <Property name="dividerLocation" type="int" value="500"/>
+        <Property name="dividerLocation" type="int" value="700"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -56,26 +56,22 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pnlStructure" max="32767" attributes="0"/>
                           <Component id="pnlLoadFile" alignment="0" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
+                          <Component id="lblLoadFile" min="-2" pref="146" max="-2" attributes="0"/>
+                          <Component id="pnlData" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lblData" alignment="0" min="-2" pref="280" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblStructure" alignment="0" min="-2" pref="289" max="-2" attributes="0"/>
-                                  <Component id="lblData" alignment="0" min="-2" pref="280" max="-2" attributes="0"/>
+                                  <Component id="lblStructure" min="-2" pref="289" max="-2" attributes="0"/>
+                                  <Component id="pnlStructure" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="pnlData" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="lblLoadFile" min="-2" pref="146" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="lblPagesScanner" pref="225" max="32767" attributes="0"/>
+                                  <Component id="pnlPagesScanner" pref="0" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -88,9 +84,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnlLoadFile" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="lblStructure" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblStructure" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPagesScanner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnlStructure" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="pnlPagesScanner" max="32767" attributes="0"/>
+                          <Component id="pnlStructure" max="32767" attributes="0"/>
+                      </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="lblData" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -117,13 +119,13 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                           <Component id="pnlStructure1" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                           <Component id="pnlStructure2" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <EmptySpace pref="20" max="32767" attributes="0"/>
                           <Component id="pnlStructure3" min="-2" pref="132" max="-2" attributes="0"/>
-                          <EmptySpace pref="26" max="32767" attributes="0"/>
+                          <EmptySpace pref="19" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -184,7 +186,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JRadioButton" name="rdbStructure1">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;en cada p&#xe1;gina&lt;/html&gt;"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;cada dos p&#xe1;ginas&lt;/html&gt;"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="imgPage1">
@@ -242,7 +244,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JRadioButton" name="rdbStructure2">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;cada dos p&#xe1;ginas&lt;/html&gt;"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;en cada p&#xe1;gina&lt;/html&gt;"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="imgPage3">
@@ -297,7 +299,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JRadioButton" name="rdbStructure3">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Datos por un lado&lt;br&gt;y votos por el otro&lt;/html&gt;"/>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Datos distintos por&lt;br&gt;las dos caras&lt;/html&gt;"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="imgPage4">
@@ -412,7 +414,9 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pnlDataList" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnlDataFormat" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -420,7 +424,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pnlDataList" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="pnlDataList" max="32767" attributes="0"/>
+                              <Component id="pnlDataFormat" max="32767" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -466,7 +473,7 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="lblDataList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" pref="106" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" pref="227" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="btnEditData" linkSize="1" min="-2" max="-2" attributes="0"/>
@@ -568,8 +575,174 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Container class="javax.swing.JPanel" name="pnlDataFormat">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="c8" green="c8" red="c8" type="rgb"/>
+                    </Property>
+                  </Properties>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="lblDataFormat1" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
+                                  <Component id="rdbDataFormat1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rdbDataFormat2" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rdbDataFormat3" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lblDataFormat1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbDataFormat1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbDataFormat2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbDataFormat3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="lblDataFormat1">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Tipo de campo"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat1">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor &#xfa;nico"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat2">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor m&#xfa;ltiple maestro"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat3">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Valor m&#xfa;ltiple dependiente"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
+            <Container class="javax.swing.JPanel" name="pnlPagesScanner">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="c8" green="c8" red="c8" type="rgb"/>
+                </Property>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
+                    <BevelBorder/>
+                  </Border>
+                </Property>
+              </Properties>
+
+              <Layout>
+                <DimensionLayout dim="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="rbdPagesScanner2" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="rbdPagesScanner1" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <Component id="lblPageFinish" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <Component id="txfFinish" min="-2" pref="71" max="-2" attributes="0"/>
+                                              </Group>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <Component id="lblPageStart" min="-2" max="-2" attributes="0"/>
+                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                  <Component id="txfStart" max="32767" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+                <DimensionLayout dim="1">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                          <Component id="rbdPagesScanner1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="rbdPagesScanner2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblPageStart" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txfStart" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblPageFinish" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txfFinish" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                </DimensionLayout>
+              </Layout>
+              <SubComponents>
+                <Component class="javax.swing.JRadioButton" name="rbdPagesScanner1">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Documento completo"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JRadioButton" name="rbdPagesScanner2">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Margen personalizado"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblPageStart">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="-Iniciar en p&#xe1;gina:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="lblPageFinish">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="-Finalizar en p&#xe1;gina:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="txfStart">
+                </Component>
+                <Component class="javax.swing.JTextField" name="txfFinish">
+                </Component>
+              </SubComponents>
+            </Container>
+            <Component class="javax.swing.JLabel" name="lblPagesScanner">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="18" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="P&#xe1;ginas a escanear"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnlRight">
@@ -588,8 +761,8 @@
                           <Component id="scrPdfViewer" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="splRightPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="171" max="32767" attributes="0"/>
-                              <Component id="sldRightPanel" pref="174" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="sldRightPanel" pref="538" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -601,7 +774,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scrPdfViewer" pref="535" max="32767" attributes="0"/>
+                      <Component id="scrPdfViewer" pref="656" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="splRightPanel" alignment="1" min="-2" max="-2" attributes="0"/>

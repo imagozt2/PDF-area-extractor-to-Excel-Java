@@ -24,6 +24,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
     private javax.swing.ButtonGroup btnGroupStructure;
     private javax.swing.ButtonGroup btnGroupPages;
+    private javax.swing.ButtonGroup btnGroupDataFormat;
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
     private PDFPagePanel pagePanel;
@@ -58,6 +59,12 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         btnGroupStructure.add(rdbStructure1);
         btnGroupStructure.add(rdbStructure2);
         btnGroupStructure.add(rdbStructure3);
+        
+        // Configuración de btnGroupStructure
+        btnGroupDataFormat = new javax.swing.ButtonGroup();
+        btnGroupDataFormat.add(rdbDataFormat1);
+        btnGroupDataFormat.add(rdbDataFormat2);
+        btnGroupDataFormat.add(rdbDataFormat3);
 
         // Configuración de btnGroupPages
         btnGroupPages = new javax.swing.ButtonGroup();
@@ -107,6 +114,19 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         btnEditData = new javax.swing.JButton();
         btnMoveUpData = new javax.swing.JButton();
         btnMoveDownData = new javax.swing.JButton();
+        pnlDataFormat = new javax.swing.JPanel();
+        lblDataFormat1 = new javax.swing.JLabel();
+        rdbDataFormat1 = new javax.swing.JRadioButton();
+        rdbDataFormat2 = new javax.swing.JRadioButton();
+        rdbDataFormat3 = new javax.swing.JRadioButton();
+        pnlPagesScanner = new javax.swing.JPanel();
+        rbdPagesScanner1 = new javax.swing.JRadioButton();
+        rbdPagesScanner2 = new javax.swing.JRadioButton();
+        lblPageStart = new javax.swing.JLabel();
+        lblPageFinish = new javax.swing.JLabel();
+        txfStart = new javax.swing.JTextField();
+        txfFinish = new javax.swing.JTextField();
+        lblPagesScanner = new javax.swing.JLabel();
         pnlRight = new javax.swing.JPanel();
         scrPdfViewer = new javax.swing.JScrollPane();
         splRightPanel = new javax.swing.JSplitPane();
@@ -116,7 +136,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        splMain.setDividerLocation(500);
+        splMain.setDividerLocation(700);
 
         pnlLeft.setPreferredSize(new java.awt.Dimension(400, 500));
 
@@ -125,7 +145,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         pnlStructure1.setBackground(new java.awt.Color(200, 200, 200));
 
-        rdbStructure1.setText("<html>Todos los datos<br>en cada página</html>");
+        rdbStructure1.setText("<html>Todos los datos<br>cada dos páginas</html>");
 
         imgPage1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/todoPorCara.png"))); // NOI18N
         imgPage1.setText("jLabel1");
@@ -162,7 +182,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         pnlStructure2.setBackground(new java.awt.Color(200, 200, 200));
 
-        rdbStructure2.setText("<html>Todos los datos<br>cada dos páginas</html>");
+        rdbStructure2.setText("<html>Todos los datos<br>en cada página</html>");
 
         imgPage3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/todoPorCara.png"))); // NOI18N
         imgPage3.setText("jLabel3");
@@ -192,7 +212,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         pnlStructure3.setBackground(new java.awt.Color(200, 200, 200));
 
-        rdbStructure3.setText("<html>Datos por un lado<br>y votos por el otro</html>");
+        rdbStructure3.setText("<html>Datos distintos por<br>las dos caras</html>");
 
         imgPage4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/datos.png"))); // NOI18N
         imgPage4.setText("jLabel4");
@@ -231,13 +251,13 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         pnlStructureLayout.setHorizontalGroup(
             pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStructureLayout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(pnlStructure1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(pnlStructure2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addComponent(pnlStructure3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         pnlStructureLayout.setVerticalGroup(
             pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,7 +372,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblDataList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEditData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -370,6 +390,44 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         pnlDataListLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {brnDeleteData, btnAddData, btnClearListData, btnEditData, btnMoveDownData, btnMoveUpData});
 
+        pnlDataFormat.setBackground(new java.awt.Color(200, 200, 200));
+
+        lblDataFormat1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDataFormat1.setText("Tipo de campo");
+
+        rdbDataFormat1.setText("Valor único");
+
+        rdbDataFormat2.setText("Valor múltiple maestro");
+
+        rdbDataFormat3.setText("Valor múltiple dependiente");
+
+        javax.swing.GroupLayout pnlDataFormatLayout = new javax.swing.GroupLayout(pnlDataFormat);
+        pnlDataFormat.setLayout(pnlDataFormatLayout);
+        pnlDataFormatLayout.setHorizontalGroup(
+            pnlDataFormatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlDataFormatLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlDataFormatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblDataFormat1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rdbDataFormat1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdbDataFormat2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdbDataFormat3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlDataFormatLayout.setVerticalGroup(
+            pnlDataFormatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlDataFormatLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblDataFormat1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdbDataFormat1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdbDataFormat2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdbDataFormat3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout pnlDataLayout = new javax.swing.GroupLayout(pnlData);
         pnlData.setLayout(pnlDataLayout);
         pnlDataLayout.setHorizontalGroup(
@@ -377,15 +435,76 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             .addGroup(pnlDataLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnlDataList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlDataFormat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlDataLayout.setVerticalGroup(
             pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlDataList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlDataList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlDataFormat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
+
+        pnlPagesScanner.setBackground(new java.awt.Color(200, 200, 200));
+        pnlPagesScanner.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        rbdPagesScanner1.setText("Documento completo");
+
+        rbdPagesScanner2.setText("Margen personalizado");
+
+        lblPageStart.setText("-Iniciar en página:");
+
+        lblPageFinish.setText("-Finalizar en página:");
+
+        javax.swing.GroupLayout pnlPagesScannerLayout = new javax.swing.GroupLayout(pnlPagesScanner);
+        pnlPagesScanner.setLayout(pnlPagesScannerLayout);
+        pnlPagesScannerLayout.setHorizontalGroup(
+            pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rbdPagesScanner2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                        .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbdPagesScanner1)
+                            .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                                        .addComponent(lblPageFinish)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txfFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                                        .addComponent(lblPageStart)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txfStart)))))
+                        .addGap(152, 152, 152)))
+                .addContainerGap())
+        );
+        pnlPagesScannerLayout.setVerticalGroup(
+            pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPagesScannerLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(rbdPagesScanner1)
+                .addGap(18, 18, 18)
+                .addComponent(rbdPagesScanner2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPageStart)
+                    .addComponent(txfStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPageFinish)
+                    .addComponent(txfFinish, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lblPagesScanner.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblPagesScanner.setText("Páginas a escanear");
 
         javax.swing.GroupLayout pnlLeftLayout = new javax.swing.GroupLayout(pnlLeft);
         pnlLeft.setLayout(pnlLeftLayout);
@@ -394,20 +513,18 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             .addGroup(pnlLeftLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlStructure, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlLoadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblLoadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblData, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlLeftLayout.createSequentialGroup()
                         .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblStructure, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblData, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnlLeftLayout.createSequentialGroup()
+                            .addComponent(pnlStructure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(pnlLeftLayout.createSequentialGroup()
-                                .addComponent(lblLoadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                            .addComponent(lblPagesScanner, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                            .addComponent(pnlPagesScanner, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))))
         );
         pnlLeftLayout.setVerticalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -416,9 +533,13 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlLoadFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblStructure)
+                .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStructure)
+                    .addComponent(lblPagesScanner))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlStructure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnlPagesScanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlStructure, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(lblData)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -444,8 +565,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     .addComponent(scrPdfViewer)
                     .addGroup(pnlRightLayout.createSequentialGroup()
                         .addComponent(splRightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
-                        .addComponent(sldRightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sldRightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                         .addGap(9, 9, 9)))
                 .addContainerGap())
         );
@@ -453,7 +574,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrPdfViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                .addComponent(scrPdfViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 656, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addGroup(pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(splRightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -467,7 +588,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addComponent(splMain, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -647,19 +768,30 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.JLabel imgPage5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblData;
+    private javax.swing.JLabel lblDataFormat1;
     private javax.swing.JLabel lblDataList;
     private javax.swing.JLabel lblLoadFile;
+    private javax.swing.JLabel lblPageFinish;
+    private javax.swing.JLabel lblPageStart;
+    private javax.swing.JLabel lblPagesScanner;
     private javax.swing.JLabel lblStructure;
     private javax.swing.JList<String> lstDataList;
     private javax.swing.JPanel pnlData;
+    private javax.swing.JPanel pnlDataFormat;
     private javax.swing.JPanel pnlDataList;
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlLoadFile;
+    private javax.swing.JPanel pnlPagesScanner;
     private javax.swing.JPanel pnlRight;
     private javax.swing.JPanel pnlStructure;
     private javax.swing.JPanel pnlStructure1;
     private javax.swing.JPanel pnlStructure2;
     private javax.swing.JPanel pnlStructure3;
+    private javax.swing.JRadioButton rbdPagesScanner1;
+    private javax.swing.JRadioButton rbdPagesScanner2;
+    private javax.swing.JRadioButton rdbDataFormat1;
+    private javax.swing.JRadioButton rdbDataFormat2;
+    private javax.swing.JRadioButton rdbDataFormat3;
     private javax.swing.JRadioButton rdbStructure1;
     private javax.swing.JRadioButton rdbStructure2;
     private javax.swing.JRadioButton rdbStructure3;
@@ -669,6 +801,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.JSplitPane splRightPanel;
     private javax.swing.JToggleButton tglPag1;
     private javax.swing.JToggleButton tglPag2;
+    private javax.swing.JTextField txfFinish;
     private javax.swing.JTextField txfLink;
+    private javax.swing.JTextField txfStart;
     // End of variables declaration//GEN-END:variables
 }
