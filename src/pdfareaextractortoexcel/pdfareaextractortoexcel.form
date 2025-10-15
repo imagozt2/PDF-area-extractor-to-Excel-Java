@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="splMain" alignment="1" max="32767" attributes="0"/>
+          <Component id="splMain" alignment="1" pref="1000" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -35,7 +35,7 @@
   <SubComponents>
     <Container class="javax.swing.JSplitPane" name="splMain">
       <Properties>
-        <Property name="dividerLocation" type="int" value="400"/>
+        <Property name="dividerLocation" type="int" value="500"/>
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
@@ -55,21 +55,20 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="pnlStructure" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="lblStructure" min="-2" pref="154" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
                           <Group type="102" attributes="0">
                               <Component id="btnSelector" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txfLink" pref="275" max="32767" attributes="0"/>
+                              <Component id="txfLink" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblStructure" min="-2" pref="154" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="pnlStructure" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -85,7 +84,7 @@
                       <Component id="lblStructure" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Component id="pnlStructure" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="300" max="32767" attributes="0"/>
+                      <EmptySpace pref="357" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -117,77 +116,207 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="imgPage1" min="-2" pref="51" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="imgPage2" min="-2" pref="51" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="imgPage3" min="-2" pref="51" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="imgPage4" min="-2" pref="52" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="imgPage5" min="-2" pref="51" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <Component id="pnlStructure1" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <Component id="pnlStructure2" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="25" max="32767" attributes="0"/>
+                          <Component id="pnlStructure3" min="-2" pref="132" max="-2" attributes="0"/>
+                          <EmptySpace pref="26" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="imgPage1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="imgPage2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="imgPage3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="imgPage4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="imgPage5" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="pnlStructure2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="pnlStructure3" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="pnlStructure1" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="39" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JLabel" name="imgPage1">
+                <Container class="javax.swing.JPanel" name="pnlStructure1">
                   <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/graphicresources/todoPorCara.png"/>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="c8" green="c8" red="c8" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="jLabel1"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="imgPage2">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="rdbStructure1" min="-2" pref="117" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="imgPage1" min="-2" pref="51" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="imgPage2" min="-2" pref="51" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="imgPage1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="imgPage2" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbStructure1" min="-2" pref="37" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JRadioButton" name="rdbStructure1">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;en cada p&#xe1;gina&lt;/html&gt;"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="imgPage1">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/graphicresources/todoPorCara.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel1"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="imgPage2">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/graphicresources/blanco.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel2"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pnlStructure2">
                   <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/graphicresources/blanco.png"/>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="c8" green="c8" red="c8" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="jLabel2"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="imgPage3">
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="rdbStructure2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="imgPage3" min="-2" pref="51" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="imgPage3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbStructure2" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JRadioButton" name="rdbStructure2">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Todos los datos&lt;br&gt;cada dos p&#xe1;ginas&lt;/html&gt;"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="imgPage3">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/graphicresources/todoPorCara.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel3"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="pnlStructure3">
                   <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/graphicresources/todoPorCara.png"/>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="c8" green="c8" red="c8" type="rgb"/>
                     </Property>
-                    <Property name="text" type="java.lang.String" value="jLabel3"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="imgPage4">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/graphicresources/datos.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="jLabel4"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="imgPage5">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/graphicresources/tabla.png"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" value="jLabel5"/>
-                  </Properties>
-                </Component>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="rdbStructure3" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="imgPage4" min="-2" pref="52" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="imgPage5" min="-2" pref="51" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace pref="9" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="imgPage4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="imgPage5" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rdbStructure3" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="15" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JRadioButton" name="rdbStructure3">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="&lt;html&gt;Datos por un lado&lt;br&gt;y votos por el otro&lt;/html&gt;"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="imgPage4">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/graphicresources/datos.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel4"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="imgPage5">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/graphicresources/tabla.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="jLabel5"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JLabel" name="lblStructure">
@@ -213,8 +342,8 @@
                           <Component id="scrPdfViewer" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Component id="splRightPanel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="77" max="32767" attributes="0"/>
-                              <Component id="sldRightPanel" pref="170" max="32767" attributes="0"/>
+                              <EmptySpace pref="171" max="32767" attributes="0"/>
+                              <Component id="sldRightPanel" pref="174" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -226,7 +355,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scrPdfViewer" pref="457" max="32767" attributes="0"/>
+                      <Component id="scrPdfViewer" pref="535" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="splRightPanel" alignment="1" min="-2" max="-2" attributes="0"/>
