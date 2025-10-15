@@ -68,6 +68,13 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         pnlLeft = new javax.swing.JPanel();
         btnSelector = new javax.swing.JButton();
         txfLink = new javax.swing.JTextField();
+        pnlStructure = new javax.swing.JPanel();
+        imgPage1 = new javax.swing.JLabel();
+        imgPage2 = new javax.swing.JLabel();
+        imgPage3 = new javax.swing.JLabel();
+        imgPage4 = new javax.swing.JLabel();
+        imgPage5 = new javax.swing.JLabel();
+        lblStructure = new javax.swing.JLabel();
         pnlRight = new javax.swing.JPanel();
         scrPdfViewer = new javax.swing.JScrollPane();
         splRightPanel = new javax.swing.JSplitPane();
@@ -88,15 +95,71 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
         });
 
+        pnlStructure.setBackground(new java.awt.Color(200, 200, 200));
+        pnlStructure.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        imgPage1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/todoPorCara.png"))); // NOI18N
+        imgPage1.setText("jLabel1");
+
+        imgPage2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/blanco.png"))); // NOI18N
+        imgPage2.setText("jLabel2");
+
+        imgPage3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/todoPorCara.png"))); // NOI18N
+        imgPage3.setText("jLabel3");
+
+        imgPage4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/datos.png"))); // NOI18N
+        imgPage4.setText("jLabel4");
+
+        imgPage5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/graphicresources/tabla.png"))); // NOI18N
+        imgPage5.setText("jLabel5");
+
+        javax.swing.GroupLayout pnlStructureLayout = new javax.swing.GroupLayout(pnlStructure);
+        pnlStructure.setLayout(pnlStructureLayout);
+        pnlStructureLayout.setHorizontalGroup(
+            pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlStructureLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(imgPage1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(imgPage2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(imgPage3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(imgPage4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(imgPage5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlStructureLayout.setVerticalGroup(
+            pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlStructureLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(imgPage1)
+                    .addComponent(imgPage2)
+                    .addComponent(imgPage3)
+                    .addComponent(imgPage4)
+                    .addComponent(imgPage5))
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+
+        lblStructure.setText("Estructura del documento");
+
         javax.swing.GroupLayout pnlLeftLayout = new javax.swing.GroupLayout(pnlLeft);
         pnlLeft.setLayout(pnlLeftLayout);
         pnlLeftLayout.setHorizontalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlLeftLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnSelector)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txfLink, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlStructure, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlLeftLayout.createSequentialGroup()
+                        .addComponent(btnSelector)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txfLink, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
+                    .addGroup(pnlLeftLayout.createSequentialGroup()
+                        .addComponent(lblStructure, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnlLeftLayout.setVerticalGroup(
@@ -106,7 +169,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSelector)
                     .addComponent(txfLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(463, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStructure)
+                .addGap(4, 4, 4)
+                .addComponent(pnlStructure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(300, Short.MAX_VALUE))
         );
 
         splMain.setLeftComponent(pnlLeft);
@@ -317,8 +384,15 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSelector;
+    private javax.swing.JLabel imgPage1;
+    private javax.swing.JLabel imgPage2;
+    private javax.swing.JLabel imgPage3;
+    private javax.swing.JLabel imgPage4;
+    private javax.swing.JLabel imgPage5;
+    private javax.swing.JLabel lblStructure;
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlRight;
+    private javax.swing.JPanel pnlStructure;
     private javax.swing.JScrollPane scrPdfViewer;
     private javax.swing.JSlider sldRightPanel;
     private javax.swing.JSplitPane splMain;
