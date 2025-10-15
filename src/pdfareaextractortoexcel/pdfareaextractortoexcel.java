@@ -4,7 +4,18 @@
  */
 package pdfareaextractortoexcel;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  *
@@ -12,6 +23,10 @@ import java.awt.image.BufferedImage;
  */
 public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
+    private BufferedImage currentImage;
+    private PDDocument pdfDocument;
+    private PDFPagePanel pagePanel;
+    private String PDFLink;
     /**
      * Creates new form pdfareaextractortoexcel
      */
@@ -27,15 +42,16 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         splRightPanel.setResizeWeight(0.5);
         splRightPanel.setEnabled(false);
 
-        // Imagen en blanco temporal (por ejemplo, 1x1 píxel para evitar NullPointer)
+        // Imagen en blanco temporal
         BufferedImage placeholderImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
-        // Crear el PDFPagePanel con la imagen vacía
-        PDFPagePanel pagePanel = new PDFPagePanel(placeholderImage);
+        // Creación del PDFPagePanel con la imagen vacía
+        pagePanel = new PDFPagePanel(placeholderImage);
         pagePanel.setZoom(1.0);
         pagePanel.setCanSelect(false);
 
         scrPdfViewer.setViewportView(pagePanel);
+
     }
 
 
@@ -50,6 +66,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         splMain = new javax.swing.JSplitPane();
         pnlLeft = new javax.swing.JPanel();
+        btnSelector = new javax.swing.JButton();
+        txfLink = new javax.swing.JTextField();
         pnlRight = new javax.swing.JPanel();
         scrPdfViewer = new javax.swing.JScrollPane();
         splRightPanel = new javax.swing.JSplitPane();
@@ -63,15 +81,32 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         pnlLeft.setPreferredSize(new java.awt.Dimension(400, 500));
 
+        btnSelector.setText("Cargar archivo");
+        btnSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlLeftLayout = new javax.swing.GroupLayout(pnlLeft);
         pnlLeft.setLayout(pnlLeftLayout);
         pnlLeftLayout.setHorizontalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(pnlLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnSelector)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txfLink, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlLeftLayout.setVerticalGroup(
             pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGroup(pnlLeftLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(pnlLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSelector)
+                    .addComponent(txfLink, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(463, Short.MAX_VALUE))
         );
 
         splMain.setLeftComponent(pnlLeft);
@@ -125,6 +160,125 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectorActionPerformed
+
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos PDF", "pdf");
+        chooser.setFileFilter(filter);
+        chooser.setAcceptAllFileFilterUsed(false);
+        int result = chooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        PDFLink = chooser.getSelectedFile().getAbsolutePath();
+        txfLink.setText(PDFLink);
+        
+        PDDocument doc = null;
+        File archivo = new File(PDFLink);
+        try {
+            doc = Loader.loadPDF(archivo);
+        } catch (org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException ex) {
+            String password = JOptionPane.showInputDialog(
+                this,
+                "Este archivo PDF está protegido con contraseña.\nPor favor, introdúcela:",
+                "Contraseña requerida",
+                JOptionPane.QUESTION_MESSAGE
+            );
+            if (password == null) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "No se cargó el PDF porque no se proporcionó la contraseña.",
+                    "Operación cancelada",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+            try {
+                doc = Loader.loadPDF(archivo, password);
+            } catch (org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException ex2) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Contraseña incorrecta. No se pudo abrir el PDF.",
+                    "Error de Contraseña",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error al abrir el PDF cifrado:\n" + ioe.getMessage(),
+                    "Error interno",
+                    JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                this,
+                "Error al cargar o renderizar el PDF:\n" + e.getMessage(),
+                "Error interno",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        pdfDocument = doc;
+        try {
+            PDFRenderer renderer = new PDFRenderer(pdfDocument);
+            BufferedImage img = renderer.renderImageWithDPI(0, 150);
+            currentImage = img;
+
+            pagePanel = new PDFPagePanel(img);
+            //pagePanel.setOnAreaSelected(this::onAreaSelected);
+            pagePanel.setCanSelect(false);
+            pagePanel.setCurrentPage(0);
+            //pagePanel.setSelections(selecciones.get(0));
+
+            /*
+            jList1.addListSelectionListener(ev -> {
+                campoActivo = jList1.getSelectedValue();
+                pagePanel.setCanSelect(campoActivo != null);
+                pagePanel.repaint();
+            });
+            */
+            
+            scrPdfViewer.setViewportView(pagePanel);
+            splMain.setDividerLocation(0.5);
+
+            
+            SwingUtilities.invokeLater(() -> {
+                Dimension vp = scrPdfViewer.getViewport().getExtentSize();
+                double initZoom = vp.width / (double) img.getWidth();
+                pagePanel.setZoom(initZoom);
+               
+                sldRightPanel.setMinimum(50);
+                sldRightPanel.setMaximum(200);
+                sldRightPanel.setValue((int) (initZoom * 100));
+                
+            });
+
+            sldRightPanel.addChangeListener(e -> {
+                double z = sldRightPanel.getValue() / 100.0;
+                pagePanel.setZoom(z);
+            });
+
+            scrPdfViewer.revalidate();
+            scrPdfViewer.repaint();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(
+                this,
+                "Error al renderizar la primera página:\n" + ex.getMessage(),
+                "Error interno",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnSelectorActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -160,9 +314,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         });
     }
 
-    // Declaración de variables 
-    private PDFPagePanel pdfPanel;
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSelector;
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlRight;
     private javax.swing.JScrollPane scrPdfViewer;
@@ -171,5 +325,6 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.JSplitPane splRightPanel;
     private javax.swing.JToggleButton tglPag1;
     private javax.swing.JToggleButton tglPag2;
+    private javax.swing.JTextField txfLink;
     // End of variables declaration//GEN-END:variables
 }
