@@ -1385,7 +1385,23 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMoveUpDataActionPerformed
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
-        // TODO add your handling code here:
+        int index = lstDataList.getSelectedIndex();
+        javax.swing.ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+        // Si no hay selección o el ítem ya es el último, no hacemos nada
+        if (index == -1 || index >= model.getSize() - 1) return;
+
+        // Intercambiar con el siguiente
+        String actual = model.getElementAt(index);
+        String siguiente = model.getElementAt(index + 1);
+
+        model.setElementAt(siguiente, index);
+        model.setElementAt(actual, index + 1);
+
+        // Mantener la selección en la nueva posición
+        lstDataList.setSelectedIndex(index + 1);
     }//GEN-LAST:event_btnMoveDownDataActionPerformed
 
     // Controla qué caras están disponibles según la estructura seleccionada
