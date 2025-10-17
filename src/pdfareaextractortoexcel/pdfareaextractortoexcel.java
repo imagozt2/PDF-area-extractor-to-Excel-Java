@@ -154,6 +154,10 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         rbdPagesScanner1.addActionListener(e -> applyPageScannerMode());
         rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
         
+        // Listener de la lista de campos
+        lstDataList.setModel(new javax.swing.DefaultListModel<>());
+
+        
         // Listener para volver a la primera página cuando se selecciona "Documento completo"
         rbdPagesScanner1.addActionListener(e -> {
             if (pdfDocument == null) return;
@@ -1168,36 +1172,53 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSelectorActionPerformed
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
-        
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
+        // Campo de texto para el nombre
+        javax.swing.JTextField txtNombre = new javax.swing.JTextField(20);
 
-        // Mostrar cuadro de entrada
-        String nuevoCampo = JOptionPane.showInputDialog(
-            this,
-            "Introduce el nombre del nuevo campo:",
-            "Añadir campo",
-            JOptionPane.PLAIN_MESSAGE
+        // Panel simple con etiqueta + campo
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.add(new javax.swing.JLabel("Nombre del campo:"));
+        panel.add(txtNombre);
+
+        // Crear el cuadro de diálogo
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+            panel,
+            javax.swing.JOptionPane.PLAIN_MESSAGE,
+            javax.swing.JOptionPane.OK_CANCEL_OPTION
         );
 
-        // Si el usuario cancela o deja el texto vacío → no hacemos nada
-        if (nuevoCampo == null || nuevoCampo.trim().isEmpty()) {
-            return;
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Añadir nuevo campo");
+
+        // Solicitar foco en el campo justo cuando se muestra el diálogo
+        dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+                txtNombre.requestFocusInWindow();
+            }
+        });
+
+        // Mostrar el diálogo
+        dialog.setVisible(true);
+
+        // Procesar resultado solo si el usuario pulsa "Aceptar"
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue != null && (int) selectedValue == javax.swing.JOptionPane.OK_OPTION) {
+            String nombreCampo = txtNombre.getText().trim();
+            if (!nombreCampo.isEmpty()) {
+                javax.swing.ListModel<String> lm = lstDataList.getModel();
+                javax.swing.DefaultListModel<String> model;
+                if (lm instanceof javax.swing.DefaultListModel) {
+                    model = (javax.swing.DefaultListModel<String>) lm;
+                } else {
+                    model = new javax.swing.DefaultListModel<>();
+                    lstDataList.setModel(model);
+                }
+                model.addElement(nombreCampo);
+                lstDataList.setSelectedIndex(model.getSize() - 1);
+            }
         }
 
-        // Añadir el campo a la lista
-        model.addElement(nuevoCampo.trim());
-
-        // Seleccionar el nuevo ítem añadido
-        lstDataList.setSelectedIndex(model.getSize() - 1);
-
-        // Habilitar botones relacionados con la lista
-        btnClearListData.setEnabled(true);
-        brnDeleteData.setEnabled(true);
-        btnEditData.setEnabled(true);
-
-        // Si hay más de un elemento, habilitar movimiento
-        btnMoveUpData.setEnabled(model.getSize() > 1);
-        btnMoveDownData.setEnabled(false);
+        dialog.dispose();
     }//GEN-LAST:event_btnAddDataActionPerformed
 
     private void brnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnDeleteDataActionPerformed
