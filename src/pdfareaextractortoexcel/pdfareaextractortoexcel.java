@@ -156,11 +156,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         
         // Listener para volver a la primera página cuando se selecciona "Documento completo"
         rbdPagesScanner1.addActionListener(e -> {
-            if (pdfDocument == null) return; // si no hay PDF cargado, no hacemos nada
+            if (pdfDocument == null) return;
 
             try {
                 PDFRenderer renderer = new PDFRenderer(pdfDocument);
-                BufferedImage img = renderer.renderImageWithDPI(0, 150); // página 1 = índice 0
+                BufferedImage img = renderer.renderImageWithDPI(0, 150);
                 currentImage = img;
                 pagePanel.setImage(img);
                 pagePanel.setCurrentPage(0);
@@ -189,7 +189,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             // 🔹 Esta es la función interna (no es global, vive dentro del listener)
             private void updatePageView() {
                 if (pdfDocument == null) return;
-                if (!rbdPagesScanner2.isSelected()) return; // Solo si el modo personalizado está activo
+                if (!rbdPagesScanner2.isSelected()) return;
 
                 try {
                     int paginaInicio = Integer.parseInt(txfStart.getText().trim());
@@ -197,12 +197,12 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
                     // Validación del rango
                     if (paginaInicio < 1 || paginaInicio > totalPaginas) {
-                        return; // fuera de rango, no hacemos nada
+                        return;
                     }
 
                     // Renderizar la nueva página
                     PDFRenderer renderer = new PDFRenderer(pdfDocument);
-                    BufferedImage img = renderer.renderImageWithDPI(paginaInicio - 1, 150); // base 0
+                    BufferedImage img = renderer.renderImageWithDPI(paginaInicio - 1, 150);
                     currentImage = img;
             
                     // Actualizamos el panel sin recrearlo
@@ -238,6 +238,102 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) {
                 updatePageView();
+            }
+        });
+        
+        // Listener para "Cara delantera" (tglPag1)
+        tglPag1.addActionListener(e -> {
+            if (pdfDocument == null) return;
+
+            try {
+                int paginaBase;
+
+                if (rbdPagesScanner2.isSelected()) {
+                    // Modo personalizado: usamos el valor del campo txfStart
+                    paginaBase = Integer.parseInt(txfStart.getText().trim());
+                } else {
+                    // Modo completo: siempre la página 1
+                    paginaBase = 1;
+                }
+
+                // Renderizar la página base (delantera)
+                PDFRenderer renderer = new PDFRenderer(pdfDocument);
+                BufferedImage img = renderer.renderImageWithDPI(paginaBase - 1, 150);
+                currentImage = img;
+                pagePanel.setImage(img);
+                pagePanel.setCurrentPage(paginaBase - 1);
+
+                scrPdfViewer.revalidate();
+                scrPdfViewer.repaint();
+
+                // Sincronizar estados de botones
+                if (!tglPag1.isSelected()) tglPag1.setSelected(true);
+                tglPag2.setSelected(false);
+
+            } catch (Exception ex) {
+                // Cualquier error de conversión o renderizado
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(
+                    pdfareaextractortoexcel.this,
+                    "Error al mostrar la cara delantera:\n" + ex.getMessage(),
+                    "Error de renderizado",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
+
+        // Listener para "Cara trasera" (tglPag2)
+        tglPag2.addActionListener(e -> {
+            if (pdfDocument == null) return;
+
+            try {
+                int totalPaginas = pdfDocument.getNumberOfPages();
+                int paginaBase;
+
+                if (rbdPagesScanner2.isSelected()) {
+                    // En modo personalizado, la "trasera" es la página siguiente a txfStart
+                    paginaBase = Integer.parseInt(txfStart.getText().trim()) + 1;
+                } else {
+                    // En modo completo, la "trasera" es la página 2
+                    paginaBase = 2;
+                }
+
+                // Evitar pasar del total
+                if (paginaBase > totalPaginas) {
+                    JOptionPane.showMessageDialog(
+                        pdfareaextractortoexcel.this,
+                        "El documento solo tiene " + totalPaginas + " páginas.",
+                        "Página fuera de rango",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    tglPag2.setSelected(false);
+                    tglPag1.setSelected(true);
+                    return;
+                }
+
+                // Renderizar la página trasera
+                PDFRenderer renderer = new PDFRenderer(pdfDocument);
+                BufferedImage img = renderer.renderImageWithDPI(paginaBase - 1, 150);
+                currentImage = img;
+                pagePanel.setImage(img);
+                pagePanel.setCurrentPage(paginaBase - 1);
+
+                scrPdfViewer.revalidate();
+                scrPdfViewer.repaint();
+
+                // Sincronizar estados de botones
+                if (!tglPag2.isSelected()) tglPag2.setSelected(true);
+                tglPag1.setSelected(false);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(
+                    pdfareaextractortoexcel.this,
+                    "Error al mostrar la cara trasera:\n" + ex.getMessage(),
+                    "Error de renderizado",
+                    JOptionPane.ERROR_MESSAGE
+                );
             }
         });
     }
