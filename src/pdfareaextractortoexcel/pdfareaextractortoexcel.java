@@ -241,6 +241,47 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
         });
         
+        // Validación dinámica de txfStart Y txfFinish
+        javax.swing.event.DocumentListener rangoListener = new javax.swing.event.DocumentListener() {
+            private void validarRango() {
+                if (pdfDocument == null) return;
+
+                int totalPaginas = pdfDocument.getNumberOfPages();
+                String startText = txfStart.getText().trim();
+                String finishText = txfFinish.getText().trim();
+
+                boolean valido = true;
+
+                try {
+                    int start = Integer.parseInt(startText);
+                    int finish = Integer.parseInt(finishText);
+
+                    // Validar: start >= 1 y finish <= totalPaginas
+                    if (start < 1 || finish > totalPaginas || start >= finish) {
+                        valido = false;
+                    }
+                } catch (NumberFormatException ex) {
+                    // Si no son números válidos, marcamos error
+                    valido = false;
+                }
+
+                java.awt.Color color = valido ? java.awt.Color.BLACK : java.awt.Color.RED;
+                txfStart.setForeground(color);
+                txfFinish.setForeground(color);
+            }
+
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+        };
+
+        // Asignar el listener a ambos campos
+        txfStart.getDocument().addDocumentListener(rangoListener);
+        txfFinish.getDocument().addDocumentListener(rangoListener);
+
         // Listener para "Cara delantera" (tglPag1)
         tglPag1.addActionListener(e -> {
             if (pdfDocument == null) return;
