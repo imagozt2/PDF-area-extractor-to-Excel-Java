@@ -157,6 +157,31 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Listener de la lista de campos
         lstDataList.setModel(new javax.swing.DefaultListModel<>());
 
+        // Listener de habilitación de botones
+        lstDataList.addListSelectionListener(e -> {
+            if (e.getValueIsAdjusting()) return;
+
+            javax.swing.ListModel<String> lm = lstDataList.getModel();
+            if (!(lm instanceof javax.swing.DefaultListModel)) return;
+            javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+            int size = model.getSize();
+            int index = lstDataList.getSelectedIndex();
+            boolean hasSelection = (index != -1);
+
+            // Borrar lista
+            btnClearListData.setEnabled(size > 0);
+
+            // Borrar item y Editar item
+            brnDeleteData.setEnabled(hasSelection);
+            btnEditData.setEnabled(hasSelection);
+
+            // Mover arriba
+            btnMoveUpData.setEnabled(hasSelection && index > 0);
+
+            // Mover abajo
+            btnMoveDownData.setEnabled(hasSelection && index < size - 1);
+        });
         
         // Listener para volver a la primera página cuando se selecciona "Documento completo"
         rbdPagesScanner1.addActionListener(e -> {
@@ -1222,11 +1247,68 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddDataActionPerformed
 
     private void brnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnDeleteDataActionPerformed
-        // TODO add your handling code here:
+        // Obtener el modelo de la lista
+        javax.swing.ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+        // Obtener el índice del elemento seleccionado
+        int index = lstDataList.getSelectedIndex();
+        if (index == -1) return; // Ningún ítem seleccionado
+
+        // Obtener el nombre del campo seleccionado
+        String nombreCampo = model.getElementAt(index);
+
+        // Mostrar el diálogo de confirmación
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que quiere eliminar el item \"" + nombreCampo + "\"?",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        // Si el usuario confirma, eliminar el elemento
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            model.remove(index);
+
+            // Ajustar la selección tras eliminar
+            if (!model.isEmpty()) {
+                int nuevoIndex = Math.min(index, model.getSize() - 1);
+                lstDataList.setSelectedIndex(nuevoIndex);
+            }
+        }
     }//GEN-LAST:event_brnDeleteDataActionPerformed
 
     private void btnClearListDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearListDataActionPerformed
-        // TODO add your handling code here:
+        javax.swing.ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+        // Si la lista está vacía, no hacemos nada
+        if (model.isEmpty()) return;
+
+        // Mostrar confirmación
+        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que quiere eliminar todos los ítems de la lista?",
+            "Confirmar eliminación",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        // Si el usuario elige “Sí”, vaciar la lista
+        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+            model.clear();
+
+            // Desactivar botones relacionados tras vaciar la lista
+            brnDeleteData.setEnabled(false);
+            btnEditData.setEnabled(false);
+            btnMoveUpData.setEnabled(false);
+            btnMoveDownData.setEnabled(false);
+            btnClearListData.setEnabled(false);
+        }
     }//GEN-LAST:event_btnClearListDataActionPerformed
 
     private void btnEditDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditDataActionPerformed
