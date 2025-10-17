@@ -225,13 +225,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace pref="23" max="32767" attributes="0"/>
-                              <Component id="rdbStructure2" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="rdbStructure2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="imgPage3" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace pref="23" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="imgPage3" min="-2" pref="51" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

@@ -154,6 +154,35 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         rbdPagesScanner1.addActionListener(e -> applyPageScannerMode());
         rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
         
+        // Listener para volver a la primera página cuando se selecciona "Documento completo"
+        rbdPagesScanner1.addActionListener(e -> {
+            if (pdfDocument == null) return; // si no hay PDF cargado, no hacemos nada
+
+            try {
+                PDFRenderer renderer = new PDFRenderer(pdfDocument);
+                BufferedImage img = renderer.renderImageWithDPI(0, 150); // página 1 = índice 0
+                currentImage = img;
+                pagePanel.setImage(img);
+                pagePanel.setCurrentPage(0);
+
+                // Restaurar los valores en los campos (por coherencia visual)
+                txfStart.setText("1");
+                txfFinish.setText(String.valueOf(pdfDocument.getNumberOfPages()));
+
+                scrPdfViewer.revalidate();
+                scrPdfViewer.repaint();
+
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(
+                    pdfareaextractortoexcel.this,
+                    "Error al mostrar la primera página:\n" + ex.getMessage(),
+                    "Error de renderizado",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
         // Listener para actualizar la página mostrada según el campo "txfStart"
         txfStart.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
