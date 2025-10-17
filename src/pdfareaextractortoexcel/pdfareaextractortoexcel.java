@@ -1312,11 +1312,76 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearListDataActionPerformed
 
     private void btnEditDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditDataActionPerformed
-        // TODO add your handling code here:
+        // Verificar que haya un ítem seleccionado
+        int index = lstDataList.getSelectedIndex();
+        if (index == -1) return;
+
+        javax.swing.ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+        // Obtener el nombre actual del campo
+        String nombreActual = model.getElementAt(index);
+
+        // Crear el campo de texto con el nombre actual preescrito
+        javax.swing.JTextField txtNombre = new javax.swing.JTextField(nombreActual, 20);
+
+        // Crear el panel simple con etiqueta + campo
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.add(new javax.swing.JLabel("Editar nombre del campo:"));
+        panel.add(txtNombre);
+
+        // Crear el cuadro de diálogo manualmente para poder dar el foco automático
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+            panel,
+            javax.swing.JOptionPane.PLAIN_MESSAGE,
+            javax.swing.JOptionPane.OK_CANCEL_OPTION
+        );
+
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Editar campo");
+
+        // Foco automático en el campo al abrir el diálogo
+        dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+                txtNombre.requestFocusInWindow();
+                txtNombre.selectAll();
+            }
+        });
+
+        // Mostrar el cuadro
+        dialog.setVisible(true);
+
+        // Procesar resultado
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue != null && (int) selectedValue == javax.swing.JOptionPane.OK_OPTION) {
+            String nuevoNombre = txtNombre.getText().trim();
+            if (!nuevoNombre.isEmpty() && !nuevoNombre.equals(nombreActual)) {
+                model.setElementAt(nuevoNombre, index);
+                lstDataList.setSelectedIndex(index);
+            }
+        }
+
+        dialog.dispose();
     }//GEN-LAST:event_btnEditDataActionPerformed
 
     private void btnMoveUpDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveUpDataActionPerformed
-        // TODO add your handling code here:
+        int index = lstDataList.getSelectedIndex();
+        if (index <= 0) return;
+
+        javax.swing.ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+
+        // Intercambiar el ítem seleccionado con el anterior
+        String actual = model.getElementAt(index);
+        String anterior = model.getElementAt(index - 1);
+
+        model.setElementAt(actual, index - 1);
+        model.setElementAt(anterior, index);
+
+        // Mantener la selección en el nuevo índice
+        lstDataList.setSelectedIndex(index - 1);
     }//GEN-LAST:event_btnMoveUpDataActionPerformed
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
