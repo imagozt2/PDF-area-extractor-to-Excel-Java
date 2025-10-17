@@ -1083,11 +1083,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             // Lista de campos y botones asociados
             lstDataList.setEnabled(true);
             btnAddData.setEnabled(true);
-            brnDeleteData.setEnabled(true);
-            btnClearListData.setEnabled(true);
-            btnEditData.setEnabled(true);
-            btnMoveUpData.setEnabled(true);
-            btnMoveDownData.setEnabled(true);
+            //brnDeleteData.setEnabled(true);
+            //btnClearListData.setEnabled(true);
+            //btnEditData.setEnabled(true);
+            //btnMoveUpData.setEnabled(true);
+            //btnMoveDownData.setEnabled(true);
 
             // Tipo de campo (formato de datos)
             rdbDataFormat1.setEnabled(true);
