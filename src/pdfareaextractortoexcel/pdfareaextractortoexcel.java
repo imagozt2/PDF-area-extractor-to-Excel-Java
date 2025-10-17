@@ -506,12 +506,10 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             pnlStructure2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStructure2Layout.createSequentialGroup()
                 .addContainerGap(23, Short.MAX_VALUE)
-                .addComponent(rdbStructure2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlStructure2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rdbStructure2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(imgPage3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(23, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlStructure2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(imgPage3, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlStructure2Layout.setVerticalGroup(
             pnlStructure2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -628,32 +626,57 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         pnlDataList.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        lstDataList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(lstDataList);
 
         lblDataList.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblDataList.setText("Lista de campos");
 
         btnAddData.setText("Añadir campo");
+        btnAddData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddDataActionPerformed(evt);
+            }
+        });
 
         brnDeleteData.setText("Eliminar campo");
         brnDeleteData.setPreferredSize(new java.awt.Dimension(105, 23));
+        brnDeleteData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                brnDeleteDataActionPerformed(evt);
+            }
+        });
 
         btnClearListData.setText("Borrar lista");
         btnClearListData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnClearListData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearListDataActionPerformed(evt);
+            }
+        });
 
         btnEditData.setText("Editar campo");
         btnEditData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnEditData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditDataActionPerformed(evt);
+            }
+        });
 
         btnMoveUpData.setText("Mover arriba");
         btnMoveUpData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnMoveUpData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoveUpDataActionPerformed(evt);
+            }
+        });
 
         btnMoveDownData.setText("Mover abajo");
         btnMoveDownData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnMoveDownData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMoveDownDataActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlDataListLayout = new javax.swing.GroupLayout(pnlDataList);
         pnlDataList.setLayout(pnlDataListLayout);
@@ -772,7 +795,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                             .addComponent(txfAxisY, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txfPage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txfAxisX, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -852,7 +875,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                                 .addComponent(lblPageStart)
                                 .addGap(18, 18, 18)
                                 .addComponent(txfStart)))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         pnlPagesScannerLayout.setVerticalGroup(
             pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1143,6 +1166,59 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             );
         }
     }//GEN-LAST:event_btnSelectorActionPerformed
+
+    private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
+        
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
+
+        // Mostrar cuadro de entrada
+        String nuevoCampo = JOptionPane.showInputDialog(
+            this,
+            "Introduce el nombre del nuevo campo:",
+            "Añadir campo",
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        // Si el usuario cancela o deja el texto vacío → no hacemos nada
+        if (nuevoCampo == null || nuevoCampo.trim().isEmpty()) {
+            return;
+        }
+
+        // Añadir el campo a la lista
+        model.addElement(nuevoCampo.trim());
+
+        // Seleccionar el nuevo ítem añadido
+        lstDataList.setSelectedIndex(model.getSize() - 1);
+
+        // Habilitar botones relacionados con la lista
+        btnClearListData.setEnabled(true);
+        brnDeleteData.setEnabled(true);
+        btnEditData.setEnabled(true);
+
+        // Si hay más de un elemento, habilitar movimiento
+        btnMoveUpData.setEnabled(model.getSize() > 1);
+        btnMoveDownData.setEnabled(false);
+    }//GEN-LAST:event_btnAddDataActionPerformed
+
+    private void brnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnDeleteDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_brnDeleteDataActionPerformed
+
+    private void btnClearListDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearListDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnClearListDataActionPerformed
+
+    private void btnEditDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEditDataActionPerformed
+
+    private void btnMoveUpDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveUpDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMoveUpDataActionPerformed
+
+    private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMoveDownDataActionPerformed
 
     // Controla qué caras están disponibles según la estructura seleccionada
     private void applyStructureMode() {
