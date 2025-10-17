@@ -1103,22 +1103,71 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSelectorActionPerformed
 
-    // Habilita/inhabilita tglPag2 según estructura
+    // Controla qué caras están disponibles según la estructura seleccionada
     private void applyStructureMode() {
-        // Estructura 2: "Todos los datos en cada página" -> solo una cara seleccionable (delantera)
-        if (rdbStructure2.isSelected()) {
+        if (pdfDocument == null) return;
+
+        // Caso 1 y 2
+        if (rdbStructure1.isSelected() || rdbStructure2.isSelected()) {
+            
+            // Solo se permite la cara delantera
             tglPag1.setEnabled(true);
             tglPag2.setEnabled(false);
-            if (!tglPag1.isSelected()) {
+
+            // Si estaba viendo la trasera, volvemos a la delantera
+            if (tglPag2.isSelected()) {
+                tglPag2.setSelected(false);
                 tglPag1.setSelected(true);
+                mostrarCaraDelantera();
             }
-        } else {
-            // Estructura 1 y 3: se puede alternar entre las dos caras
+
+        } 
+        // Caso 3
+        else if (rdbStructure3.isSelected()) {
+            // Activamos ambos botones
             tglPag1.setEnabled(true);
             tglPag2.setEnabled(true);
         }
     }
 
+    // Renderiza la "cara delantera" (página base del rango o página 1)
+    private void mostrarCaraDelantera() {
+        try {
+            int paginaBase;
+
+            if (rbdPagesScanner2.isSelected()) {
+                // En modo personalizado, usamos la página de inicio definida por el usuario
+                paginaBase = Integer.parseInt(txfStart.getText().trim());
+            } else {
+                // En modo documento completo, siempre página 1
+                paginaBase = 1;
+            }
+
+            PDFRenderer renderer = new PDFRenderer(pdfDocument);
+            BufferedImage img = renderer.renderImageWithDPI(paginaBase - 1, 150);
+            currentImage = img;
+            pagePanel.setImage(img);
+            pagePanel.setCurrentPage(paginaBase - 1);
+
+            scrPdfViewer.revalidate();
+            scrPdfViewer.repaint();
+
+            // Asegurar sincronización visual
+            tglPag1.setSelected(true);
+            tglPag2.setSelected(false);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(
+                this,
+                "Error al renderizar la cara delantera:\n" + ex.getMessage(),
+                "Error de renderizado",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    
     // Habilita/inhabilita rangos de páginas personalizados
     private void applyPageScannerMode() {
         boolean custom = rbdPagesScanner2.isSelected(); // "Margen personalizado"
