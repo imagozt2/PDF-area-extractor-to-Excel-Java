@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -190,7 +191,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             // Mover abajo
             btnMoveDownData.setEnabled(hasSelection && index < size - 1);
 
-            // Selección del tipo de campo (UNIQUE, MASTER, DEPENDENT)
+            // Selección del tipo de campo
             if (hasSelection) {
                 String selectedField = lstDataList.getSelectedValue();
                 String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
@@ -206,12 +207,38 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                         rbdFieldType3.setSelected(true);
                         break;
                 }
+
+                // Refrescar campo seleccionado en el PDF
+                pagePanel.setSelectedFields(Set.of(selectedField));
+
+                // Mostrar coordenadas si el campo ya tiene un área asignada en la página actual
+                int currentPage = pagePanel.getCurrentPage();
+                Map<Integer, Rectangle2D.Double> areaMap = fieldAreasByPage.get(selectedField);
+
+                if (areaMap != null && areaMap.containsKey(currentPage)) {
+                    Rectangle2D.Double rect = areaMap.get(currentPage);
+                    txfPage.setText(String.valueOf(currentPage + 1));
+                    txfAxisX.setText(String.format("%.4f", rect.getX()));
+                    txfAxisY.setText(String.format("%.4f", rect.getY()));
+                } else {
+                    // Si no hay selección aún para esa cara, limpiar campos
+                    txfPage.setText("");
+                    txfAxisX.setText("");
+                    txfAxisY.setText("");
+                }
+
             } else {
-                // Si no hay selección, desmarcamos todos los radiobuttons
+                // Si no hay campo seleccionado, desmarcar radio buttons y limpiar coordenadas
                 btnGroupDataFormat.clearSelection();
+                pagePanel.setSelectedFields(Set.of());
+                txfPage.setText("");
+                txfAxisX.setText("");
+                txfAxisY.setText("");
             }
+
+            pagePanel.repaint();
         });
-        
+
         java.awt.event.ActionListener fieldTypeListener = e2 -> {
             String selectedField = lstDataList.getSelectedValue();
             if (selectedField == null) return;
