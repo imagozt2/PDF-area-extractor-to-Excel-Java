@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +53,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         splMain.setResizeWeight(0.5);
         splMain.setEnabled(false);
 
-        splRightPanel.setResizeWeight(0.5);
+        SwingUtilities.invokeLater(() -> {
+            splMain.setDividerLocation(0.5);
+        });
         splRightPanel.setEnabled(false);
 
         // Imagen en blanco temporal
@@ -199,7 +202,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             // Mover abajo
             btnMoveDownData.setEnabled(hasSelection && index < size - 1);
 
-            // Selección del tipo de campo
+            // Selección del tipo de campo (UNIQUE, MASTER, DEPENDENT)
             if (hasSelection) {
                 String selectedField = lstDataList.getSelectedValue();
                 String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
@@ -216,37 +219,50 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                         break;
                 }
 
-                // Refrescar campo seleccionado en el PDF
-                pagePanel.setSelectedFields(Set.of(selectedField));
+                // Mostrar coordenadas si ese campo tiene área definida en cualquier página
+                Map<Integer, Rectangle2D.Double> areas = fieldAreasByPage.get(selectedField);
+                if (areas != null && !areas.isEmpty()) {
+                    // Solo debe haber una entrada por campo
+                    Map.Entry<Integer, Rectangle2D.Double> entry = areas.entrySet().iterator().next();
+                    int page = entry.getKey(); // 0 = frontal, 1 = trasera
+                    Rectangle2D.Double rect = entry.getValue();
 
-                // Mostrar coordenadas si el campo ya tiene un área asignada en la página actual
-                int currentPage = pagePanel.getCurrentPage();
-                Map<Integer, Rectangle2D.Double> areaMap = fieldAreasByPage.get(selectedField);
-
-                if (areaMap != null && areaMap.containsKey(currentPage)) {
-                    Rectangle2D.Double rect = areaMap.get(currentPage);
-                    txfPage.setText(String.valueOf(currentPage + 1));
-                    txfAxisX.setText(String.format("%.4f", rect.getX()));
-                    txfAxisY.setText(String.format("%.4f", rect.getY()));
+                    txfPage.setText(String.valueOf(page + 1));
+                    txfAxisX.setText(String.format("%.4f", rect.x));
+                    txfAxisY.setText(String.format("%.4f", rect.y));
                 } else {
-                    // Si no hay selección aún para esa cara, limpiar campos
                     txfPage.setText("");
                     txfAxisX.setText("");
                     txfAxisY.setText("");
                 }
 
+                // Refrescar visualmente los rectángulos para reflejar si este campo está seleccionado
+                Set<String> selectedOnly = new HashSet<>();
+                selectedOnly.add(selectedField);
+                pagePanel.setSelectedFields(selectedOnly);
+                Map<String, Rectangle2D.Double> areasForThisPage = new LinkedHashMap<>();
+
+                for (Map.Entry<String, Map<Integer, Rectangle2D.Double>> entry : fieldAreasByPage.entrySet()) {
+                    String campo = entry.getKey();
+                    Rectangle2D.Double rect = entry.getValue().get(pagePanel.getCurrentPage());
+                    if (rect != null) {
+                        areasForThisPage.put(campo, rect);
+                    }
+                }
+
+                pagePanel.setSelections(areasForThisPage);
+
             } else {
-                // Si no hay campo seleccionado, desmarcar radio buttons y limpiar coordenadas
+                // Si no hay selección, desmarcamos todos los radiobuttons y limpiamos campos
                 btnGroupDataFormat.clearSelection();
-                pagePanel.setSelectedFields(Set.of());
                 txfPage.setText("");
                 txfAxisX.setText("");
                 txfAxisY.setText("");
+
+                // También limpiar visualización de selección de áreas
+                pagePanel.setSelectedFields(new HashSet<>());
+                pagePanel.setSelections(new LinkedHashMap<>());
             }
-
-            pagePanel.repaint();
-            refreshVisibleSelections();
-
         });
 
         java.awt.event.ActionListener fieldTypeListener = e2 -> {
@@ -300,7 +316,6 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Listener para actualizar la página mostrada según el campo "txfStart"
         txfStart.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
-            // 🔹 Esta es la función interna (no es global, vive dentro del listener)
             private void updatePageView() {
                 if (pdfDocument == null) return;
                 if (!rbdPagesScanner2.isSelected()) return;
@@ -679,13 +694,13 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         pnlStructureLayout.setHorizontalGroup(
             pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStructureLayout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
+                .addContainerGap(57, Short.MAX_VALUE)
                 .addComponent(pnlStructure1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pnlStructure2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlStructure3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         pnlStructureLayout.setVerticalGroup(
             pnlStructureLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -802,22 +817,24 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataListLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
+                    .addComponent(lblDataList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataListLayout.createSequentialGroup()
+                        .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                            .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddData, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                                .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnMoveUpData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnMoveDownData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(lblDataList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnMoveDownData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnMoveUpData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
+
+        pnlDataListLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnAddData, btnClearListData, btnDeleteData, btnEditData, btnMoveDownData, btnMoveUpData});
+
         pnlDataListLayout.setVerticalGroup(
             pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataListLayout.createSequentialGroup()
@@ -865,7 +882,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     .addComponent(rbdFieldType2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rbdFieldType3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDataFormat1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         pnlDataFormat1Layout.setVerticalGroup(
             pnlDataFormat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -900,18 +917,20 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             .addGroup(pnlDataFormat2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDataFormat2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataFormat2Layout.createSequentialGroup()
                         .addGroup(pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblAxisX, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPage, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblAxisY, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txfAxisY, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txfPage, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txfAxisX, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(7, Short.MAX_VALUE))
+                        .addGroup(pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txfAxisX, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                            .addComponent(txfPage)
+                            .addComponent(txfAxisY))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnlDataFormat2Layout.createSequentialGroup()
+                        .addComponent(lblDataFormat2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7))))
         );
         pnlDataFormat2Layout.setVerticalGroup(
             pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -967,7 +986,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlDataList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlDataList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlDataLayout.createSequentialGroup()
