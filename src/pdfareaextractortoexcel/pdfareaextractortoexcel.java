@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -26,6 +27,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btnGroupScanner;
     private javax.swing.ButtonGroup btnGroupStructure;
     private javax.swing.ButtonGroup btnGroupPages;
+    private java.util.LinkedHashMap<String, String> fieldTypeMap = new java.util.LinkedHashMap<>();
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
     private PDFPagePanel pagePanel;
@@ -62,14 +64,14 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         // Configuración de btnGroupDataFormat
         btnGroupDataFormat = new javax.swing.ButtonGroup();
-        btnGroupDataFormat.add(rdbDataFormat1);
-        btnGroupDataFormat.add(rdbDataFormat2);
-        btnGroupDataFormat.add(rdbDataFormat3);
+        btnGroupDataFormat.add(rbdFieldType1);
+        btnGroupDataFormat.add(rbdFieldType2);
+        btnGroupDataFormat.add(rbdFieldType3);
 
         // Configuración de btnGroupScanner
-        btnGroupPages = new javax.swing.ButtonGroup();
-        btnGroupPages.add(rbdPagesScanner1);
-        btnGroupPages.add(rbdPagesScanner2);
+        btnGroupScanner = new javax.swing.ButtonGroup();
+        btnGroupScanner.add(rbdPagesScanner1);
+        btnGroupScanner.add(rbdPagesScanner2);
         
         // Configuración de btnGroupPages
         btnGroupPages = new javax.swing.ButtonGroup();
@@ -95,9 +97,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         btnMoveDownData.setEnabled(false);
 
         // Botones Tipo de campo
-        rdbDataFormat1.setEnabled(false);
-        rdbDataFormat2.setEnabled(false);
-        rdbDataFormat3.setEnabled(false);
+        rbdFieldType1.setEnabled(false);
+        rbdFieldType2.setEnabled(false);
+        rbdFieldType3.setEnabled(false);
 
         // Botones/Slider Navegación/zoom PDF
         tglPag1.setEnabled(false);
@@ -157,7 +159,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Listener de la lista de campos
         lstDataList.setModel(new javax.swing.DefaultListModel<>());
 
-        // Listener de habilitación de botones
+        // Listener de habilitación de botones y selección de tipo de campo
         lstDataList.addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) return;
 
@@ -181,7 +183,47 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
             // Mover abajo
             btnMoveDownData.setEnabled(hasSelection && index < size - 1);
+
+            // Selección del tipo de campo (UNIQUE, MASTER, DEPENDENT)
+            if (hasSelection) {
+                String selectedField = lstDataList.getSelectedValue();
+                String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
+
+                switch (type) {
+                    case "UNIQUE":
+                        rbdFieldType1.setSelected(true);
+                        break;
+                    case "MASTER":
+                        rbdFieldType2.setSelected(true);
+                        break;
+                    case "DEPENDENT":
+                        rbdFieldType3.setSelected(true);
+                        break;
+                }
+            } else {
+                // Si no hay selección, desmarcamos todos los radiobuttons
+                btnGroupDataFormat.clearSelection();
+            }
         });
+        
+        java.awt.event.ActionListener fieldTypeListener = e2 -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField == null) return;
+
+            if (rbdFieldType1.isSelected()) {
+                fieldTypeMap.put(selectedField, "UNIQUE");
+            } else if (rbdFieldType2.isSelected()) {
+                fieldTypeMap.put(selectedField, "MASTER");
+            } else if (rbdFieldType3.isSelected()) {
+                fieldTypeMap.put(selectedField, "DEPENDENT");
+            }   
+        };
+
+        rbdFieldType1.addActionListener(fieldTypeListener);
+        rbdFieldType2.addActionListener(fieldTypeListener);
+        rbdFieldType3.addActionListener(fieldTypeListener);
+
+
         
         // Listener para volver a la primera página cuando se selecciona "Documento completo"
         rbdPagesScanner1.addActionListener(e -> {
@@ -450,9 +492,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         btnMoveDownData = new javax.swing.JButton();
         pnlDataFormat = new javax.swing.JPanel();
         lblDataFormat1 = new javax.swing.JLabel();
-        rdbDataFormat1 = new javax.swing.JRadioButton();
-        rdbDataFormat2 = new javax.swing.JRadioButton();
-        rdbDataFormat3 = new javax.swing.JRadioButton();
+        rbdFieldType1 = new javax.swing.JRadioButton();
+        rbdFieldType2 = new javax.swing.JRadioButton();
+        rbdFieldType3 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
         lblDataFormat2 = new javax.swing.JLabel();
         lblPage = new javax.swing.JLabel();
@@ -759,11 +801,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         lblDataFormat1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblDataFormat1.setText("Tipo de campo");
 
-        rdbDataFormat1.setText("Valor único");
+        rbdFieldType1.setText("Valor único");
 
-        rdbDataFormat2.setText("Valor múltiple maestro");
+        rbdFieldType2.setText("Valor múltiple maestro");
 
-        rdbDataFormat3.setText("Valor múltiple dependiente");
+        rbdFieldType3.setText("Valor múltiple dependiente");
 
         javax.swing.GroupLayout pnlDataFormatLayout = new javax.swing.GroupLayout(pnlDataFormat);
         pnlDataFormat.setLayout(pnlDataFormatLayout);
@@ -772,9 +814,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             .addGroup(pnlDataFormatLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDataFormatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(rdbDataFormat1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rdbDataFormat2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rdbDataFormat3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbdFieldType1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbdFieldType2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rbdFieldType3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblDataFormat1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
@@ -784,11 +826,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblDataFormat1)
                 .addGap(12, 12, 12)
-                .addComponent(rdbDataFormat1)
+                .addComponent(rbdFieldType1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rdbDataFormat2)
+                .addComponent(rbdFieldType2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rdbDataFormat3)
+                .addComponent(rbdFieldType3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1140,9 +1182,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             //btnMoveDownData.setEnabled(true);
 
             // Tipo de campo (formato de datos)
-            rdbDataFormat1.setEnabled(true);
-            rdbDataFormat2.setEnabled(true);
-            rdbDataFormat3.setEnabled(true);
+            rbdFieldType1.setEnabled(true);
+            rbdFieldType2.setEnabled(true);
+            rbdFieldType3.setEnabled(true);
 
             // Navegación/zoom PDF
             tglPag1.setEnabled(true);
@@ -1237,6 +1279,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     lstDataList.setModel(model);
                 }
                 model.addElement(nombreCampo);
+                fieldTypeMap.put(nombreCampo, "UNIQUE");
                 lstDataList.setSelectedIndex(model.getSize() - 1);
             }
         }
@@ -1269,6 +1312,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Si el usuario confirma, eliminar el elemento
         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
             model.remove(index);
+            fieldTypeMap.remove(nombreCampo);
 
             // Ajustar la selección tras eliminar
             if (!model.isEmpty()) {
@@ -1299,6 +1343,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Si el usuario elige “Sí”, vaciar la lista
         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
             model.clear();
+            fieldTypeMap.clear();
 
             // Desactivar botones relacionados tras vaciar la lista
             brnDeleteData.setEnabled(false);
@@ -1319,10 +1364,10 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
 
         // Obtener el nombre actual del campo
-        String nombreActual = model.getElementAt(index);
+        String oldName = model.getElementAt(index);
 
         // Crear el campo de texto con el nombre actual preescrito
-        javax.swing.JTextField txtNombre = new javax.swing.JTextField(nombreActual, 20);
+        javax.swing.JTextField txtNombre = new javax.swing.JTextField(oldName, 20);
 
         // Crear el panel simple con etiqueta + campo
         javax.swing.JPanel panel = new javax.swing.JPanel();
@@ -1336,7 +1381,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             javax.swing.JOptionPane.OK_CANCEL_OPTION
         );
 
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Editar campo");
+       javax.swing.JDialog dialog = optionPane.createDialog(this, "Editar campo");
 
         // Foco automático en el campo al abrir el diálogo
         dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
@@ -1353,10 +1398,16 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Procesar resultado
         Object selectedValue = optionPane.getValue();
         if (selectedValue != null && (int) selectedValue == javax.swing.JOptionPane.OK_OPTION) {
-            String nuevoNombre = txtNombre.getText().trim();
-            if (!nuevoNombre.isEmpty() && !nuevoNombre.equals(nombreActual)) {
-                model.setElementAt(nuevoNombre, index);
+            String newName = txtNombre.getText().trim();
+            if (!newName.isEmpty() && !newName.equals(oldName)) {
+                // Actualizar el nombre en la lista
+                model.setElementAt(newName, index);
                 lstDataList.setSelectedIndex(index);
+
+                // Actualizar el tipo en el mapa
+                String oldType = fieldTypeMap.getOrDefault(oldName, "UNIQUE");
+                fieldTypeMap.remove(oldName);
+                fieldTypeMap.put(newName, oldType);
             }
         }
 
@@ -1367,38 +1418,44 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         int index = lstDataList.getSelectedIndex();
         if (index <= 0) return;
 
-        javax.swing.ListModel<String> lm = lstDataList.getModel();
-        if (!(lm instanceof javax.swing.DefaultListModel)) return;
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
+        String current = model.getElementAt(index);
+        String previous = model.getElementAt(index - 1);
 
-        // Intercambiar el ítem seleccionado con el anterior
-        String actual = model.getElementAt(index);
-        String anterior = model.getElementAt(index - 1);
+        // Intercambiar en el modelo
+        model.setElementAt(current, index - 1);
+        model.setElementAt(previous, index);
 
-        model.setElementAt(actual, index - 1);
-        model.setElementAt(anterior, index);
+        // Intercambiar en el mapa
+        String typeCurrent = fieldTypeMap.get(current);
+        String typePrevious = fieldTypeMap.get(previous);
 
-        // Mantener la selección en el nuevo índice
+        fieldTypeMap.put(current, typePrevious);
+        fieldTypeMap.put(previous, typeCurrent);
+
         lstDataList.setSelectedIndex(index - 1);
     }//GEN-LAST:event_btnMoveUpDataActionPerformed
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
         int index = lstDataList.getSelectedIndex();
-        javax.swing.ListModel<String> lm = lstDataList.getModel();
-        if (!(lm instanceof javax.swing.DefaultListModel)) return;
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
 
-        // Si no hay selección o el ítem ya es el último, no hacemos nada
         if (index == -1 || index >= model.getSize() - 1) return;
 
-        // Intercambiar con el siguiente
-        String actual = model.getElementAt(index);
-        String siguiente = model.getElementAt(index + 1);
+        String current = model.getElementAt(index);
+        String next = model.getElementAt(index + 1);
 
-        model.setElementAt(siguiente, index);
-        model.setElementAt(actual, index + 1);
+        // Intercambiar en el modelo
+        model.setElementAt(next, index);
+        model.setElementAt(current, index + 1);
 
-        // Mantener la selección en la nueva posición
+        // Intercambiar en el mapa
+        String typeCurrent = fieldTypeMap.get(current);
+        String typeNext = fieldTypeMap.get(next);
+
+        fieldTypeMap.put(current, typeNext);
+        fieldTypeMap.put(next, typeCurrent);
+
         lstDataList.setSelectedIndex(index + 1);
     }//GEN-LAST:event_btnMoveDownDataActionPerformed
 
@@ -1562,11 +1619,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.JPanel pnlStructure1;
     private javax.swing.JPanel pnlStructure2;
     private javax.swing.JPanel pnlStructure3;
+    private javax.swing.JRadioButton rbdFieldType1;
+    private javax.swing.JRadioButton rbdFieldType2;
+    private javax.swing.JRadioButton rbdFieldType3;
     private javax.swing.JRadioButton rbdPagesScanner1;
     private javax.swing.JRadioButton rbdPagesScanner2;
-    private javax.swing.JRadioButton rdbDataFormat1;
-    private javax.swing.JRadioButton rdbDataFormat2;
-    private javax.swing.JRadioButton rdbDataFormat3;
     private javax.swing.JRadioButton rdbStructure1;
     private javax.swing.JRadioButton rdbStructure2;
     private javax.swing.JRadioButton rdbStructure3;

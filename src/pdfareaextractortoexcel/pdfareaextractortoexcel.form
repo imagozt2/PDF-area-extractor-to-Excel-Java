@@ -629,9 +629,9 @@
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="rdbDataFormat1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="rdbDataFormat2" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="rdbDataFormat3" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rbdFieldType1" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rbdFieldType2" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="rbdFieldType3" alignment="0" max="32767" attributes="0"/>
                                   <Component id="lblDataFormat1" alignment="0" min="-2" pref="117" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="48" max="32767" attributes="0"/>
@@ -644,11 +644,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lblDataFormat1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="rdbDataFormat1" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbdFieldType1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="rdbDataFormat2" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbdFieldType2" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="rdbDataFormat3" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbdFieldType3" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -663,17 +663,17 @@
                         <Property name="text" type="java.lang.String" value="Tipo de campo"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat1">
+                    <Component class="javax.swing.JRadioButton" name="rbdFieldType1">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Valor &#xfa;nico"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat2">
+                    <Component class="javax.swing.JRadioButton" name="rbdFieldType2">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Valor m&#xfa;ltiple maestro"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="rdbDataFormat3">
+                    <Component class="javax.swing.JRadioButton" name="rbdFieldType3">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Valor m&#xfa;ltiple dependiente"/>
                       </Properties>
