@@ -5,9 +5,12 @@
 package pdfareaextractortoexcel;
 
 import java.awt.Dimension;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -15,7 +18,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripperByArea;
 
 /**
  *
@@ -27,6 +32,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btnGroupScanner;
     private javax.swing.ButtonGroup btnGroupStructure;
     private javax.swing.ButtonGroup btnGroupPages;
+    private Map<String, Map<Integer, Rectangle2D.Double>> fieldAreasByPage = new HashMap<>();
     private java.util.LinkedHashMap<String, String> fieldTypeMap = new java.util.LinkedHashMap<>();
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
@@ -1078,7 +1084,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         PDFLink = chooser.getSelectedFile().getAbsolutePath();
         txfLink.setText(PDFLink);
-    
+
         PDDocument doc = null;
         File archivo = new File(PDFLink);
         try {
@@ -1117,7 +1123,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     "Error interno",
                     JOptionPane.ERROR_MESSAGE
                 );
-                return;
+                 return;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -1137,11 +1143,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             currentImage = img;
 
             pagePanel = new PDFPagePanel(img);
-            //pagePanel.setOnAreaSelected(this::onAreaSelected);
-            pagePanel.setCanSelect(false);
+            pagePanel.setCanSelect(true);
             pagePanel.setCurrentPage(0);
-            //pagePanel.setSelections(selecciones.get(0));
-
             scrPdfViewer.setViewportView(pagePanel);
             splMain.setDividerLocation(0.5);
 
@@ -1149,7 +1152,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 Dimension vp = scrPdfViewer.getViewport().getExtentSize();
                 double initZoom = vp.width / (double) img.getWidth();
                 pagePanel.setZoom(initZoom);
-           
+
                 sldRightPanel.setMinimum(50);
                 sldRightPanel.setMaximum(200);
                 sldRightPanel.setValue((int) (initZoom * 100));
@@ -1162,41 +1165,24 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
             scrPdfViewer.revalidate();
             scrPdfViewer.repaint();
-            
-            // Estructura
+
+            // Habilitar componentes de UI
             rdbStructure1.setEnabled(true);
             rdbStructure2.setEnabled(true);
             rdbStructure3.setEnabled(true);
-
-            // Páginas a escanear
             rbdPagesScanner1.setEnabled(true);
             rbdPagesScanner2.setEnabled(true);
-
-            // Lista de campos y botones asociados
             lstDataList.setEnabled(true);
             btnAddData.setEnabled(true);
-            //brnDeleteData.setEnabled(true);
-            //btnClearListData.setEnabled(true);
-            //btnEditData.setEnabled(true);
-            //btnMoveUpData.setEnabled(true);
-            //btnMoveDownData.setEnabled(true);
-
-            // Tipo de campo (formato de datos)
             rbdFieldType1.setEnabled(true);
             rbdFieldType2.setEnabled(true);
             rbdFieldType3.setEnabled(true);
-
-            // Navegación/zoom PDF
             tglPag1.setEnabled(true);
             tglPag2.setEnabled(true);
             sldRightPanel.setEnabled(true);
-
-            // Campos de texto
             txfPage.setEnabled(true);
             txfAxisX.setEnabled(true);
             txfAxisY.setEnabled(true);
-            
-            // Etiquetas
             lblStructure.setEnabled(true);
             lblPagesScanner.setEnabled(true);
             lblPageStart.setEnabled(true);
@@ -1208,15 +1194,12 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             lblPage.setEnabled(true);
             lblAxisX.setEnabled(true);
             lblAxisY.setEnabled(true);
-        
-            // Imágenes
             imgPage1.setEnabled(true);
             imgPage2.setEnabled(true);
             imgPage3.setEnabled(true);
             imgPage4.setEnabled(true);
             imgPage5.setEnabled(true);
-                     
-            // Selecciones por defecto
+
             rdbStructure1.setSelected(true);
             rbdPagesScanner1.setSelected(true);
             tglPag1.setSelected(true);
@@ -1224,6 +1207,63 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
             applyStructureMode();
             applyPageScannerMode();
+
+            // Selección de áreas en el PDF
+            pagePanel.setOnAreaSelected(rect -> {
+                int index = lstDataList.getSelectedIndex();
+                if (index == -1) {
+                    JOptionPane.showMessageDialog(this, "Por favor, seleccione un item en la lista de campos antes de definir un área.");
+                    return;
+                }
+
+                String fieldName = ((DefaultListModel<String>) lstDataList.getModel()).get(index);
+                double zoom = pagePanel.getZoom();
+                int imgW = pagePanel.getImageWidth();
+                int imgH = pagePanel.getImageHeight();
+
+                double fx = rect.getX() / (imgW * zoom);
+                double fy = rect.getY() / (imgH * zoom);
+                double fw = rect.getWidth() / (imgW * zoom);
+                double fh = rect.getHeight() / (imgH * zoom);
+                Rectangle2D.Double relativeRect = new Rectangle2D.Double(fx, fy, fw, fh);
+                int currentPage = pagePanel.getCurrentPage();
+
+                fieldAreasByPage.computeIfAbsent(fieldName, k -> new HashMap<>()).put(currentPage, relativeRect);
+
+                try {
+                    PDPage page = pdfDocument.getPage(currentPage);
+                    PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+                    
+                    float dpi = 150f;
+                    float scale = 72f / dpi;
+
+                    Rectangle2D areaInPoints = new Rectangle2D.Double(
+                        fx * imgW * scale,
+                        fy * imgH * scale,
+                        fw * imgW * scale,
+                        fh * imgH * scale
+                    );
+
+                    stripper.addRegion("area", areaInPoints);
+                    stripper.extractRegions(page);
+                    String extractedText = stripper.getTextForRegion("area").trim();
+
+                    JOptionPane.showMessageDialog(this,
+                        "Texto detectado:\n\n" + extractedText,
+                        "Área seleccionada",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    txfPage.setText(String.valueOf(currentPage + 1));
+                    txfAxisX.setText(String.format("%.4f", fx));
+                    txfAxisY.setText(String.format("%.4f", fy));
+                    pagePanel.repaint();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Error al extraer texto: " + ex.getMessage());
+                }
+            });
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1526,7 +1566,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     
     // Habilita/inhabilita rangos de páginas personalizados
     private void applyPageScannerMode() {
-        boolean custom = rbdPagesScanner2.isSelected(); // "Margen personalizado"
+        boolean custom = rbdPagesScanner2.isSelected();
         txfStart.setEnabled(custom);
         txfFinish.setEnabled(custom);
         txfStart.setEditable(custom);
