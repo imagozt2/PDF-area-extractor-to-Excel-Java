@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.DefaultListModel;
@@ -97,7 +98,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         // Lista de campos y botones asociados
         lstDataList.setEnabled(false);
         btnAddData.setEnabled(false);
-        brnDeleteData.setEnabled(false);
+        btnDeleteData.setEnabled(false);
         btnClearListData.setEnabled(false);
         btnEditData.setEnabled(false);
         btnMoveUpData.setEnabled(false);
@@ -182,7 +183,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             btnClearListData.setEnabled(size > 0);
 
             // Borrar item y Editar item
-            brnDeleteData.setEnabled(hasSelection);
+            btnDeleteData.setEnabled(hasSelection);
             btnEditData.setEnabled(hasSelection);
 
             // Mover arriba
@@ -237,6 +238,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
 
             pagePanel.repaint();
+            refreshVisibleSelections();
+
         });
 
         java.awt.event.ActionListener fieldTypeListener = e2 -> {
@@ -394,10 +397,10 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 int paginaBase;
 
                 if (rbdPagesScanner2.isSelected()) {
-                    // Modo personalizado: usamos el valor del campo txfStart
+                    // Modo personalizado
                     paginaBase = Integer.parseInt(txfStart.getText().trim());
                 } else {
-                    // Modo completo: siempre la página 1
+                    // Modo completo
                     paginaBase = 1;
                 }
 
@@ -407,6 +410,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 currentImage = img;
                 pagePanel.setImage(img);
                 pagePanel.setCurrentPage(paginaBase - 1);
+                refreshVisibleSelections();
 
                 scrPdfViewer.revalidate();
                 scrPdfViewer.repaint();
@@ -463,6 +467,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 currentImage = img;
                 pagePanel.setImage(img);
                 pagePanel.setCurrentPage(paginaBase - 1);
+                refreshVisibleSelections();
 
                 scrPdfViewer.revalidate();
                 scrPdfViewer.repaint();
@@ -518,7 +523,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         lstDataList = new javax.swing.JList<>();
         lblDataList = new javax.swing.JLabel();
         btnAddData = new javax.swing.JButton();
-        brnDeleteData = new javax.swing.JButton();
+        btnDeleteData = new javax.swing.JButton();
         btnClearListData = new javax.swing.JButton();
         btnEditData = new javax.swing.JButton();
         btnMoveUpData = new javax.swing.JButton();
@@ -742,11 +747,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
         });
 
-        brnDeleteData.setText("Eliminar campo");
-        brnDeleteData.setPreferredSize(new java.awt.Dimension(105, 23));
-        brnDeleteData.addActionListener(new java.awt.event.ActionListener() {
+        btnDeleteData.setText("Eliminar campo");
+        btnDeleteData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnDeleteData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                brnDeleteDataActionPerformed(evt);
+                btnDeleteDataActionPerformed(evt);
             }
         });
 
@@ -795,7 +800,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                             .addComponent(btnAddData, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
-                                .addComponent(brnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -817,7 +822,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     .addComponent(btnEditData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(brnDeleteData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMoveUpData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -826,7 +831,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 .addGap(6, 6, 6))
         );
 
-        pnlDataListLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {brnDeleteData, btnAddData, btnClearListData, btnEditData, btnMoveDownData, btnMoveUpData});
+        pnlDataListLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddData, btnClearListData, btnDeleteData, btnEditData, btnMoveDownData, btnMoveUpData});
 
         pnlDataFormat.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -1284,6 +1289,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     txfPage.setText(String.valueOf(currentPage + 1));
                     txfAxisX.setText(String.format("%.4f", fx));
                     txfAxisY.setText(String.format("%.4f", fy));
+                    refreshVisibleSelections();
                     pagePanel.repaint();
 
                 } catch (Exception ex) {
@@ -1354,7 +1360,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         dialog.dispose();
     }//GEN-LAST:event_btnAddDataActionPerformed
 
-    private void brnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brnDeleteDataActionPerformed
+    private void btnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteDataActionPerformed
         // Obtener el modelo de la lista
         javax.swing.ListModel<String> lm = lstDataList.getModel();
         if (!(lm instanceof javax.swing.DefaultListModel)) return;
@@ -1380,6 +1386,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
             model.remove(index);
             fieldTypeMap.remove(nombreCampo);
+            fieldAreasByPage.remove(nombreCampo);
+            refreshVisibleSelections();
 
             // Ajustar la selección tras eliminar
             if (!model.isEmpty()) {
@@ -1387,7 +1395,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 lstDataList.setSelectedIndex(nuevoIndex);
             }
         }
-    }//GEN-LAST:event_brnDeleteDataActionPerformed
+    }//GEN-LAST:event_btnDeleteDataActionPerformed
 
     private void btnClearListDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearListDataActionPerformed
         javax.swing.ListModel<String> lm = lstDataList.getModel();
@@ -1411,9 +1419,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
             model.clear();
             fieldTypeMap.clear();
+            fieldAreasByPage.clear();
+            refreshVisibleSelections();
 
             // Desactivar botones relacionados tras vaciar la lista
-            brnDeleteData.setEnabled(false);
+            btnDeleteData.setEnabled(false);
             btnEditData.setEnabled(false);
             btnMoveUpData.setEnabled(false);
             btnMoveDownData.setEnabled(false);
@@ -1610,6 +1620,22 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         }
     }
 
+    private void refreshVisibleSelections() {
+        int currentPage = pagePanel.getCurrentPage();
+        Map<String, Rectangle2D.Double> visibleSelections = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Map<Integer, Rectangle2D.Double>> entry : fieldAreasByPage.entrySet()) {
+            String field = entry.getKey();
+            Map<Integer, Rectangle2D.Double> perPage = entry.getValue();
+
+            if (perPage.containsKey(currentPage)) {
+                visibleSelections.put(field, perPage.get(currentPage));
+            }
+        }
+
+        pagePanel.setSelections(visibleSelections);
+    }
+
     
     /**
      * @param args the command line arguments
@@ -1648,9 +1674,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton brnDeleteData;
     private javax.swing.JButton btnAddData;
     private javax.swing.JButton btnClearListData;
+    private javax.swing.JButton btnDeleteData;
     private javax.swing.JButton btnEditData;
     private javax.swing.JButton btnMoveDownData;
     private javax.swing.JButton btnMoveUpData;
