@@ -5,10 +5,12 @@
 package pdfareaextractortoexcel;
 
 import java.awt.Dimension;
+import java.awt.List;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -17,11 +19,13 @@ import java.util.Set;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 
@@ -35,6 +39,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     private javax.swing.ButtonGroup btnGroupScanner;
     private javax.swing.ButtonGroup btnGroupStructure;
     private javax.swing.ButtonGroup btnGroupPages;
+    private java.util.List<Map<String,String>> extractedData = new ArrayList<>();
     private Map<String, Map<Integer, Rectangle2D.Double>> fieldAreasByPage = new HashMap<>();
     private java.util.LinkedHashMap<String, String> fieldTypeMap = new java.util.LinkedHashMap<>();
     private BufferedImage currentImage;
@@ -218,6 +223,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 txfPage.setEnabled(true);
                 txfAxisX.setEnabled(true);
                 txfAxisY.setEnabled(true);
+                btnValidate.setEnabled(true);
                 
                 String selectedField = lstDataList.getSelectedValue();
                 String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
@@ -278,6 +284,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 txfPage.setEnabled(false);
                 txfAxisX.setEnabled(false);
                 txfAxisY.setEnabled(false);
+                btnValidate.setEnabled(false);
                 
                 btnGroupDataFormat.clearSelection();
                 txfPage.setText("");
@@ -998,6 +1005,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         btnValidate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnValidate.setText("Validar datos");
+        btnValidate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnValidateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlValidateLayout = new javax.swing.GroupLayout(pnlValidate);
         pnlValidate.setLayout(pnlValidateLayout);
@@ -1640,6 +1652,174 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         lstDataList.setSelectedIndex(index + 1);
     }//GEN-LAST:event_btnMoveDownDataActionPerformed
+
+    private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidateActionPerformed
+        try {
+            // Rango de páginas
+            int totalPages = pdfDocument.getNumberOfPages();
+            int startPage = 1;
+            int finishPage = totalPages;
+
+            if (rbdPagesScanner2.isSelected()) {
+                try {
+                    startPage = Integer.parseInt(txfStart.getText().trim());
+                    finishPage = Integer.parseInt(txfFinish.getText().trim());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "Introduce números válidos en el rango de páginas.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+                if (startPage < 1 || finishPage > totalPages || startPage > finishPage) {
+                    JOptionPane.showMessageDialog(
+                        this,
+                        "El rango de páginas especificado no es válido.",
+                        "Validación",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+            }
+
+            // Lista de campos en el orden visual
+            ArrayList<String> fields = new ArrayList<>();
+            ListModel<String> model = lstDataList.getModel();
+            for (int i = 0; i < model.getSize(); i++) fields.add(model.getElementAt(i));
+            if (fields.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "No hay campos definidos en la lista.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Comprobación de que al menos algún campo tiene área en alguna cara
+            boolean anyAreaDefined = false;
+            for (String f : fields) {
+                Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(f);
+                if (perPage != null && !perPage.isEmpty()) { anyAreaDefined = true; break; }
+            }
+            if (!anyAreaDefined) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Ningún campo tiene un área asignada.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Modo estructura
+            boolean struct1 = rdbStructure1.isSelected(); // cada dos páginas
+            boolean struct2 = rdbStructure2.isSelected(); // cada página
+            boolean struct3 = rdbStructure3.isSelected(); // dos caras (campos distintos por cara)
+
+            extractedData.clear();
+
+            System.out.println("=== Inicio de la extracción de datos ===");
+            System.out.println("Modo estructura: " + (struct1 ? "Cada dos páginas" : struct2 ? "Cada página" : "Campos diferentes por ambas caras"));
+            System.out.println("Rango de páginas: " + startPage + " - " + finishPage);
+            System.out.println("----------------------------------------");
+
+            // Conversor de fracción [0..1] a puntos PDF
+            java.util.function.BiFunction<Rectangle2D.Double, PDPage, Rectangle2D.Double> toPdfPoints =
+                (frac, page) -> {
+                    PDRectangle mb = page.getMediaBox();
+                    double pw = mb.getWidth();
+                    double ph = mb.getHeight();
+                    return new Rectangle2D.Double(frac.x * pw, frac.y * ph, frac.width * pw, frac.height * ph);
+                };
+
+            int pageStep = struct1 ? 2 : 1;
+
+            for (int p = startPage; p <= finishPage; p += pageStep) {
+                int pageIndex = p - 1;
+                PDPage page = pdfDocument.getPage(pageIndex);
+
+                // Selección del mapa de áreas según la estructura y la cara
+                Map<String, Rectangle2D.Double> currentFaceAreas = new LinkedHashMap<>();
+                if (struct3) {
+                    // Cara por paridad: 0 = delantera, 1 = trasera
+                    int face = pageIndex % 2;
+                    for (String field : fields) {
+                        Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                        if (perPage == null) continue;
+                        Rectangle2D.Double frac = perPage.get(face);
+                        if (frac != null) currentFaceAreas.put(field, frac);
+                    }
+                } else {
+                    // Estructuras 1 y 2: usan siempre la cara delantera (face=0)
+                    for (String field : fields) {
+                        Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                        if (perPage == null) continue;
+                        Rectangle2D.Double frac = perPage.get(0);
+                        if (frac != null) currentFaceAreas.put(field, frac);
+                    }
+                }
+
+                // Si en esta página no hay campos con área para la cara, se omite
+                if (currentFaceAreas.isEmpty()) continue;
+
+                PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+                stripper.setSortByPosition(true);
+
+                // Registrar solo los campos que tienen área en la cara actual
+                for (Map.Entry<String, Rectangle2D.Double> e : currentFaceAreas.entrySet()) {
+                    Rectangle2D.Double rectPDF = toPdfPoints.apply(e.getValue(), page);
+                    stripper.addRegion(e.getKey(), rectPDF);
+                }
+
+                stripper.extractRegions(page);
+
+                // Fila con solo los campos de esta cara
+                Map<String, String> row = new LinkedHashMap<>();
+                for (String field : fields) {
+                    if (!currentFaceAreas.containsKey(field)) continue; // no hay área en esta cara
+                    String text = stripper.getTextForRegion(field);
+                    row.put(field, text == null ? "" : text.trim());
+                }
+
+                if (!row.isEmpty()) {
+                    extractedData.add(row);
+
+                    // Salida por consola siguiendo el orden de la lista de campos,
+                    // imprimiendo solo los presentes en esta cara
+                    StringBuilder line = new StringBuilder();
+                    boolean first = true;
+                    for (String field : fields) {
+                        if (!row.containsKey(field)) continue;
+                        if (!first) line.append(", ");
+                        line.append(row.getOrDefault(field, ""));
+                        first = false;
+                    }
+                    System.out.println(line.toString());
+                }
+            }
+
+            System.out.println("=== Fin del recorrido del documento ===");
+
+            JOptionPane.showMessageDialog(
+                this,
+                "La validación y recogida de datos se ha completado correctamente.",
+                "Validación completada",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(
+                this,
+                "Se produjo un error durante la validación: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_btnValidateActionPerformed
 
     // Controla qué caras están disponibles según la estructura seleccionada
     private void applyStructureMode() {

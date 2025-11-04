@@ -862,6 +862,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Validar datos"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnValidateActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
