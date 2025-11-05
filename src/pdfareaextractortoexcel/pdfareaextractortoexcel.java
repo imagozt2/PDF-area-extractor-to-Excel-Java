@@ -4,11 +4,16 @@
  */
 package pdfareaextractortoexcel;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.List;
+import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,32 +21,47 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
  * @author Ivan
  */
-public class pdfareaextractortoexcel extends javax.swing.JFrame {
+public class pdfareaextractortoexcel extends JFrame {
 
-    private javax.swing.ButtonGroup btnGroupDataFormat;
-    private javax.swing.ButtonGroup btnGroupScanner;
-    private javax.swing.ButtonGroup btnGroupStructure;
-    private javax.swing.ButtonGroup btnGroupPages;
-    private java.util.List<Map<String,String>> extractedData = new ArrayList<>();
+    private ButtonGroup btnGroupDataFormat;
+    private ButtonGroup btnGroupScanner;
+    private ButtonGroup btnGroupStructure;
+    private ButtonGroup btnGroupPages;
+    private ArrayList<Map<String,String>> extractedData = new ArrayList<>();
     private Map<String, Map<Integer, Rectangle2D.Double>> fieldAreasByPage = new HashMap<>();
-    private java.util.LinkedHashMap<String, String> fieldTypeMap = new java.util.LinkedHashMap<>();
+    private LinkedHashMap<String, String> fieldTypeMap = new LinkedHashMap<>();
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
     private PDFPagePanel pagePanel;
@@ -73,24 +93,24 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         scrPdfViewer.setViewportView(pagePanel);
 
         // Configuración de btnGroupStructure
-        btnGroupStructure = new javax.swing.ButtonGroup();
+        btnGroupStructure = new ButtonGroup();
         btnGroupStructure.add(rdbStructure1);
         btnGroupStructure.add(rdbStructure2);
         btnGroupStructure.add(rdbStructure3);
 
         // Configuración de btnGroupDataFormat
-        btnGroupDataFormat = new javax.swing.ButtonGroup();
+        btnGroupDataFormat = new ButtonGroup();
         btnGroupDataFormat.add(rbdFieldType1);
         btnGroupDataFormat.add(rbdFieldType2);
         btnGroupDataFormat.add(rbdFieldType3);
 
         // Configuración de btnGroupScanner
-        btnGroupScanner = new javax.swing.ButtonGroup();
+        btnGroupScanner = new ButtonGroup();
         btnGroupScanner.add(rbdPagesScanner1);
         btnGroupScanner.add(rbdPagesScanner2);
         
         // Configuración de btnGroupPages
-        btnGroupPages = new javax.swing.ButtonGroup();
+        btnGroupPages = new ButtonGroup();
         btnGroupPages.add(tglPag1);
         btnGroupPages.add(tglPag2);
 
@@ -184,15 +204,15 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
         
         // Listener de la lista de campos
-        lstDataList.setModel(new javax.swing.DefaultListModel<>());
+        lstDataList.setModel(new DefaultListModel<>());
 
         // Listener de habilitación de botones y selección de tipo de campo
         lstDataList.addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) return;
 
-            javax.swing.ListModel<String> lm = lstDataList.getModel();
-            if (!(lm instanceof javax.swing.DefaultListModel)) return;
-            javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+            ListModel<String> lm = lstDataList.getModel();
+            if (!(lm instanceof DefaultListModel)) return;
+            DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
             int size = model.getSize();
             int index = lstDataList.getSelectedIndex();
@@ -297,7 +317,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
         });
 
-        java.awt.event.ActionListener fieldTypeListener = e2 -> {
+        ActionListener fieldTypeListener = e2 -> {
             String selectedField = lstDataList.getSelectedValue();
             if (selectedField == null) return;
 
@@ -346,7 +366,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         });
 
         // Listener para actualizar la página mostrada según el campo "txfStart"
-        txfStart.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+        txfStart.getDocument().addDocumentListener(new DocumentListener() {
 
             private void updatePageView() {
                 if (pdfDocument == null) return;
@@ -387,23 +407,23 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
 
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            public void insertUpdate(DocumentEvent e) {
                 updatePageView();
             }
 
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            public void removeUpdate(DocumentEvent e) {
                 updatePageView();
             }
 
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            public void changedUpdate(DocumentEvent e) {
                 updatePageView();
             }
         });
         
         // Validación dinámica de txfStart Y txfFinish
-        javax.swing.event.DocumentListener rangoListener = new javax.swing.event.DocumentListener() {
+        DocumentListener rangoListener = new DocumentListener() {
             private void validarRango() {
                 if (pdfDocument == null) return;
 
@@ -426,17 +446,17 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     valido = false;
                 }
 
-                java.awt.Color color = valido ? java.awt.Color.BLACK : java.awt.Color.RED;
+                Color color = valido ? Color.BLACK : Color.RED;
                 txfStart.setForeground(color);
                 txfFinish.setForeground(color);
             }
 
             @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+            public void insertUpdate(DocumentEvent e) { validarRango(); }
             @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+            public void removeUpdate(DocumentEvent e) { validarRango(); }
             @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { validarRango(); }
+            public void changedUpdate(DocumentEvent e) { validarRango(); }
         };
 
         // Asignar el listener a ambos campos
@@ -1002,6 +1022,11 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         btnGenerate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnGenerate.setText("Generar Excel");
+        btnGenerate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateActionPerformed(evt);
+            }
+        });
 
         btnValidate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnValidate.setText("Validar datos");
@@ -1238,7 +1263,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         File archivo = new File(PDFLink);
         try {
             doc = Loader.loadPDF(archivo);
-        } catch (org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException ex) {
+        } catch (InvalidPasswordException ex) {
             String password = JOptionPane.showInputDialog(
                 this,
                 "Este archivo PDF está protegido con contraseña.\nPor favor, introdúcela:",
@@ -1256,7 +1281,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             }
             try {
                 doc = Loader.loadPDF(archivo, password);
-            } catch (org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException ex2) {
+            } catch (InvalidPasswordException ex2) {
                 JOptionPane.showMessageDialog(
                     this,
                     "Contraseña incorrecta. No se pudo abrir el PDF.",
@@ -1428,26 +1453,26 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
         // Campo de texto para el nombre
-        javax.swing.JTextField txtNombre = new javax.swing.JTextField(20);
+        JTextField txtNombre = new JTextField(20);
 
         // Panel simple con etiqueta + campo
-        javax.swing.JPanel panel = new javax.swing.JPanel();
-        panel.add(new javax.swing.JLabel("Nombre del campo:"));
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Nombre del campo:"));
         panel.add(txtNombre);
 
         // Crear el cuadro de diálogo
-        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+        JOptionPane optionPane = new JOptionPane(
             panel,
-            javax.swing.JOptionPane.PLAIN_MESSAGE,
-            javax.swing.JOptionPane.OK_CANCEL_OPTION
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION
         );
 
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Añadir nuevo campo");
+        JDialog dialog = optionPane.createDialog(this, "Añadir nuevo campo");
 
         // Solicitar foco en el campo justo cuando se muestra el diálogo
-        dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+        dialog.addWindowFocusListener(new WindowAdapter() {
             @Override
-            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+            public void windowGainedFocus(WindowEvent e) {
                 txtNombre.requestFocusInWindow();
             }
         });
@@ -1457,15 +1482,15 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         // Procesar resultado solo si el usuario pulsa "Aceptar"
         Object selectedValue = optionPane.getValue();
-        if (selectedValue != null && (int) selectedValue == javax.swing.JOptionPane.OK_OPTION) {
+        if (selectedValue != null && (int) selectedValue == JOptionPane.OK_OPTION) {
             String nombreCampo = txtNombre.getText().trim();
             if (!nombreCampo.isEmpty()) {
-                javax.swing.ListModel<String> lm = lstDataList.getModel();
-                javax.swing.DefaultListModel<String> model;
-                if (lm instanceof javax.swing.DefaultListModel) {
-                    model = (javax.swing.DefaultListModel<String>) lm;
+                ListModel<String> lm = lstDataList.getModel();
+                DefaultListModel<String> model;
+                if (lm instanceof DefaultListModel) {
+                    model = (DefaultListModel<String>) lm;
                 } else {
-                    model = new javax.swing.DefaultListModel<>();
+                    model = new DefaultListModel<>();
                     lstDataList.setModel(model);
                 }
                 model.addElement(nombreCampo);
@@ -1479,9 +1504,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
     private void btnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteDataActionPerformed
         // Obtener el modelo de la lista
-        javax.swing.ListModel<String> lm = lstDataList.getModel();
-        if (!(lm instanceof javax.swing.DefaultListModel)) return;
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+        ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof DefaultListModel)) return;
+        DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
         // Obtener el índice del elemento seleccionado
         int index = lstDataList.getSelectedIndex();
@@ -1491,16 +1516,16 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         String nombreCampo = model.getElementAt(index);
 
         // Mostrar el diálogo de confirmación
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+        int opcion = JOptionPane.showConfirmDialog(
             this,
             "¿Está seguro de que quiere eliminar el item \"" + nombreCampo + "\"?",
             "Confirmar eliminación",
-            javax.swing.JOptionPane.YES_NO_OPTION,
-            javax.swing.JOptionPane.WARNING_MESSAGE
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
         );
 
         // Si el usuario confirma, eliminar el elemento
-        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+        if (opcion == JOptionPane.YES_OPTION) {
             model.remove(index);
             fieldTypeMap.remove(nombreCampo);
             fieldAreasByPage.remove(nombreCampo);
@@ -1515,25 +1540,25 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteDataActionPerformed
 
     private void btnClearListDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearListDataActionPerformed
-        javax.swing.ListModel<String> lm = lstDataList.getModel();
-        if (!(lm instanceof javax.swing.DefaultListModel)) return;
+        ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof DefaultListModel)) return;
 
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+        DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
         // Si la lista está vacía, no hacemos nada
         if (model.isEmpty()) return;
 
         // Mostrar confirmación
-        int opcion = javax.swing.JOptionPane.showConfirmDialog(
+        int opcion = JOptionPane.showConfirmDialog(
             this,
             "¿Está seguro de que quiere eliminar todos los ítems de la lista?",
             "Confirmar eliminación",
-            javax.swing.JOptionPane.YES_NO_OPTION,
-            javax.swing.JOptionPane.WARNING_MESSAGE
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
         );
 
         // Si el usuario elige “Sí”, vaciar la lista
-        if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+        if (opcion == JOptionPane.YES_OPTION) {
             model.clear();
             fieldTypeMap.clear();
             fieldAreasByPage.clear();
@@ -1553,34 +1578,34 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         int index = lstDataList.getSelectedIndex();
         if (index == -1) return;
 
-        javax.swing.ListModel<String> lm = lstDataList.getModel();
-        if (!(lm instanceof javax.swing.DefaultListModel)) return;
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lm;
+        ListModel<String> lm = lstDataList.getModel();
+        if (!(lm instanceof DefaultListModel)) return;
+        DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
         // Obtener el nombre actual del campo
         String oldName = model.getElementAt(index);
 
         // Crear el campo de texto con el nombre actual preescrito
-        javax.swing.JTextField txtNombre = new javax.swing.JTextField(oldName, 20);
+        JTextField txtNombre = new JTextField(oldName, 20);
 
         // Crear el panel simple con etiqueta + campo
-        javax.swing.JPanel panel = new javax.swing.JPanel();
-        panel.add(new javax.swing.JLabel("Editar nombre del campo:"));
+        JPanel panel = new JPanel();
+        panel.add(new JLabel("Editar nombre del campo:"));
         panel.add(txtNombre);
 
         // Crear el cuadro de diálogo manualmente para poder dar el foco automático
-        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+        JOptionPane optionPane = new JOptionPane(
             panel,
-            javax.swing.JOptionPane.PLAIN_MESSAGE,
-            javax.swing.JOptionPane.OK_CANCEL_OPTION
+            JOptionPane.PLAIN_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION
         );
 
-       javax.swing.JDialog dialog = optionPane.createDialog(this, "Editar campo");
+       JDialog dialog = optionPane.createDialog(this, "Editar campo");
 
         // Foco automático en el campo al abrir el diálogo
-        dialog.addWindowFocusListener(new java.awt.event.WindowAdapter() {
+        dialog.addWindowFocusListener(new WindowAdapter() {
             @Override
-            public void windowGainedFocus(java.awt.event.WindowEvent e) {
+            public void windowGainedFocus(WindowEvent e) {
                 txtNombre.requestFocusInWindow();
                 txtNombre.selectAll();
             }
@@ -1591,7 +1616,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
         // Procesar resultado
         Object selectedValue = optionPane.getValue();
-        if (selectedValue != null && (int) selectedValue == javax.swing.JOptionPane.OK_OPTION) {
+        if (selectedValue != null && (int) selectedValue == JOptionPane.OK_OPTION) {
             String newName = txtNombre.getText().trim();
             if (!newName.isEmpty() && !newName.equals(oldName)) {
                 // Actualizar el nombre en la lista
@@ -1612,7 +1637,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         int index = lstDataList.getSelectedIndex();
         if (index <= 0) return;
 
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
+        DefaultListModel<String> model = (DefaultListModel<String>) lstDataList.getModel();
         String current = model.getElementAt(index);
         String previous = model.getElementAt(index - 1);
 
@@ -1632,7 +1657,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
         int index = lstDataList.getSelectedIndex();
-        javax.swing.DefaultListModel<String> model = (javax.swing.DefaultListModel<String>) lstDataList.getModel();
+        DefaultListModel<String> model = (DefaultListModel<String>) lstDataList.getModel();
 
         if (index == -1 || index >= model.getSize() - 1) return;
 
@@ -1655,7 +1680,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
 
     private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidateActionPerformed
         try {
-            // Rango de páginas
+            // === 1. Determinar rango de páginas ===
             int totalPages = pdfDocument.getNumberOfPages();
             int startPage = 1;
             int finishPage = totalPages;
@@ -1673,6 +1698,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     );
                     return;
                 }
+
                 if (startPage < 1 || finishPage > totalPages || startPage > finishPage) {
                     JOptionPane.showMessageDialog(
                         this,
@@ -1684,40 +1710,30 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                 }
             }
 
-            // Lista de campos en el orden visual
+            // === 2. Obtener campos de la lista ===
             ArrayList<String> fields = new ArrayList<>();
             ListModel<String> model = lstDataList.getModel();
             for (int i = 0; i < model.getSize(); i++) fields.add(model.getElementAt(i));
             if (fields.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "No hay campos definidos en la lista.",
-                    "Validación",
-                    JOptionPane.WARNING_MESSAGE
-                );
+                JOptionPane.showMessageDialog(this, "No hay campos definidos en la lista.", "Validación", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Comprobación de que al menos algún campo tiene área en alguna cara
+            // === 3. Comprobar que hay al menos un área asignada ===
             boolean anyAreaDefined = false;
             for (String f : fields) {
                 Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(f);
                 if (perPage != null && !perPage.isEmpty()) { anyAreaDefined = true; break; }
             }
             if (!anyAreaDefined) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    "Ningún campo tiene un área asignada.",
-                    "Validación",
-                    JOptionPane.WARNING_MESSAGE
-                );
+                JOptionPane.showMessageDialog(this, "Ningún campo tiene un área asignada.", "Validación", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Modo estructura
+            // === 4. Detectar estructura seleccionada ===
             boolean struct1 = rdbStructure1.isSelected(); // cada dos páginas
             boolean struct2 = rdbStructure2.isSelected(); // cada página
-            boolean struct3 = rdbStructure3.isSelected(); // dos caras (campos distintos por cara)
+            boolean struct3 = rdbStructure3.isSelected(); // campos diferentes por las dos caras
 
             extractedData.clear();
 
@@ -1726,8 +1742,8 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             System.out.println("Rango de páginas: " + startPage + " - " + finishPage);
             System.out.println("----------------------------------------");
 
-            // Conversor de fracción [0..1] a puntos PDF
-            java.util.function.BiFunction<Rectangle2D.Double, PDPage, Rectangle2D.Double> toPdfPoints =
+            // === 5. Conversor de coordenadas relativas a puntos PDF ===
+            BiFunction<Rectangle2D.Double, PDPage, Rectangle2D.Double> toPdfPoints =
                 (frac, page) -> {
                     PDRectangle mb = page.getMediaBox();
                     double pw = mb.getWidth();
@@ -1735,78 +1751,169 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
                     return new Rectangle2D.Double(frac.x * pw, frac.y * ph, frac.width * pw, frac.height * ph);
                 };
 
-            int pageStep = struct1 ? 2 : 1;
+            // === 6. Recorrido principal de páginas ===
+            int pageStep = (struct1 || struct3) ? 2 : 1;
 
             for (int p = startPage; p <= finishPage; p += pageStep) {
-                int pageIndex = p - 1;
-                PDPage page = pdfDocument.getPage(pageIndex);
+                Map<String, String> row = new LinkedHashMap<>();
+                for (String f : fields) row.put(f, ""); // inicializamos vacíos
 
-                // Selección del mapa de áreas según la estructura y la cara
-                Map<String, Rectangle2D.Double> currentFaceAreas = new LinkedHashMap<>();
                 if (struct3) {
-                    // Cara por paridad: 0 = delantera, 1 = trasera
-                    int face = pageIndex % 2;
-                    for (String field : fields) {
-                        Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
-                        if (perPage == null) continue;
-                        Rectangle2D.Double frac = perPage.get(face);
-                        if (frac != null) currentFaceAreas.put(field, frac);
+                    // --- Cara delantera ---
+                    int frontIdx = p - 1;
+                    if (frontIdx < totalPages) {
+                        PDPage pageFront = pdfDocument.getPage(frontIdx);
+                        PDFTextStripperByArea stripperFront = new PDFTextStripperByArea();
+                        stripperFront.setSortByPosition(true);
+
+                        for (String field : fields) {
+                            Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                            if (perPage == null) continue;
+                            Rectangle2D.Double frac = perPage.get(0);
+                            if (frac == null) continue;
+                            Rectangle2D.Double rectPDF = toPdfPoints.apply(frac, pageFront);
+                            stripperFront.addRegion(field, rectPDF);
+                        }
+
+                        stripperFront.extractRegions(pageFront);
+                        for (String field : fields) {
+                            Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                            if (perPage == null || !perPage.containsKey(0)) continue;
+                            String text = stripperFront.getTextForRegion(field);
+                            if (text != null) row.put(field, text.trim());
+                        }
                     }
+
+                    // --- Cara trasera ---
+                    int backLogical = p + 1;
+                    int backIdx = backLogical - 1;
+                    if (backLogical <= finishPage && backIdx < totalPages) {
+                        PDPage pageBack = pdfDocument.getPage(backIdx);
+                        PDFTextStripperByArea stripperBack = new PDFTextStripperByArea();
+                        stripperBack.setSortByPosition(true);
+
+                        for (String field : fields) {
+                            Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                            if (perPage == null) continue;
+                            Rectangle2D.Double frac = perPage.get(1);
+                            if (frac == null) continue;
+                            Rectangle2D.Double rectPDF = toPdfPoints.apply(frac, pageBack);
+                            stripperBack.addRegion(field, rectPDF);
+                        }
+
+                        stripperBack.extractRegions(pageBack);
+                        for (String field : fields) {
+                            Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                            if (perPage == null || !perPage.containsKey(1)) continue;
+                            String text = stripperBack.getTextForRegion(field);
+                            if (text != null && !text.trim().isEmpty()) {
+                                row.put(field, text.trim());
+                            }
+                        }
+                    }
+
                 } else {
-                    // Estructuras 1 y 2: usan siempre la cara delantera (face=0)
+                    // --- Estructuras 1 y 2 ---
+                    int pageIndex = p - 1;
+                    if (pageIndex >= totalPages) continue;
+                    PDPage page = pdfDocument.getPage(pageIndex);
+
+                    PDFTextStripperByArea stripper = new PDFTextStripperByArea();
+                    stripper.setSortByPosition(true);
+
                     for (String field : fields) {
                         Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                         if (perPage == null) continue;
                         Rectangle2D.Double frac = perPage.get(0);
-                        if (frac != null) currentFaceAreas.put(field, frac);
+                        if (frac == null) continue;
+                        Rectangle2D.Double rectPDF = toPdfPoints.apply(frac, page);
+                        stripper.addRegion(field, rectPDF);
+                    }
+
+                    stripper.extractRegions(page);
+                    for (String field : fields) {
+                        Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
+                        if (perPage == null || !perPage.containsKey(0)) continue;
+                        String text = stripper.getTextForRegion(field);
+                        if (text != null) row.put(field, text.trim());
                     }
                 }
 
-                // Si en esta página no hay campos con área para la cara, se omite
-                if (currentFaceAreas.isEmpty()) continue;
-
-                PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-                stripper.setSortByPosition(true);
-
-                // Registrar solo los campos que tienen área en la cara actual
-                for (Map.Entry<String, Rectangle2D.Double> e : currentFaceAreas.entrySet()) {
-                    Rectangle2D.Double rectPDF = toPdfPoints.apply(e.getValue(), page);
-                    stripper.addRegion(e.getKey(), rectPDF);
-                }
-
-                stripper.extractRegions(page);
-
-                // Fila con solo los campos de esta cara
-                Map<String, String> row = new LinkedHashMap<>();
-                for (String field : fields) {
-                    if (!currentFaceAreas.containsKey(field)) continue; // no hay área en esta cara
-                    String text = stripper.getTextForRegion(field);
-                    row.put(field, text == null ? "" : text.trim());
-                }
-
-                if (!row.isEmpty()) {
+                // --- Añadir fila si contiene datos ---
+                boolean anyValue = row.values().stream().anyMatch(v -> v != null && !v.isEmpty());
+                if (anyValue) {
                     extractedData.add(row);
 
-                    // Salida por consola siguiendo el orden de la lista de campos,
-                    // imprimiendo solo los presentes en esta cara
                     StringBuilder line = new StringBuilder();
-                    boolean first = true;
-                    for (String field : fields) {
-                        if (!row.containsKey(field)) continue;
-                        if (!first) line.append(", ");
-                        line.append(row.getOrDefault(field, ""));
-                        first = false;
+                    for (int i = 0; i < fields.size(); i++) {
+                        if (i > 0) line.append(", ");
+                        line.append(row.getOrDefault(fields.get(i), ""));
                     }
                     System.out.println(line.toString());
                 }
             }
 
+            // === 7. Fin de proceso ===
             System.out.println("=== Fin del recorrido del documento ===");
+            JOptionPane.showMessageDialog(this, "La validación y recogida de datos se ha completado correctamente.", "Validación completada", JOptionPane.INFORMATION_MESSAGE);
+            btnGenerate.setEnabled(true);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Se produjo un error durante la validación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnValidateActionPerformed
+
+    private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
+        try {
+            // Encabezados: exactamente los visibles en la lista (mismo orden)
+            ArrayList<String> headers = new ArrayList<>();
+            ListModel<String> lm = lstDataList.getModel();
+            for (int i = 0; i < lm.getSize(); i++) headers.add(lm.getElementAt(i));
+
+            // Ruta del PDF (deriva nombre y carpeta del XLSX)
+            String pdfPath = PDFLink; // asumimos que está establecida tras la carga del PDF
+            File pdfFile = new File(pdfPath);
+            String baseName = pdfFile.getName().replaceFirst("(?i)\\.pdf$", "");
+            File outXlsx = new File(pdfFile.getParentFile(), baseName + ".xlsx");
+
+            // Nombre de hoja: “mismo que el PDF con .xlsx”
+            String sheetName = (baseName + ".xlsx").replaceAll("[\\\\/?*\\[\\]:]", "_");
+            if (sheetName.length() > 31) sheetName = sheetName.substring(0, 31);
+
+            // Crear y escribir XLSX
+            try (Workbook wb = new XSSFWorkbook(); FileOutputStream fos = new FileOutputStream(outXlsx)) {
+
+                Sheet sheet = wb.createSheet(sheetName);
+
+                // Encabezados
+                org.apache.poi.ss.usermodel.Row headerRow = sheet.createRow(0);
+                for (int c = 0; c < headers.size(); c++) {
+                    org.apache.poi.ss.usermodel.Cell cell = headerRow.createCell(c);
+                    cell.setCellValue(headers.get(c));
+                }
+
+                // Filas de datos (tal cual texto)
+                for (int r = 0; r < extractedData.size(); r++) {
+                    Map<String, String> map = extractedData.get(r);
+                    Row row = sheet.createRow(r + 1);
+                    for (int c = 0; c < headers.size(); c++) {
+                        String key = headers.get(c);
+                        String val = map.getOrDefault(key, "");
+                        row.createCell(c).setCellValue(val);
+                    }
+                }
+
+                // Autoajuste
+                for (int c = 0; c < headers.size(); c++) sheet.autoSizeColumn(c);
+
+                wb.write(fos);
+            }
 
             JOptionPane.showMessageDialog(
                 this,
-                "La validación y recogida de datos se ha completado correctamente.",
-                "Validación completada",
+                "Excel generado correctamente en:\n" + outXlsx.getAbsolutePath(),
+                "Generación completada",
                 JOptionPane.INFORMATION_MESSAGE
             );
 
@@ -1814,12 +1921,12 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(
                 this,
-                "Se produjo un error durante la validación: " + ex.getMessage(),
+                "Error al generar el Excel: " + ex.getMessage(),
                 "Error",
                 JOptionPane.ERROR_MESSAGE
             );
         }
-    }//GEN-LAST:event_btnValidateActionPerformed
+    }//GEN-LAST:event_btnGenerateActionPerformed
 
     // Controla qué caras están disponibles según la estructura seleccionada
     private void applyStructureMode() {
@@ -1934,9 +2041,9 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
@@ -1952,7 +2059,7 @@ public class pdfareaextractortoexcel extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new pdfareaextractortoexcel().setVisible(true);
             }
