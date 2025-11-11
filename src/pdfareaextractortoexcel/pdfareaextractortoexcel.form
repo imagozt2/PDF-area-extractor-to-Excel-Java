@@ -482,15 +482,15 @@
                                   <Component id="lblDataList" min="-2" pref="141" max="-2" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="btnAddData" alignment="0" pref="136" max="32767" attributes="0"/>
-                                          <Component id="btnDeleteData" alignment="0" pref="136" max="32767" attributes="0"/>
-                                          <Component id="btnClearListData" alignment="0" pref="136" max="32767" attributes="0"/>
+                                          <Component id="btnAddData" alignment="0" pref="125" max="32767" attributes="0"/>
+                                          <Component id="btnDeleteData" alignment="0" pref="125" max="32767" attributes="0"/>
+                                          <Component id="btnClearListData" alignment="0" pref="125" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="btnMoveDownData" alignment="1" pref="135" max="32767" attributes="0"/>
-                                          <Component id="btnEditData" alignment="1" pref="135" max="32767" attributes="0"/>
-                                          <Component id="btnMoveUpData" alignment="1" pref="135" max="32767" attributes="0"/>
+                                          <Component id="btnMoveDownData" alignment="1" pref="124" max="32767" attributes="0"/>
+                                          <Component id="btnEditData" alignment="1" pref="124" max="32767" attributes="0"/>
+                                          <Component id="btnMoveUpData" alignment="1" pref="124" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -504,7 +504,7 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="lblDataList" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="jScrollPane1" pref="281" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" pref="290" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="btnAddData" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -799,15 +799,142 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblOptions" min="-2" pref="122" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lblMaster" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="cmbMaster" min="-2" pref="130" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="chkItem" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="chkText" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cmbText" min="-2" pref="130" max="-2" attributes="0"/>
+                                          <Component id="cmbItem" min="-2" pref="130" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Component id="chkSpaces" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkSymbols" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="108" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lblOptions" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblMaster" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cmbMaster" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="chkItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cmbItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="chkText" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cmbText" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="chkSpaces" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="chkSymbols" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="lblOptions">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Segoe UI" size="14" style="1"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Otras opciones"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="cmbMaster">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="chkItem">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Definir campo sin &#xe1;rea:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lblMaster">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="-Respectivo campo maestro: "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="cmbItem">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="chkSpaces">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Eliminar espacios entre el texto"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="chkSymbols">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Eliminar caracteres no num&#xe9;ricos"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JCheckBox" name="chkText">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Normalizar texto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="cmbText">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="4">
+                            <StringItem index="0" value="Item 1"/>
+                            <StringItem index="1" value="Item 2"/>
+                            <StringItem index="2" value="Item 3"/>
+                            <StringItem index="3" value="Item 4"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                      </AuxValues>
+                    </Component>
+                  </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="pnlValidate">
                   <Properties>
@@ -825,11 +952,11 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="16" max="32767" attributes="0"/>
                               <Component id="btnValidate" min="-2" pref="175" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="32767" attributes="0"/>
+                              <EmptySpace type="separate" pref="28" max="32767" attributes="0"/>
                               <Component id="btnGenerate" min="-2" pref="175" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="16" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1001,7 +1128,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="scrPdfViewer" pref="726" max="32767" attributes="0"/>
+                      <Component id="scrPdfViewer" pref="735" max="32767" attributes="0"/>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="splRightPanel" alignment="1" min="-2" max="-2" attributes="0"/>

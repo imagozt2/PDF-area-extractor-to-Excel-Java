@@ -170,6 +170,17 @@ public class pdfareaextractortoexcel extends JFrame {
         txfAxisX.setEnabled(false);
         txfAxisY.setEnabled(false);
         
+        // Configuración de componentes de "Otras opciones"
+        lblOptions.setEnabled(false);
+        lblMaster.setEnabled(false);
+        cmbMaster.setEnabled(false);
+        chkItem.setEnabled(false);
+        cmbItem.setEnabled(false);
+        chkText.setEnabled(false);
+        cmbText.setEnabled(false);
+        chkSpaces.setEnabled(false);
+        chkSymbols.setEnabled(false);
+        
         // Etiquetas
         lblStructure.setEnabled(false);
         lblPagesScanner.setEnabled(false);
@@ -616,6 +627,15 @@ public class pdfareaextractortoexcel extends JFrame {
         txfAxisX = new javax.swing.JTextField();
         txfAxisY = new javax.swing.JTextField();
         pnlDataFormat3 = new javax.swing.JPanel();
+        lblOptions = new javax.swing.JLabel();
+        cmbMaster = new javax.swing.JComboBox<>();
+        chkItem = new javax.swing.JCheckBox();
+        lblMaster = new javax.swing.JLabel();
+        cmbItem = new javax.swing.JComboBox<>();
+        chkSpaces = new javax.swing.JCheckBox();
+        chkSymbols = new javax.swing.JCheckBox();
+        chkText = new javax.swing.JCheckBox();
+        cmbText = new javax.swing.JComboBox<>();
         pnlValidate = new javax.swing.JPanel();
         btnGenerate = new javax.swing.JButton();
         btnValidate = new javax.swing.JButton();
@@ -876,14 +896,14 @@ public class pdfareaextractortoexcel extends JFrame {
                     .addComponent(lblDataList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataListLayout.createSequentialGroup()
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-                            .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                            .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnMoveDownData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                            .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                            .addComponent(btnMoveUpData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))))
+                            .addComponent(btnMoveDownData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                            .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                            .addComponent(btnMoveUpData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnlDataListLayout.setVerticalGroup(
@@ -892,7 +912,7 @@ public class pdfareaextractortoexcel extends JFrame {
                 .addContainerGap()
                 .addComponent(lblDataList)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddData)
@@ -1006,15 +1026,71 @@ public class pdfareaextractortoexcel extends JFrame {
         pnlDataFormat3.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        lblOptions.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblOptions.setText("Otras opciones");
+
+        cmbMaster.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        chkItem.setText("Definir campo sin área:");
+
+        lblMaster.setText("-Respectivo campo maestro: ");
+
+        cmbItem.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        chkSpaces.setText("Eliminar espacios entre el texto");
+
+        chkSymbols.setText("Eliminar caracteres no numéricos");
+
+        chkText.setText("Normalizar texto:");
+
+        cmbText.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout pnlDataFormat3Layout = new javax.swing.GroupLayout(pnlDataFormat3);
         pnlDataFormat3.setLayout(pnlDataFormat3Layout);
         pnlDataFormat3Layout.setHorizontalGroup(
             pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnlDataFormat3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlDataFormat3Layout.createSequentialGroup()
+                        .addComponent(lblMaster)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbMaster, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlDataFormat3Layout.createSequentialGroup()
+                        .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkItem)
+                            .addComponent(chkText))
+                        .addGap(21, 21, 21)
+                        .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbText, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbItem, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(chkSpaces)
+                    .addComponent(chkSymbols))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         pnlDataFormat3Layout.setVerticalGroup(
             pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(pnlDataFormat3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblOptions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMaster)
+                    .addComponent(cmbMaster, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkItem)
+                    .addComponent(cmbItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkText)
+                    .addComponent(cmbText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkSpaces)
+                .addGap(18, 18, 18)
+                .addComponent(chkSymbols)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlValidate.setBackground(new java.awt.Color(180, 180, 180));
@@ -1041,11 +1117,11 @@ public class pdfareaextractortoexcel extends JFrame {
         pnlValidateLayout.setHorizontalGroup(
             pnlValidateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlValidateLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addComponent(btnValidate, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 28, Short.MAX_VALUE)
                 .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         pnlValidateLayout.setVerticalGroup(
             pnlValidateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1221,7 +1297,7 @@ public class pdfareaextractortoexcel extends JFrame {
             pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrPdfViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
+                .addComponent(scrPdfViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 735, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addGroup(pnlRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(splRightPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2077,6 +2153,13 @@ public class pdfareaextractortoexcel extends JFrame {
     private javax.swing.JButton btnMoveUpData;
     private javax.swing.JButton btnSelector;
     private javax.swing.JButton btnValidate;
+    private javax.swing.JCheckBox chkItem;
+    private javax.swing.JCheckBox chkSpaces;
+    private javax.swing.JCheckBox chkSymbols;
+    private javax.swing.JCheckBox chkText;
+    private javax.swing.JComboBox<String> cmbItem;
+    private javax.swing.JComboBox<String> cmbMaster;
+    private javax.swing.JComboBox<String> cmbText;
     private javax.swing.JLabel imgPage1;
     private javax.swing.JLabel imgPage2;
     private javax.swing.JLabel imgPage3;
@@ -2090,6 +2173,8 @@ public class pdfareaextractortoexcel extends JFrame {
     private javax.swing.JLabel lblDataFormat2;
     private javax.swing.JLabel lblDataList;
     private javax.swing.JLabel lblLoadFile;
+    private javax.swing.JLabel lblMaster;
+    private javax.swing.JLabel lblOptions;
     private javax.swing.JLabel lblPage;
     private javax.swing.JLabel lblPageFinish;
     private javax.swing.JLabel lblPageStart;
