@@ -1442,6 +1442,10 @@ public class pdfareaextractortoexcel extends JFrame {
             lblDataList.setEnabled(true);
             lblDataFormat1.setEnabled(true);
             lblDataFormat2.setEnabled(true);
+            lblDataFormat3.setEnabled(true);
+            chkText.setEnabled(true);
+            chkSpaces.setEnabled(true);
+            chkSymbols.setEnabled(true);
             lblPage.setEnabled(false);
             lblAxisX.setEnabled(false);
             lblAxisY.setEnabled(false);
