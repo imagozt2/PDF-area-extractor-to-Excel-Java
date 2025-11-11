@@ -94,44 +94,67 @@ public class pdfareaextractortoexcel extends JFrame {
         tglPag1.setEnabled(false);
         tglPag2.setEnabled(false);
         sldRightPanel.setEnabled(false);
+        // 1.1.4. Configuración de btnGroupPages
+        btnGroupPages = new ButtonGroup();
+        btnGroupPages.add(tglPag1);
+        btnGroupPages.add(tglPag2);
         
         // 1.2. Configuración inicial de componentes del panel pnlLeft
-        // 1.2.1. Configuración inicial de componentes del panel pnlLoadFile
-        // 1.2.2. Configuración inicial de componentes del panel pnlStructure
-        // 1.2.3. Configuración inicial de componentes del panel pnlPagesScanner
-        // 1.2.4. Configuración inicial de componentes del panel pnlData
         
+        // 1.2.1. Configuración inicial de componentes del panel pnlLoadFile
+        txfLink.setEditable(false);
+        txfLink.setFocusable(false);
+        
+        // 1.2.2. Configuración inicial de componentes del panel pnlStructure
+        lblStructure.setEnabled(false);
+        lblPageStart.setEnabled(false);
+        lblPageFinish.setEnabled(false);
+        // Botones Estructura
+        rdbStructure1.setEnabled(false);
+        rdbStructure2.setEnabled(false);
+        rdbStructure3.setEnabled(false);
         // Configuración de btnGroupStructure
         btnGroupStructure = new ButtonGroup();
         btnGroupStructure.add(rdbStructure1);
         btnGroupStructure.add(rdbStructure2);
         btnGroupStructure.add(rdbStructure3);
-
+        // Imágenes
+        imgPage1.setEnabled(false);
+        imgPage2.setEnabled(false);
+        imgPage3.setEnabled(false);
+        imgPage4.setEnabled(false);
+        imgPage5.setEnabled(false);
+        // Listeners para condiciones dinámicas
+        rdbStructure1.addActionListener(e -> applyStructureMode());
+        rdbStructure2.addActionListener(e -> applyStructureMode());
+        rdbStructure3.addActionListener(e -> applyStructureMode());
+        
+        // 1.2.3. Configuración inicial de componentes del panel pnlPagesScanner
+        lblPagesScanner.setEnabled(false);
+        // Botones Páginas a escanear
+        rbdPagesScanner1.setEnabled(false);
+        rbdPagesScanner2.setEnabled(false);
+        // Configuración de btnGroupScanner
+        btnGroupScanner = new ButtonGroup();
+        btnGroupScanner.add(rbdPagesScanner1);
+        btnGroupScanner.add(rbdPagesScanner2);
+        // Configuración de campos de texto
+        txfStart.setEditable(false);
+        txfFinish.setEditable(false);
+        txfStart.setFocusable(false);
+        txfFinish.setFocusable(false);
+        txfStart.setEnabled(false);
+        txfFinish.setEnabled(false);
+        // Listeners para condiciones dinámicas (Páginas escanear)
+        rbdPagesScanner1.addActionListener(e -> applyPageScannerMode());
+        rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
+        
+        // 1.2.4. Configuración inicial de componentes del panel pnlData
         // Configuración de btnGroupDataFormat
         btnGroupDataFormat = new ButtonGroup();
         btnGroupDataFormat.add(rbdFieldType1);
         btnGroupDataFormat.add(rbdFieldType2);
         btnGroupDataFormat.add(rbdFieldType3);
-
-        // Configuración de btnGroupScanner
-        btnGroupScanner = new ButtonGroup();
-        btnGroupScanner.add(rbdPagesScanner1);
-        btnGroupScanner.add(rbdPagesScanner2);
-        
-        // Configuración de btnGroupPages
-        btnGroupPages = new ButtonGroup();
-        btnGroupPages.add(tglPag1);
-        btnGroupPages.add(tglPag2);
-
-        // Botones Estructura
-        rdbStructure1.setEnabled(false);
-        rdbStructure2.setEnabled(false);
-        rdbStructure3.setEnabled(false);
-
-        // Botones Páginas a escanear
-        rbdPagesScanner1.setEnabled(false);
-        rbdPagesScanner2.setEnabled(false);
-
         // Lista de campos y botones asociados
         lstDataList.setEnabled(false);
         btnAddData.setEnabled(false);
@@ -140,40 +163,27 @@ public class pdfareaextractortoexcel extends JFrame {
         btnEditData.setEnabled(false);
         btnMoveUpData.setEnabled(false);
         btnMoveDownData.setEnabled(false);
-
         // Botones Tipo de campo
         rbdFieldType1.setEnabled(false);
         rbdFieldType2.setEnabled(false);
         rbdFieldType3.setEnabled(false);
-
         // Campos de texto (en blanco)
         txfStart.setText("");
         txfFinish.setText("");
         txfPage.setText("");
         txfAxisX.setText("");
         txfAxisY.setText("");
-
         // Campos de texto (no rellenables)
-        txfLink.setEditable(false);
-        txfStart.setEditable(false);
-        txfFinish.setEditable(false);
         txfPage.setEditable(false);
         txfAxisX.setEditable(false);
         txfAxisY.setEditable(false);
-        txfLink.setFocusable(false);
-        txfStart.setFocusable(false);
-        txfFinish.setFocusable(false);
         txfPage.setFocusable(false);
         txfAxisX.setFocusable(false);
         txfAxisY.setFocusable(false);
-
         // Campos de texto (deshabilitados)
-        txfStart.setEnabled(false);
-        txfFinish.setEnabled(false);
         txfPage.setEnabled(false);
         txfAxisX.setEnabled(false);
         txfAxisY.setEnabled(false);
-        
         // Configuración de componentes de "Otras opciones"
         lblOptions.setEnabled(false);
         lblMaster.setEnabled(false);
@@ -184,12 +194,7 @@ public class pdfareaextractortoexcel extends JFrame {
         cmbText.setEnabled(false);
         chkSpaces.setEnabled(false);
         chkSymbols.setEnabled(false);
-        
         // Etiquetas
-        lblStructure.setEnabled(false);
-        lblPagesScanner.setEnabled(false);
-        lblPageStart.setEnabled(false);
-        lblPageFinish.setEnabled(false);
         lblData.setEnabled(false);
         lblDataList.setEnabled(false);
         lblDataFormat1.setEnabled(false);
@@ -197,30 +202,11 @@ public class pdfareaextractortoexcel extends JFrame {
         lblPage.setEnabled(false);
         lblAxisX.setEnabled(false);
         lblAxisY.setEnabled(false);
-        
         // Botones de validación/Generación
         btnValidate.setEnabled(false);
         btnGenerate.setEnabled(false);
-        
-        // Imágenes
-        imgPage1.setEnabled(false);
-        imgPage2.setEnabled(false);
-        imgPage3.setEnabled(false);
-        imgPage4.setEnabled(false);
-        imgPage5.setEnabled(false);
-        
-        // Listeners para condiciones dinámicas (Estructura documento)
-        rdbStructure1.addActionListener(e -> applyStructureMode());
-        rdbStructure2.addActionListener(e -> applyStructureMode());
-        rdbStructure3.addActionListener(e -> applyStructureMode());
-
-        // Listeners para condiciones dinámicas (Páginas escanear)
-        rbdPagesScanner1.addActionListener(e -> applyPageScannerMode());
-        rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
-        
         // Listener de la lista de campos
         lstDataList.setModel(new DefaultListModel<>());
-
         // Listener de habilitación de botones y selección de tipo de campo
         lstDataList.addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) return;
