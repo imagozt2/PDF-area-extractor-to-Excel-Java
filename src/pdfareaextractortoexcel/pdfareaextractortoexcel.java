@@ -72,26 +72,35 @@ public class pdfareaextractortoexcel extends JFrame {
     public pdfareaextractortoexcel() {
         initComponents();
 
-        // Configuración del frame principal
+        // 1. Configuración inicial de JFrame y splMain
         setTitle("PDF Area Extractor to Excel (Java)");
         setExtendedState(pdfareaextractortoexcel.MAXIMIZED_BOTH);
         splMain.setResizeWeight(0.5);
         splMain.setEnabled(false);
-
         SwingUtilities.invokeLater(() -> {
             splMain.setDividerLocation(0.5);
         });
         splRightPanel.setEnabled(false);
-
-        // Imagen en blanco temporal
+        
+        // 1.1. Configuración inicial de componentes del panel pnlRight
+        // 1.1.1. Imagen en blanco temporal
         BufferedImage placeholderImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-
-        // Creación del PDFPagePanel con la imagen vacía
+        // 1.1.2. Creación del PDFPagePanel con imagen vacía
         pagePanel = new PDFPagePanel(placeholderImage);
         pagePanel.setZoom(1.0);
         pagePanel.setCanSelect(false);
         scrPdfViewer.setViewportView(pagePanel);
-
+        // 1.1.3. Botones/Slider Navegación/zoom PDF
+        tglPag1.setEnabled(false);
+        tglPag2.setEnabled(false);
+        sldRightPanel.setEnabled(false);
+        
+        // 1.2. Configuración inicial de componentes del panel pnlLeft
+        // 1.2.1. Configuración inicial de componentes del panel pnlLoadFile
+        // 1.2.2. Configuración inicial de componentes del panel pnlStructure
+        // 1.2.3. Configuración inicial de componentes del panel pnlPagesScanner
+        // 1.2.4. Configuración inicial de componentes del panel pnlData
+        
         // Configuración de btnGroupStructure
         btnGroupStructure = new ButtonGroup();
         btnGroupStructure.add(rdbStructure1);
@@ -136,11 +145,6 @@ public class pdfareaextractortoexcel extends JFrame {
         rbdFieldType1.setEnabled(false);
         rbdFieldType2.setEnabled(false);
         rbdFieldType3.setEnabled(false);
-
-        // Botones/Slider Navegación/zoom PDF
-        tglPag1.setEnabled(false);
-        tglPag2.setEnabled(false);
-        sldRightPanel.setEnabled(false);
 
         // Campos de texto (en blanco)
         txfStart.setText("");
