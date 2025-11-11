@@ -100,111 +100,122 @@ public class pdfareaextractortoexcel extends JFrame {
         btnGroupPages.add(tglPag2);
         
         // 1.2. Configuración inicial de componentes del panel pnlLeft
-        
         // 1.2.1. Configuración inicial de componentes del panel pnlLoadFile
+        // 1.2.1.1. Campo de texto
         txfLink.setEditable(false);
         txfLink.setFocusable(false);
         
         // 1.2.2. Configuración inicial de componentes del panel pnlStructure
+        // 1.2.2.1. Etiquetas
         lblStructure.setEnabled(false);
-        lblPageStart.setEnabled(false);
-        lblPageFinish.setEnabled(false);
-        // Botones Estructura
+        // 1.2.2.2. Botones
         rdbStructure1.setEnabled(false);
         rdbStructure2.setEnabled(false);
         rdbStructure3.setEnabled(false);
-        // Configuración de btnGroupStructure
+        // 1.2.2.3. Grupo de botones
         btnGroupStructure = new ButtonGroup();
         btnGroupStructure.add(rdbStructure1);
         btnGroupStructure.add(rdbStructure2);
         btnGroupStructure.add(rdbStructure3);
-        // Imágenes
+        // 1.2.2.4. Imágenes
         imgPage1.setEnabled(false);
         imgPage2.setEnabled(false);
         imgPage3.setEnabled(false);
         imgPage4.setEnabled(false);
         imgPage5.setEnabled(false);
-        // Listeners para condiciones dinámicas
+        // 1.2.2.5. Listeners para condiciones dinámicas
         rdbStructure1.addActionListener(e -> applyStructureMode());
         rdbStructure2.addActionListener(e -> applyStructureMode());
         rdbStructure3.addActionListener(e -> applyStructureMode());
         
         // 1.2.3. Configuración inicial de componentes del panel pnlPagesScanner
+        // 1.2.3.1. Etiquetas
         lblPagesScanner.setEnabled(false);
-        // Botones Páginas a escanear
+        lblPageStart.setEnabled(false);
+        lblPageFinish.setEnabled(false);
+        // 1.2.3.2. Botones
         rbdPagesScanner1.setEnabled(false);
         rbdPagesScanner2.setEnabled(false);
-        // Configuración de btnGroupScanner
+        // 1.2.3.3. Grupo de botones
         btnGroupScanner = new ButtonGroup();
         btnGroupScanner.add(rbdPagesScanner1);
         btnGroupScanner.add(rbdPagesScanner2);
-        // Configuración de campos de texto
+        // 1.2.3.4. Campos de texto
         txfStart.setEditable(false);
         txfFinish.setEditable(false);
         txfStart.setFocusable(false);
         txfFinish.setFocusable(false);
         txfStart.setEnabled(false);
         txfFinish.setEnabled(false);
-        // Listeners para condiciones dinámicas (Páginas escanear)
+        txfStart.setText("");
+        txfFinish.setText("");
+        // 1.2.3.5. Listeners para condiciones dinámicas
         rbdPagesScanner1.addActionListener(e -> applyPageScannerMode());
         rbdPagesScanner2.addActionListener(e -> applyPageScannerMode());
         
         // 1.2.4. Configuración inicial de componentes del panel pnlData
-        // Configuración de btnGroupDataFormat
-        btnGroupDataFormat = new ButtonGroup();
-        btnGroupDataFormat.add(rbdFieldType1);
-        btnGroupDataFormat.add(rbdFieldType2);
-        btnGroupDataFormat.add(rbdFieldType3);
-        // Lista de campos y botones asociados
+        lblData.setEnabled(false);
+        // 1.2.4.1. Configuración inicial de componentes del panel pnlDataList
+        //1.2.4.1.1. Etiqueta
+        lblDataList.setEnabled(false);
+        //1.2.4.1.2. Lista
         lstDataList.setEnabled(false);
+        //1.2.4.1.3. Botones
         btnAddData.setEnabled(false);
         btnDeleteData.setEnabled(false);
         btnClearListData.setEnabled(false);
         btnEditData.setEnabled(false);
         btnMoveUpData.setEnabled(false);
         btnMoveDownData.setEnabled(false);
-        // Botones Tipo de campo
+        // 1.2.4.2. Configuración inicial de componentes del panel pnlDataFormat1
+        //1.2.4.2.1. Etiqueta
+        lblDataFormat1.setEnabled(false);
+        //1.2.4.2.2. Botones
         rbdFieldType1.setEnabled(false);
         rbdFieldType2.setEnabled(false);
         rbdFieldType3.setEnabled(false);
-        // Campos de texto (en blanco)
-        txfStart.setText("");
-        txfFinish.setText("");
-        txfPage.setText("");
-        txfAxisX.setText("");
-        txfAxisY.setText("");
-        // Campos de texto (no rellenables)
+        //1.2.4.2.3. Grupo de botones
+        btnGroupDataFormat = new ButtonGroup();
+        btnGroupDataFormat.add(rbdFieldType1);
+        btnGroupDataFormat.add(rbdFieldType2);
+        btnGroupDataFormat.add(rbdFieldType3);
+        // 1.2.4.3. Configuración inicial de componentes del panel pnlDataFormat2
+        // 1.2.4.3.1. Etiquetas
+        lblDataFormat2.setEnabled(false);
+        lblPage.setEnabled(false);
+        lblAxisX.setEnabled(false);
+        lblAxisY.setEnabled(false);
+        // 1.2.4.3.2. Campos de texto
+        txfPage.setEnabled(false);
+        txfAxisX.setEnabled(false);
+        txfAxisY.setEnabled(false);
         txfPage.setEditable(false);
         txfAxisX.setEditable(false);
         txfAxisY.setEditable(false);
         txfPage.setFocusable(false);
         txfAxisX.setFocusable(false);
         txfAxisY.setFocusable(false);
-        // Campos de texto (deshabilitados)
-        txfPage.setEnabled(false);
-        txfAxisX.setEnabled(false);
-        txfAxisY.setEnabled(false);
-        // Configuración de componentes de "Otras opciones"
-        lblOptions.setEnabled(false);
+        txfPage.setText("");
+        txfAxisX.setText("");
+        txfAxisY.setText("");
+        // 1.2.4.4. Configuración inicial de componentes del panel pnlDataFormat3
+        // 1.2.4.4.1. Etiquetas
+        lblDataFormat3.setEnabled(false);
         lblMaster.setEnabled(false);
-        cmbMaster.setEnabled(false);
+        // 1.2.4.4.1. Botones
         chkItem.setEnabled(false);
-        cmbItem.setEnabled(false);
         chkText.setEnabled(false);
-        cmbText.setEnabled(false);
         chkSpaces.setEnabled(false);
         chkSymbols.setEnabled(false);
-        // Etiquetas
-        lblData.setEnabled(false);
-        lblDataList.setEnabled(false);
-        lblDataFormat1.setEnabled(false);
-        lblDataFormat2.setEnabled(false);
-        lblPage.setEnabled(false);
-        lblAxisX.setEnabled(false);
-        lblAxisY.setEnabled(false);
-        // Botones de validación/Generación
+        // 1.2.4.4.1. Desplegables
+        cmbMaster.setEnabled(false);
+        cmbItem.setEnabled(false);
+        cmbText.setEnabled(false);
+        // 1.2.4.5. Configuración inicial de componentes del panel pnlValidate
+        // 1.2.4.5.1. Botones
         btnValidate.setEnabled(false);
         btnGenerate.setEnabled(false);
+        
         // Listener de la lista de campos
         lstDataList.setModel(new DefaultListModel<>());
         // Listener de habilitación de botones y selección de tipo de campo
@@ -617,7 +628,7 @@ public class pdfareaextractortoexcel extends JFrame {
         txfAxisX = new javax.swing.JTextField();
         txfAxisY = new javax.swing.JTextField();
         pnlDataFormat3 = new javax.swing.JPanel();
-        lblOptions = new javax.swing.JLabel();
+        lblDataFormat3 = new javax.swing.JLabel();
         cmbMaster = new javax.swing.JComboBox<>();
         chkItem = new javax.swing.JCheckBox();
         lblMaster = new javax.swing.JLabel();
@@ -1016,8 +1027,8 @@ public class pdfareaextractortoexcel extends JFrame {
         pnlDataFormat3.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        lblOptions.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblOptions.setText("Otras opciones");
+        lblDataFormat3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDataFormat3.setText("Otras opciones");
 
         cmbMaster.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -1042,7 +1053,7 @@ public class pdfareaextractortoexcel extends JFrame {
             .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDataFormat3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                         .addComponent(lblMaster)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1063,7 +1074,7 @@ public class pdfareaextractortoexcel extends JFrame {
             pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblOptions)
+                .addComponent(lblDataFormat3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMaster)
@@ -2161,10 +2172,10 @@ public class pdfareaextractortoexcel extends JFrame {
     private javax.swing.JLabel lblData;
     private javax.swing.JLabel lblDataFormat1;
     private javax.swing.JLabel lblDataFormat2;
+    private javax.swing.JLabel lblDataFormat3;
     private javax.swing.JLabel lblDataList;
     private javax.swing.JLabel lblLoadFile;
     private javax.swing.JLabel lblMaster;
-    private javax.swing.JLabel lblOptions;
     private javax.swing.JLabel lblPage;
     private javax.swing.JLabel lblPageFinish;
     private javax.swing.JLabel lblPageStart;
