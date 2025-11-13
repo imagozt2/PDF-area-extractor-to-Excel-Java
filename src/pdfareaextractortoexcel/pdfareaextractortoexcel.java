@@ -70,6 +70,7 @@ public class pdfareaextractortoexcel extends JFrame {
     private Map<String, String> itemTypeByField = new LinkedHashMap<>();
     private Map<String, Boolean> textOptionByField = new LinkedHashMap<>();
     private Map<String, String> textTypeByField = new LinkedHashMap<>();
+    private Map<String, String> dependentMasterMap = new LinkedHashMap<>();
     private LinkedHashMap<String, String> fieldTypeMap = new LinkedHashMap<>();
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
@@ -218,6 +219,7 @@ public class pdfareaextractortoexcel extends JFrame {
         chkSymbols.setEnabled(false);
         // 1.2.4.4.1. Desplegables
         cmbMaster.setEnabled(false);
+        cmbMaster.removeAllItems();
         cmbItem.setEnabled(false);
         cmbItem.removeAllItems();
         cmbItem.addItem("ID");
@@ -308,6 +310,11 @@ public class pdfareaextractortoexcel extends JFrame {
                 cmbItem.setSelectedItem(itemType != null ? itemType : "ID");
                 cmbText.setSelectedItem(textType != null ? textType : "MAYÚSCULA");
 
+                // Actualizar cmbMaster si es tipo DEPENDENT
+                if ("DEPENDENT".equals(type)) {
+                    updateMasterComboBox();
+                }
+
                 // Aplicar lógica de habilitación basada en el tipo de campo seleccionado
                 updateFieldTypeDependencies();
 
@@ -359,6 +366,8 @@ public class pdfareaextractortoexcel extends JFrame {
                 chkText.setEnabled(false);
                 cmbItem.setEnabled(false);
                 cmbText.setEnabled(false);
+                lblMaster.setEnabled(false);
+                cmbMaster.setEnabled(false);
 
                 chkSpaces.setSelected(false);
                 chkSymbols.setSelected(false);
@@ -374,7 +383,7 @@ public class pdfareaextractortoexcel extends JFrame {
                 pagePanel.setSelections(new LinkedHashMap<>());
             }
         });
-
+        
         // Listeners para persistir las opciones por campo
         chkSpaces.addActionListener(e2 -> {
             String f = lstDataList.getSelectedValue();
@@ -387,6 +396,17 @@ public class pdfareaextractortoexcel extends JFrame {
             String f = lstDataList.getSelectedValue();
             if (f != null) {
                 symbolsOptionByField.put(f, chkSymbols.isSelected());
+            }
+        });
+        
+        // En el constructor, después de los otros listeners:
+        cmbMaster.addActionListener(e -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null && cmbMaster.getSelectedItem() != null) {
+                String masterField = cmbMaster.getSelectedItem().toString();
+                if (!masterField.equals("No hay campos maestros definidos")) {
+                    dependentMasterMap.put(selectedField, masterField);
+                }
             }
         });
 
@@ -414,10 +434,22 @@ public class pdfareaextractortoexcel extends JFrame {
         chkItem.addActionListener(e -> {
             String selectedField = lstDataList.getSelectedValue();
             if (selectedField != null) {
-                itemOptionByField.put(selectedField, chkItem.isSelected());
+                boolean isItemSelected = chkItem.isSelected();
+                itemOptionByField.put(selectedField, isItemSelected);
+        
+                // Si se marca chkItem, eliminar cualquier área definida para este campo
+                if (isItemSelected) {
+                    fieldAreasByPage.remove(selectedField);
+                    // Limpiar campos de coordenadas
+                    txfPage.setText("");
+                    txfAxisX.setText("");
+                    txfAxisY.setText("");
+                    refreshVisibleSelections();
+                }
+        
+                // Actualizar dependencias cuando cambia chkItem
+                updateFieldTypeDependencies();
             }
-            // Actualizar dependencias cuando cambia chkItem
-            updateFieldTypeDependencies();
         });
 
         // Listener para chkText
@@ -1580,6 +1612,18 @@ public class pdfareaextractortoexcel extends JFrame {
                 }
 
                 String fieldName = ((DefaultListModel<String>) lstDataList.getModel()).get(index);
+    
+                // Verificar si este campo está marcado como "sin área"
+                Boolean isItemField = itemOptionByField.get(fieldName);
+                if (Boolean.TRUE.equals(isItemField)) {
+                    JOptionPane.showMessageDialog(this, 
+                        "Los campos definidos sin área no pueden tener áreas de PDF asignadas.\n" +
+                        "Desmarque la opción 'Definir campo sin área' si desea asignar un área.",
+                        "Campo sin área",
+                        JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 double zoom = pagePanel.getZoom();
                 int imgW = pagePanel.getImageWidth();
                 int imgH = pagePanel.getImageHeight();
@@ -1596,7 +1640,7 @@ public class pdfareaextractortoexcel extends JFrame {
                 try {
                     PDPage page = pdfDocument.getPage(currentPage);
                     PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-                    
+        
                     float dpi = 150f;
                     float scale = 72f / dpi;
 
@@ -1694,6 +1738,9 @@ public class pdfareaextractortoexcel extends JFrame {
                     fieldAreasByPage.putIfAbsent(nombreCampo, new LinkedHashMap<>());
 
                     lstDataList.setSelectedIndex(model.getSize() - 1);
+
+                    // Actualizar cmbMaster si es necesario
+                    updateMasterComboBoxIfNeeded();
                 }
             }
         }
@@ -1734,6 +1781,9 @@ public class pdfareaextractortoexcel extends JFrame {
             textTypeByField.remove(nombreCampo);
 
             refreshVisibleSelections();
+
+            // Actualizar cmbMaster si es necesario
+            updateMasterComboBoxIfNeeded();
 
             if (!model.isEmpty()) {
                 int nuevoIndex = Math.min(index, model.getSize() - 1);
@@ -1778,6 +1828,9 @@ public class pdfareaextractortoexcel extends JFrame {
             textTypeByField.clear();
 
             refreshVisibleSelections();
+
+            // Actualizar cmbMaster si es necesario
+            updateMasterComboBoxIfNeeded();
 
             btnDeleteData.setEnabled(false);
             btnEditData.setEnabled(false);
@@ -1845,11 +1898,27 @@ public class pdfareaextractortoexcel extends JFrame {
                     Boolean sy = symbolsOptionByField.remove(oldName);
                     if (sy != null) symbolsOptionByField.put(newName, sy);
 
+                    // Mover opciones de item y text
+                    Boolean itemOpt = itemOptionByField.remove(oldName);
+                    if (itemOpt != null) itemOptionByField.put(newName, itemOpt);
+
+                    Boolean textOpt = textOptionByField.remove(oldName);
+                    if (textOpt != null) textOptionByField.put(newName, textOpt);
+
+                    String itemType = itemTypeByField.remove(oldName);
+                    if (itemType != null) itemTypeByField.put(newName, itemType);
+
+                    String textType = textTypeByField.remove(oldName);
+                    if (textType != null) textTypeByField.put(newName, textType);
+
                     // Mover áreas
                     Map<Integer, Rectangle2D.Double> areas = fieldAreasByPage.remove(oldName);
                     if (areas != null) fieldAreasByPage.put(newName, areas);
 
                     refreshVisibleSelections();
+
+                    // Actualizar cmbMaster si es necesario
+                    updateMasterComboBoxIfNeeded();
                 }
             }
         }
@@ -1872,6 +1941,9 @@ public class pdfareaextractortoexcel extends JFrame {
         // Reaplicar selección y asegurar visibilidad
         lstDataList.setSelectedIndex(index - 1);
         lstDataList.ensureIndexIsVisible(index - 1);
+
+        // Actualizar cmbMaster si es necesario (por si el orden afecta a la visualización)
+        updateMasterComboBoxIfNeeded();
     }//GEN-LAST:event_btnMoveUpDataActionPerformed
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
@@ -1891,6 +1963,9 @@ public class pdfareaextractortoexcel extends JFrame {
         // Reaplicar selección y asegurar visibilidad
         lstDataList.setSelectedIndex(index + 1);
         lstDataList.ensureIndexIsVisible(index + 1);
+
+        // Actualizar cmbMaster si es necesario (por si el orden afecta a la visualización)
+        updateMasterComboBoxIfNeeded();
     }//GEN-LAST:event_btnMoveDownDataActionPerformed
 
     private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidateActionPerformed
@@ -1931,13 +2006,76 @@ public class pdfareaextractortoexcel extends JFrame {
                 return;
             }
 
-            boolean anyAreaDefined = false;
+            // Validación de áreas
+            boolean hasFieldsWithArea = false;
+            boolean hasInvalidFields = false;
+            List<String> invalidFields = new ArrayList<>();
+
             for (String f : fields) {
+                Boolean isItemField = itemOptionByField.get(f);
+                if (Boolean.TRUE.equals(isItemField)) {
+                    continue;
+                }
+        
                 Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(f);
-                if (perPage != null && !perPage.isEmpty()) { anyAreaDefined = true; break; }
+                if (perPage != null && !perPage.isEmpty()) { 
+                    hasFieldsWithArea = true; 
+                } else {
+                    hasInvalidFields = true;
+                    invalidFields.add(f);
+                }
             }
-            if (!anyAreaDefined) {
-                JOptionPane.showMessageDialog(this, "Ningún campo tiene un área asignada.", "Validación", JOptionPane.WARNING_MESSAGE);
+
+            if (!hasFieldsWithArea) {
+                JOptionPane.showMessageDialog(this, 
+                    "No hay campos con área asignada. Para generar datos, al menos un campo debe tener un área definida o estar marcado como 'campo sin área'.",
+                    "Validación", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (hasInvalidFields) {
+                StringBuilder errorMessage = new StringBuilder();
+                errorMessage.append("Los siguientes campos requieren un área asignada:\n\n");
+                for (String field : invalidFields) {
+                    errorMessage.append("• ").append(field).append("\n");
+                }
+                errorMessage.append("\nPor favor, asigne áreas a estos campos o márquelos como 'campos sin área'.");
+        
+                JOptionPane.showMessageDialog(this, 
+                    errorMessage.toString(),
+                    "Campos sin área asignada", 
+                    JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Validar relaciones DEPENDENT-MASTER
+            boolean hasInvalidDependencies = false;
+            StringBuilder dependencyErrors = new StringBuilder();
+    
+            for (String field : fields) {
+                String fieldType = fieldTypeMap.get(field);
+                if ("DEPENDENT".equals(fieldType)) {
+                    String masterField = dependentMasterMap.get(field);
+                    if (masterField == null || masterField.isEmpty()) {
+                        hasInvalidDependencies = true;
+                        dependencyErrors.append("• El campo '").append(field).append("' no tiene un campo maestro asignado.\n");
+                    } else {
+                        String masterFieldType = fieldTypeMap.get(masterField);
+                        if (!"MASTER".equals(masterFieldType)) {
+                            hasInvalidDependencies = true;
+                            dependencyErrors.append("• El campo '").append(masterField).append("' no está definido como campo maestro.\n");
+                        }
+                    }
+                }
+            }
+    
+            if (hasInvalidDependencies) {
+                JOptionPane.showMessageDialog(this,
+                    "Errores en las dependencias:\n\n" + dependencyErrors.toString() +
+                    "\nPor favor, asigne campos maestros válidos a los campos dependientes.",
+                    "Dependencias inválidas",
+                    JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -1961,21 +2099,44 @@ public class pdfareaextractortoexcel extends JFrame {
                 };
 
             int pageStep = (struct1 || struct3) ? 2 : 1;
+            int globalRowCounter = 0;
+            int pageCounter = 0;
 
             for (int p = startPage; p <= finishPage; p += pageStep) {
+                pageCounter++;
+        
                 Map<String, String> baseRow = new LinkedHashMap<>();
                 for (String f : fields) baseRow.put(f, "");
 
                 Map<String, List<String>> masterItemsByField = new LinkedHashMap<>();
-                
+                Map<String, List<String>> dependentItemsByField = new LinkedHashMap<>();
+        
+                // Procesar campos "sin área" primero
+                for (String field : fields) {
+                    Boolean isItemField = itemOptionByField.get(field);
+                    if (Boolean.TRUE.equals(isItemField)) {
+                        String itemType = itemTypeByField.get(field);
+                        if ("Fecha".equals(itemType)) {
+                            baseRow.put(field, java.time.LocalDate.now().toString());
+                        } else if ("Página".equals(itemType)) {
+                            baseRow.put(field, String.valueOf(pageCounter));
+                        }
+                    }
+                }
+        
                 if (struct3) {
+                    // Procesar cara delantera (página p)
                     int frontIdx = p - 1;
                     if (frontIdx < totalPages) {
                         PDPage pageFront = pdfDocument.getPage(frontIdx);
                         PDFTextStripperByArea stripperFront = new PDFTextStripperByArea();
                         stripperFront.setSortByPosition(true);
 
+                        // Primero extraer todos los campos
                         for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) continue;
+                    
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null) continue;
                             Rectangle2D.Double frac = perPage.get(0);
@@ -1986,7 +2147,11 @@ public class pdfareaextractortoexcel extends JFrame {
 
                         stripperFront.extractRegions(pageFront);
 
+                        // CORRECCIÓN: Procesar tanto MASTER como DEPENDENT correctamente
                         for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) continue;
+                    
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null || !perPage.containsKey(0)) continue;
 
@@ -1994,21 +2159,49 @@ public class pdfareaextractortoexcel extends JFrame {
                             String cleaned = stripTrailingLineBreaks(raw);
 
                             String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
-                            if ("MASTER".equals(type)) {
+                        
+                            // CORRECCIÓN: Procesar tanto MASTER como DEPENDENT
+                            if ("MASTER".equals(type) || "DEPENDENT".equals(type)) {
                                 String[] parts = cleaned.split("\\r?\\n");
                                 List<String> items = new ArrayList<>();
                                 for (String it : parts) {
                                     String itClean = applyPerFieldOptions(field, it);
-                                    items.add(itClean);
+                                    if (!itClean.trim().isEmpty()) {
+                                        items.add(itClean);
+                                    }
                                 }
-                                masterItemsByField.put(field, items);
-                            } else {
+                            
+                                if ("MASTER".equals(type)) {
+                                    masterItemsByField.put(field, items);
+                                } else if ("DEPENDENT".equals(type)) {
+                                    // Para DEPENDENT, verificar si tiene un maestro asignado
+                                    String masterField = dependentMasterMap.get(field);
+                                    if (masterField != null && masterItemsByField.containsKey(masterField)) {
+                                        List<String> masterItems = masterItemsByField.get(masterField);
+                                        List<String> dependentItems = new ArrayList<>();
+                                    
+                                        // Sincronizar con el maestro
+                                        for (int i = 0; i < masterItems.size(); i++) {
+                                            if (i < items.size()) {
+                                                dependentItems.add(items.get(i));
+                                            } else {
+                                                dependentItems.add(""); // Rellenar con vacío si faltan items
+                                            }
+                                        }
+                                        dependentItemsByField.put(field, dependentItems);
+                                    } else {
+                                        // Si no tiene maestro, usar los items tal cual
+                                        dependentItemsByField.put(field, items);
+                                    }
+                                }
+                            } else if ("UNIQUE".equals(type)) {
                                 String val = applyPerFieldOptions(field, cleaned);
                                 baseRow.put(field, val);
                             }
                         }
                     }
 
+                    // CORRECCIÓN: Completar la implementación de la cara trasera para struct3
                     int backLogical = p + 1;
                     int backIdx = backLogical - 1;
                     if (backLogical <= finishPage && backIdx < totalPages) {
@@ -2016,10 +2209,14 @@ public class pdfareaextractortoexcel extends JFrame {
                         PDFTextStripperByArea stripperBack = new PDFTextStripperByArea();
                         stripperBack.setSortByPosition(true);
 
+                        // Extraer campos de la cara trasera
                         for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) continue;
+                        
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null) continue;
-                            Rectangle2D.Double frac = perPage.get(1);
+                            Rectangle2D.Double frac = perPage.get(1); // Página 1 para cara trasera
                             if (frac == null) continue;
                             Rectangle2D.Double rectPDF = toPdfPoints.apply(frac, pageBack);
                             stripperBack.addRegion(field, rectPDF);
@@ -2027,7 +2224,11 @@ public class pdfareaextractortoexcel extends JFrame {
 
                         stripperBack.extractRegions(pageBack);
 
+                        // Procesar campos de la cara trasera (lógica similar a la cara delantera)
                         for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) continue;
+                        
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null || !perPage.containsKey(1)) continue;
 
@@ -2035,32 +2236,76 @@ public class pdfareaextractortoexcel extends JFrame {
                             String cleaned = stripTrailingLineBreaks(raw);
 
                             String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
-                            if ("MASTER".equals(type)) {
+                        
+                            if ("MASTER".equals(type) || "DEPENDENT".equals(type)) {
                                 String[] parts = cleaned.split("\\r?\\n");
                                 List<String> items = new ArrayList<>();
                                 for (String it : parts) {
                                     String itClean = applyPerFieldOptions(field, it);
-                                    items.add(itClean);
+                                    if (!itClean.trim().isEmpty()) {
+                                        items.add(itClean);
+                                    }
                                 }
-                                List<String> prev = masterItemsByField.get(field);
-                                if (prev == null) {
-                                    masterItemsByField.put(field, items);
-                                } else {
-                                    prev.addAll(items);
+                            
+                                if ("MASTER".equals(type)) {
+                                    // Combinar con items de la cara delantera si existen
+                                    List<String> existingItems = masterItemsByField.get(field);
+                                    if (existingItems != null) {
+                                        existingItems.addAll(items);
+                                    } else {
+                                        masterItemsByField.put(field, items);
+                                    }
+                                } else if ("DEPENDENT".equals(type)) {
+                                    // Lógica similar para DEPENDENT en cara trasera
+                                    String masterField = dependentMasterMap.get(field);
+                                    if (masterField != null && masterItemsByField.containsKey(masterField)) {
+                                        List<String> masterItems = masterItemsByField.get(masterField);
+                                        List<String> dependentItems = dependentItemsByField.getOrDefault(field, new ArrayList<>());
+                                    
+                                        // Sincronizar con el maestro
+                                        for (int i = 0; i < masterItems.size(); i++) {
+                                            if (i < items.size()) {
+                                                if (i < dependentItems.size()) {
+                                                    // Si ya existe un valor, combinarlo
+                                                    String existing = dependentItems.get(i);
+                                                    if (!existing.isEmpty()) {
+                                                        dependentItems.set(i, existing + "\n" + items.get(i));
+                                                    } else {
+                                                        dependentItems.set(i, items.get(i));
+                                                    }
+                                                } else {
+                                                    // Si no existe, añadirlo
+                                                    dependentItems.add(items.get(i));
+                                                }
+                                            }
+                                        }
+                                        dependentItemsByField.put(field, dependentItems);
+                                    } else {
+                                        // Si no tiene maestro, usar los items tal cual
+                                        List<String> existingItems = dependentItemsByField.get(field);
+                                        if (existingItems != null) {
+                                            existingItems.addAll(items);
+                                        } else {
+                                            dependentItemsByField.put(field, items);
+                                        }
+                                    }
                                 }
-                            } else {
+                            } else if ("UNIQUE".equals(type)) {
                                 String existing = baseRow.getOrDefault(field, "");
                                 String val = applyPerFieldOptions(field, cleaned);
-                                if (existing == null || existing.isEmpty()) {
-                                    baseRow.put(field, val);
-                                } else if (val != null && !val.isEmpty()) {
-                                    baseRow.put(field, existing + "\n" + val);
+                                if (!val.isEmpty()) {
+                                    if (existing.isEmpty()) {
+                                        baseRow.put(field, val);
+                                    } else {
+                                        baseRow.put(field, existing + "\n" + val);
+                                    }
                                 }
                             }
                         }
                     }
 
                 } else {
+                    // Modo struct1 o struct2 - una sola página por iteración
                     int pageIndex = p - 1;
                     if (pageIndex >= totalPages) continue;
                     PDPage page = pdfDocument.getPage(pageIndex);
@@ -2068,7 +2313,11 @@ public class pdfareaextractortoexcel extends JFrame {
                     PDFTextStripperByArea stripper = new PDFTextStripperByArea();
                     stripper.setSortByPosition(true);
 
+                    // Primero extraer todos los campos
                     for (String field : fields) {
+                        Boolean isItemField = itemOptionByField.get(field);
+                        if (Boolean.TRUE.equals(isItemField)) continue;
+                
                         Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                         if (perPage == null) continue;
                         Rectangle2D.Double frac = perPage.get(0);
@@ -2079,7 +2328,11 @@ public class pdfareaextractortoexcel extends JFrame {
 
                     stripper.extractRegions(page);
 
+                    // CORRECCIÓN: Procesar tanto MASTER como DEPENDENT correctamente
                     for (String field : fields) {
+                        Boolean isItemField = itemOptionByField.get(field);
+                        if (Boolean.TRUE.equals(isItemField)) continue;
+                
                         Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                         if (perPage == null || !perPage.containsKey(0)) continue;
 
@@ -2087,63 +2340,157 @@ public class pdfareaextractortoexcel extends JFrame {
                         String cleaned = stripTrailingLineBreaks(raw);
 
                         String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
-                        if ("MASTER".equals(type)) {
+                    
+                        // CORRECCIÓN: Procesar tanto MASTER como DEPENDENT
+                        if ("MASTER".equals(type) || "DEPENDENT".equals(type)) {
                             String[] parts = cleaned.split("\\r?\\n");
                             List<String> items = new ArrayList<>();
                             for (String it : parts) {
                                 String itClean = applyPerFieldOptions(field, it);
-                                items.add(itClean);
+                                if (!itClean.trim().isEmpty()) {
+                                    items.add(itClean);
+                                }
                             }
-                            masterItemsByField.put(field, items);
-                        } else {
+                        
+                            if ("MASTER".equals(type)) {
+                                masterItemsByField.put(field, items);
+                            } else if ("DEPENDENT".equals(type)) {
+                                // Para DEPENDENT, verificar si tiene un maestro asignado
+                                String masterField = dependentMasterMap.get(field);
+                                if (masterField != null && masterItemsByField.containsKey(masterField)) {
+                                    List<String> masterItems = masterItemsByField.get(masterField);
+                                    List<String> dependentItems = new ArrayList<>();
+                                
+                                    // Sincronizar con el maestro
+                                    for (int i = 0; i < masterItems.size(); i++) {
+                                        if (i < items.size()) {
+                                            dependentItems.add(items.get(i));
+                                        } else {
+                                            dependentItems.add(""); // Rellenar con vacío si faltan items
+                                        }
+                                    }
+                                    dependentItemsByField.put(field, dependentItems);
+                                } else {
+                                    // Si no tiene maestro, usar los items tal cual
+                                    dependentItemsByField.put(field, items);
+                                }
+                            }
+                        } else if ("UNIQUE".equals(type)) {
                             String val = applyPerFieldOptions(field, cleaned);
                             baseRow.put(field, val);
                         }
                     }
                 }
 
+                // CORRECCIÓN: Determinar el número máximo de filas basado en campos MASTER Y DEPENDENT
                 int maxRows = 0;
                 for (List<String> items : masterItemsByField.values()) {
                     if (items != null && items.size() > maxRows) maxRows = items.size();
                 }
 
+                // CORRECCIÓN: También considerar campos DEPENDENT para determinar maxRows
+                for (List<String> items : dependentItemsByField.values()) {
+                    if (items != null && items.size() > maxRows) maxRows = items.size();
+                }
+
+                // Si no hay campos MASTER ni DEPENDENT, crear una sola fila
                 if (maxRows <= 0) {
                     boolean anyValue = baseRow.values().stream().anyMatch(v -> v != null && !v.isEmpty());
                     if (anyValue) {
-                        extractedData.add(baseRow);
+                        Map<String, String> finalRow = new LinkedHashMap<>(baseRow);
+                        for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) {
+                                String itemType = itemTypeByField.get(field);
+                                if ("ID".equals(itemType)) {
+                                    globalRowCounter++;
+                                    finalRow.put(field, String.valueOf(globalRowCounter));
+                                }
+                            }
+                        }
+                
+                        extractedData.add(finalRow);
+                    
+                        // Logging
                         StringBuilder line = new StringBuilder();
                         for (int i = 0; i < fields.size(); i++) {
                             if (i > 0) line.append(", ");
-                            line.append(baseRow.getOrDefault(fields.get(i), ""));
+                            line.append(finalRow.getOrDefault(fields.get(i), ""));
                         }
-                        System.out.println(line.toString());
+                        System.out.println("Fila única: " + line.toString());
                     }
                 } else {
+                    // CORRECCIÓN COMPLETA: Crear múltiples filas basadas en campos MASTER y DEPENDENT
                     for (int r = 0; r < maxRows; r++) {
-                        Map<String, String> newRow = new LinkedHashMap<>(baseRow);
+                        Map<String, String> newRow = new LinkedHashMap<>();
+                    
+                        // Inicializar todos los campos con valores base primero
+                        for (String field : fields) {
+                            // Para campos UNIQUE, usar el valor base
+                            String fieldType = fieldTypeMap.getOrDefault(field, "UNIQUE");
+                            if ("UNIQUE".equals(fieldType)) {
+                                String baseValue = baseRow.get(field);
+                                newRow.put(field, baseValue != null ? baseValue : "");
+                            } else {
+                                newRow.put(field, "");
+                            }
+                        }
+                    
+                        // Campos automáticos (sobrescriben si es necesario)
+                        for (String field : fields) {
+                            Boolean isItemField = itemOptionByField.get(field);
+                            if (Boolean.TRUE.equals(isItemField)) {
+                                String itemType = itemTypeByField.get(field);
+                                if ("ID".equals(itemType)) {
+                                    globalRowCounter++;
+                                    newRow.put(field, String.valueOf(globalRowCounter));
+                                } else if ("Fecha".equals(itemType)) {
+                                    newRow.put(field, java.time.LocalDate.now().toString());
+                                } else if ("Página".equals(itemType)) {
+                                    newRow.put(field, String.valueOf(pageCounter));
+                                }
+                            }
+                        }
+                    
+                        // CORRECCIÓN CLAVE: Campos MASTER (sobrescriben valores existentes)
                         for (String mf : masterItemsByField.keySet()) {
                             List<String> items = masterItemsByField.get(mf);
                             String itemVal = (items != null && r < items.size()) ? items.get(r) : "";
                             newRow.put(mf, itemVal);
                         }
-                        boolean anyValue = newRow.values().stream().anyMatch(v -> v != null && !v.isEmpty());
-                        if (anyValue) {
+                    
+                        // CORRECCIÓN CLAVE: Campos DEPENDENT (sobrescriben valores existentes)
+                        for (String df : dependentItemsByField.keySet()) {
+                            List<String> items = dependentItemsByField.get(df);
+                            String itemVal = (items != null && r < items.size()) ? items.get(r) : "";
+                            newRow.put(df, itemVal);
+                        }
+                    
+                        // Solo añadir fila si tiene al menos un dato
+                        boolean hasData = newRow.values().stream().anyMatch(v -> v != null && !v.trim().isEmpty());
+                        if (hasData) {
                             extractedData.add(newRow);
-                            StringBuilder line = new StringBuilder();
-                            for (int i = 0; i < fields.size(); i++) {
-                                if (i > 0) line.append(", ");
-                                line.append(newRow.getOrDefault(fields.get(i), ""));
+                        
+                            // Logging detallado para debug
+                            System.out.println("=== FILA " + r + " ===");
+                            for (String field : fields) {
+                                String value = newRow.getOrDefault(field, "");
+                                String fieldType = fieldTypeMap.getOrDefault(field, "UNIQUE");
+                                System.out.println(field + " (" + fieldType + "): '" + value + "'");
                             }
-                            System.out.println(line.toString());
+                            System.out.println("=================");
                         }
                     }
                 }
             }
 
-            System.out.println("Fin del recorrido del documento");
-            JOptionPane.showMessageDialog(this, "La validación y recogida de datos se ha completado correctamente.", "Validación completada", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Fin del recorrido del documento. Total filas: " + extractedData.size());
+            JOptionPane.showMessageDialog(this, 
+                "Validación completada. Se extrajeron " + extractedData.size() + " filas de datos.", 
+                "Validación completada", 
+                JOptionPane.INFORMATION_MESSAGE);
             btnGenerate.setEnabled(true);
-
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Se produjo un error durante la validación: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -2385,45 +2732,182 @@ public class pdfareaextractortoexcel extends JFrame {
     // Aplica las opciones por campo sin tocar los saltos de línea internos
     private String applyPerFieldOptions(String field, String text) {
         if (text == null) return "";
+    
+        // Primero aplicar limpieza básica
+        String out = text.trim();
+    
+        // Aplicar opciones de espacios y símbolos
         Boolean rmSpaces  = spacesOptionByField.get(field);
         Boolean onlyNums  = symbolsOptionByField.get(field);
-        String out = text;
+    
         if (Boolean.TRUE.equals(rmSpaces)) {
             out = out.replace(" ", "");
         }
         if (Boolean.TRUE.equals(onlyNums)) {
             out = out.replaceAll("[^0-9]", "");
         }
+    
+        // Aplicar normalización de texto si está activada
+        Boolean textNormalization = textOptionByField.get(field);
+        if (Boolean.TRUE.equals(textNormalization)) {
+            String textType = textTypeByField.get(field);
+            if (textType != null) {
+                out = applyTextNormalization(out, textType);
+            }
+        }
+    
         return out;
+    }
+    
+    // Aplica normalización de texto según el tipo seleccionado
+    private String applyTextNormalization(String text, String textType) {
+        if (text == null || text.isEmpty()) return text;
+    
+        switch (textType) {
+            case "MAYÚSCULA":
+                return text.toUpperCase();
+            
+            case "minúscula":
+                return text.toLowerCase();
+            
+            case "Título":
+                return toTitleCase(text);
+            
+            default:
+                return text;
+        }
+    }
+
+    // Convierte texto a formato Título (primera letra mayúscula, resto minúsculas)
+    private String toTitleCase(String text) {
+        if (text == null || text.isEmpty()) return text;
+    
+        // Si el texto tiene múltiples líneas, procesar cada línea por separado
+        if (text.contains("\n")) {
+            String[] lines = text.split("\n");
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < lines.length; i++) {
+                if (i > 0) result.append("\n");
+                result.append(toTitleCaseSingleLine(lines[i]));
+            }
+            return result.toString();
+        }
+    
+        return toTitleCaseSingleLine(text);
+    }
+
+    // Convierte una sola línea a formato Título
+    private String toTitleCaseSingleLine(String line) {
+        if (line == null || line.isEmpty()) return line;
+    
+        // Convertir todo a minúsculas primero
+        String lowerCase = line.toLowerCase();
+    
+        // Capitalizar primera letra
+        if (lowerCase.length() == 1) {
+            return lowerCase.toUpperCase();
+        } else {
+            return Character.toUpperCase(lowerCase.charAt(0)) + lowerCase.substring(1);
+        }
     }
     
     private void updateFieldTypeDependencies() {
         boolean hasSelection = lstDataList.getSelectedIndex() != -1;
         boolean isUniqueType = rbdFieldType1.isSelected();
-    
+        boolean isDependentType = rbdFieldType3.isSelected();
+
         // chkItem solo se habilita si hay selección y es tipo UNIQUE
         chkItem.setEnabled(hasSelection && isUniqueType);
-    
+
         // Si chkItem se deshabilita, se deselecciona
-        if (!chkItem.isEnabled()) {
+        if (!chkItem.isEnabled() && chkItem.isSelected()) {
             chkItem.setSelected(false);
+            // También limpiar el estado guardado
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null) {
+                itemOptionByField.put(selectedField, false);
+            }
         }
-    
+
         // chkText se habilita si hay selección y chkItem NO está seleccionado
         chkText.setEnabled(hasSelection && !chkItem.isSelected());
-    
+
         // Si chkText se deshabilita, se deselecciona
-        if (!chkText.isEnabled()) {
+        if (!chkText.isEnabled() && chkText.isSelected()) {
             chkText.setSelected(false);
         }
-    
+
         // cmbItem se habilita si chkItem está habilitado y seleccionado
         cmbItem.setEnabled(chkItem.isEnabled() && chkItem.isSelected());
-    
+
         // cmbText se habilita si chkText está habilitado y seleccionado
         cmbText.setEnabled(chkText.isEnabled() && chkText.isSelected());
+
+        // lblMaster y cmbMaster se habilitan solo si hay selección y es tipo DEPENDENT
+        boolean masterEnabled = hasSelection && isDependentType;
+        lblMaster.setEnabled(masterEnabled);
+        cmbMaster.setEnabled(masterEnabled);
+
+        // Si cmbMaster está habilitado, actualizar su contenido con campos maestros
+        if (masterEnabled) {
+            updateMasterComboBox();
+        }
+    }
+    
+    // Actualiza el combobox de campos maestros con los campos marcados como MASTER
+    private void updateMasterComboBox() {
+        cmbMaster.removeAllItems();
+    
+        ListModel<String> model = lstDataList.getModel();
+        for (int i = 0; i < model.getSize(); i++) {
+            String fieldName = model.getElementAt(i);
+            String fieldType = fieldTypeMap.get(fieldName);
+        
+            // Solo incluir campos marcados como MASTER (rdbFieldType2)
+            if ("MASTER".equals(fieldType)) {
+                cmbMaster.addItem(fieldName);
+            }
+        }
+    
+        // Si no hay campos maestros, mostrar un mensaje en el combobox
+        if (cmbMaster.getItemCount() == 0) {
+            cmbMaster.addItem("No hay campos maestros definidos");
+            cmbMaster.setEnabled(false);
+        } else {
+            cmbMaster.setEnabled(true);
+        }
     }
 
+    // Genera valores automáticos para campos sin área
+    private String generateAutoValue(String itemType, int currentPage, int startPage, int rowIndex) {
+        if (itemType == null) return "";
+    
+        switch (itemType) {
+            case "ID":
+                // Valor incremental por fila (1, 2, 3, ...)
+                return String.valueOf(rowIndex);
+            
+            case "Fecha":
+                // Fecha actual
+                return java.time.LocalDate.now().toString();
+            
+            case "Página":
+                // Número de página (relativo al inicio del escaneo)
+                // Si startPage = 3 y currentPage = 5, entonces página = 3
+                int pageNumber = currentPage - startPage + 1;
+                return String.valueOf(pageNumber);
+            
+            default:
+                return "";
+        }
+    }
+
+    // Actualiza cmbMaster solo si está habilitado (es decir, si hay un campo DEPENDENT seleccionado)
+    private void updateMasterComboBoxIfNeeded() {
+        if (cmbMaster.isEnabled()) {
+            updateMasterComboBox();
+        }
+    }
 
     /**
      * @param args the command line arguments
