@@ -16,12 +16,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
@@ -61,6 +64,12 @@ public class pdfareaextractortoexcel extends JFrame {
     private ButtonGroup btnGroupPages;
     private ArrayList<Map<String,String>> extractedData = new ArrayList<>();
     private Map<String, Map<Integer, Rectangle2D.Double>> fieldAreasByPage = new HashMap<>();
+    private Map<String, Boolean> spacesOptionByField = new LinkedHashMap<>();
+    private Map<String, Boolean> symbolsOptionByField = new LinkedHashMap<>();
+    private Map<String, Boolean> itemOptionByField = new LinkedHashMap<>();
+    private Map<String, String> itemTypeByField = new LinkedHashMap<>();
+    private Map<String, Boolean> textOptionByField = new LinkedHashMap<>();
+    private Map<String, String> textTypeByField = new LinkedHashMap<>();
     private LinkedHashMap<String, String> fieldTypeMap = new LinkedHashMap<>();
     private BufferedImage currentImage;
     private PDDocument pdfDocument;
@@ -210,15 +219,26 @@ public class pdfareaextractortoexcel extends JFrame {
         // 1.2.4.4.1. Desplegables
         cmbMaster.setEnabled(false);
         cmbItem.setEnabled(false);
+        cmbItem.removeAllItems();
+        cmbItem.addItem("ID");
+        cmbItem.addItem("Fecha");
+        cmbItem.addItem("Página");
+        cmbItem.setSelectedItem("ID");
         cmbText.setEnabled(false);
+        cmbText.removeAllItems();
+        cmbText.addItem("MAYÚSCULA");
+        cmbText.addItem("minúscula");
+        cmbText.addItem("Título");
+        cmbText.setSelectedItem("MAYÚSCULA");
         // 1.2.4.5. Configuración inicial de componentes del panel pnlValidate
         // 1.2.4.5.1. Botones
         btnValidate.setEnabled(false);
         btnGenerate.setEnabled(false);
         
-        // Listener de la lista de campos
+        // Modelo base
         lstDataList.setModel(new DefaultListModel<>());
-        // Listener de habilitación de botones y selección de tipo de campo
+
+        // Listener de selección de la lista de campos
         lstDataList.addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) return;
 
@@ -230,22 +250,17 @@ public class pdfareaextractortoexcel extends JFrame {
             int index = lstDataList.getSelectedIndex();
             boolean hasSelection = (index != -1);
 
-            // Borrar lista
+            // Botones de lista (existente)
             btnClearListData.setEnabled(size > 0);
-
-            // Borrar item y Editar item
             btnDeleteData.setEnabled(hasSelection);
             btnEditData.setEnabled(hasSelection);
-
-            // Mover arriba
             btnMoveUpData.setEnabled(hasSelection && index > 0);
-
-            // Mover abajo
             btnMoveDownData.setEnabled(hasSelection && index < size - 1);
 
-            // Selección del tipo de campo (UNIQUE, MASTER, DEPENDENT)
             if (hasSelection) {
-                
+                String selectedField = lstDataList.getSelectedValue();
+
+                // Habilitar controles básicos
                 rbdFieldType1.setEnabled(true);
                 rbdFieldType2.setEnabled(true);
                 rbdFieldType3.setEnabled(true);
@@ -256,30 +271,52 @@ public class pdfareaextractortoexcel extends JFrame {
                 txfAxisX.setEnabled(true);
                 txfAxisY.setEnabled(true);
                 btnValidate.setEnabled(true);
-                
-                String selectedField = lstDataList.getSelectedValue();
-                String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
 
+                // Habilitar opciones por campo (siempre disponibles)
+                chkSpaces.setEnabled(true);
+                chkSymbols.setEnabled(true);
+
+                // Cargar tipo de campo
+                String type = fieldTypeMap.getOrDefault(selectedField, "UNIQUE");
                 switch (type) {
-                    case "UNIQUE":
-                        rbdFieldType1.setSelected(true);
-                        break;
                     case "MASTER":
                         rbdFieldType2.setSelected(true);
                         break;
                     case "DEPENDENT":
                         rbdFieldType3.setSelected(true);
                         break;
+                    default:
+                        rbdFieldType1.setSelected(true);
+                        break;
                 }
 
-                // Mostrar coordenadas si ese campo tiene área definida en cualquier página
+                // Cargar estado de opciones por campo
+                Boolean sp = spacesOptionByField.get(selectedField);
+                Boolean sy = symbolsOptionByField.get(selectedField);
+                chkSpaces.setSelected(sp != null ? sp : false);
+                chkSymbols.setSelected(sy != null ? sy : false);
+
+                // Cargar estados de chkItem y chkText
+                Boolean itemOpt = itemOptionByField.get(selectedField);
+                Boolean textOpt = textOptionByField.get(selectedField);
+                chkItem.setSelected(itemOpt != null ? itemOpt : false);
+                chkText.setSelected(textOpt != null ? textOpt : false);
+
+                // Cargar tipos de item y text
+                String itemType = itemTypeByField.get(selectedField);
+                String textType = textTypeByField.get(selectedField);
+                cmbItem.setSelectedItem(itemType != null ? itemType : "ID");
+                cmbText.setSelectedItem(textType != null ? textType : "MAYÚSCULA");
+
+                // Aplicar lógica de habilitación basada en el tipo de campo seleccionado
+                updateFieldTypeDependencies();
+
+                // Mostrar coordenadas si existen
                 Map<Integer, Rectangle2D.Double> areas = fieldAreasByPage.get(selectedField);
                 if (areas != null && !areas.isEmpty()) {
-                    // Solo debe haber una entrada por campo
                     Map.Entry<Integer, Rectangle2D.Double> entry = areas.entrySet().iterator().next();
-                    int page = entry.getKey(); // 0 = frontal, 1 = trasera
+                    int page = entry.getKey();
                     Rectangle2D.Double rect = entry.getValue();
-
                     txfPage.setText(String.valueOf(page + 1));
                     txfAxisX.setText(String.format("%.4f", rect.x));
                     txfAxisY.setText(String.format("%.4f", rect.y));
@@ -289,12 +326,11 @@ public class pdfareaextractortoexcel extends JFrame {
                     txfAxisY.setText("");
                 }
 
-                // Refrescar visualmente los rectángulos para reflejar si este campo está seleccionado
+                // Refresco visual de selecciones
                 Set<String> selectedOnly = new HashSet<>();
                 selectedOnly.add(selectedField);
                 pagePanel.setSelectedFields(selectedOnly);
                 Map<String, Rectangle2D.Double> areasForThisPage = new LinkedHashMap<>();
-
                 for (Map.Entry<String, Map<Integer, Rectangle2D.Double>> entry : fieldAreasByPage.entrySet()) {
                     String campo = entry.getKey();
                     Rectangle2D.Double rect = entry.getValue().get(pagePanel.getCurrentPage());
@@ -302,11 +338,10 @@ public class pdfareaextractortoexcel extends JFrame {
                         areasForThisPage.put(campo, rect);
                     }
                 }
-
                 pagePanel.setSelections(areasForThisPage);
 
             } else {
-
+                // Deshabilitar cuando no hay selección
                 rbdFieldType1.setEnabled(false);
                 rbdFieldType2.setEnabled(false);
                 rbdFieldType3.setEnabled(false);
@@ -317,15 +352,41 @@ public class pdfareaextractortoexcel extends JFrame {
                 txfAxisX.setEnabled(false);
                 txfAxisY.setEnabled(false);
                 btnValidate.setEnabled(false);
-                
+
+                chkSpaces.setEnabled(false);
+                chkSymbols.setEnabled(false);
+                chkItem.setEnabled(false);
+                chkText.setEnabled(false);
+                cmbItem.setEnabled(false);
+                cmbText.setEnabled(false);
+
+                chkSpaces.setSelected(false);
+                chkSymbols.setSelected(false);
+                chkItem.setSelected(false);
+                chkText.setSelected(false);
+
                 btnGroupDataFormat.clearSelection();
                 txfPage.setText("");
                 txfAxisX.setText("");
                 txfAxisY.setText("");
 
-                // También limpiar visualización de selección de áreas
                 pagePanel.setSelectedFields(new HashSet<>());
                 pagePanel.setSelections(new LinkedHashMap<>());
+            }
+        });
+
+        // Listeners para persistir las opciones por campo
+        chkSpaces.addActionListener(e2 -> {
+            String f = lstDataList.getSelectedValue();
+            if (f != null) {
+                spacesOptionByField.put(f, chkSpaces.isSelected());
+            }
+        });
+
+        chkSymbols.addActionListener(e3 -> {
+            String f = lstDataList.getSelectedValue();
+            if (f != null) {
+                symbolsOptionByField.put(f, chkSymbols.isSelected());
             }
         });
 
@@ -339,14 +400,64 @@ public class pdfareaextractortoexcel extends JFrame {
                 fieldTypeMap.put(selectedField, "MASTER");
             } else if (rbdFieldType3.isSelected()) {
                 fieldTypeMap.put(selectedField, "DEPENDENT");
-            }   
+            }
+    
+            // Actualizar dependencias cuando cambia el tipo
+            updateFieldTypeDependencies();
         };
 
         rbdFieldType1.addActionListener(fieldTypeListener);
         rbdFieldType2.addActionListener(fieldTypeListener);
         rbdFieldType3.addActionListener(fieldTypeListener);
+        
+        // Listener para chkItem
+        chkItem.addActionListener(e -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null) {
+                itemOptionByField.put(selectedField, chkItem.isSelected());
+            }
+            // Actualizar dependencias cuando cambia chkItem
+            updateFieldTypeDependencies();
+        });
 
+        // Listener para chkText
+        chkText.addActionListener(e -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null) {
+                textOptionByField.put(selectedField, chkText.isSelected());
+            }
+            // Actualizar dependencias cuando cambia chkText
+            updateFieldTypeDependencies();
+        });
 
+        // Listeners para los combobox
+        cmbItem.addActionListener(e -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null && cmbItem.getSelectedItem() != null) {
+                itemTypeByField.put(selectedField, cmbItem.getSelectedItem().toString());
+            }
+        });
+
+        cmbText.addActionListener(e -> {
+            String selectedField = lstDataList.getSelectedValue();
+            if (selectedField != null && cmbText.getSelectedItem() != null) {
+                textTypeByField.put(selectedField, cmbText.getSelectedItem().toString());
+            }
+        });
+
+        chkSpaces.addActionListener(e -> {
+            String f = lstDataList.getSelectedValue();
+            if (f != null) {
+                spacesOptionByField.put(f, chkSpaces.isSelected());
+            }
+        });
+
+        chkSymbols.addActionListener(e -> {
+            String f = lstDataList.getSelectedValue();
+            if (f != null) {
+                symbolsOptionByField.put(f, chkSymbols.isSelected());
+            }
+        });
         
         // Listener para volver a la primera página cuando se selecciona "Documento completo"
         rbdPagesScanner1.addActionListener(e -> {
@@ -1443,9 +1554,6 @@ public class pdfareaextractortoexcel extends JFrame {
             lblDataFormat1.setEnabled(true);
             lblDataFormat2.setEnabled(true);
             lblDataFormat3.setEnabled(true);
-            chkText.setEnabled(true);
-            chkSpaces.setEnabled(true);
-            chkSymbols.setEnabled(true);
             lblPage.setEnabled(false);
             lblAxisX.setEnabled(false);
             lblAxisY.setEnabled(false);
@@ -1533,15 +1641,12 @@ public class pdfareaextractortoexcel extends JFrame {
     }//GEN-LAST:event_btnSelectorActionPerformed
 
     private void btnAddDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddDataActionPerformed
-        // Campo de texto para el nombre
         JTextField txtNombre = new JTextField(20);
 
-        // Panel simple con etiqueta + campo
         JPanel panel = new JPanel();
         panel.add(new JLabel("Nombre del campo:"));
         panel.add(txtNombre);
 
-        // Crear el cuadro de diálogo
         JOptionPane optionPane = new JOptionPane(
             panel,
             JOptionPane.PLAIN_MESSAGE,
@@ -1550,7 +1655,6 @@ public class pdfareaextractortoexcel extends JFrame {
 
         JDialog dialog = optionPane.createDialog(this, "Añadir nuevo campo");
 
-        // Solicitar foco en el campo justo cuando se muestra el diálogo
         dialog.addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
@@ -1558,10 +1662,8 @@ public class pdfareaextractortoexcel extends JFrame {
             }
         });
 
-        // Mostrar el diálogo
         dialog.setVisible(true);
 
-        // Procesar resultado solo si el usuario pulsa "Aceptar"
         Object selectedValue = optionPane.getValue();
         if (selectedValue != null && (int) selectedValue == JOptionPane.OK_OPTION) {
             String nombreCampo = txtNombre.getText().trim();
@@ -1574,9 +1676,25 @@ public class pdfareaextractortoexcel extends JFrame {
                     model = new DefaultListModel<>();
                     lstDataList.setModel(model);
                 }
-                model.addElement(nombreCampo);
-                fieldTypeMap.put(nombreCampo, "UNIQUE");
-                lstDataList.setSelectedIndex(model.getSize() - 1);
+
+                // Evitar duplicados simples
+                if (((DefaultListModel<String>) lstDataList.getModel()).contains(nombreCampo)) {
+                    JOptionPane.showMessageDialog(this, "Ese nombre ya existe en la lista.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    model.addElement(nombreCampo);
+
+                    // Inicializar metadatos del campo
+                    fieldTypeMap.put(nombreCampo, "UNIQUE");
+                    spacesOptionByField.put(nombreCampo, false);
+                    symbolsOptionByField.put(nombreCampo, false);
+                    itemOptionByField.put(nombreCampo, false);
+                    textOptionByField.put(nombreCampo, false);
+                    itemTypeByField.put(nombreCampo, "ID");
+                    textTypeByField.put(nombreCampo, "MAYÚSCULA");
+                    fieldAreasByPage.putIfAbsent(nombreCampo, new LinkedHashMap<>());
+
+                    lstDataList.setSelectedIndex(model.getSize() - 1);
+                }
             }
         }
 
@@ -1584,19 +1702,15 @@ public class pdfareaextractortoexcel extends JFrame {
     }//GEN-LAST:event_btnAddDataActionPerformed
 
     private void btnDeleteDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteDataActionPerformed
-        // Obtener el modelo de la lista
         ListModel<String> lm = lstDataList.getModel();
         if (!(lm instanceof DefaultListModel)) return;
         DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
-        // Obtener el índice del elemento seleccionado
         int index = lstDataList.getSelectedIndex();
-        if (index == -1) return; // Ningún ítem seleccionado
+        if (index == -1) return;
 
-        // Obtener el nombre del campo seleccionado
         String nombreCampo = model.getElementAt(index);
 
-        // Mostrar el diálogo de confirmación
         int opcion = JOptionPane.showConfirmDialog(
             this,
             "¿Está seguro de que quiere eliminar el item \"" + nombreCampo + "\"?",
@@ -1605,17 +1719,32 @@ public class pdfareaextractortoexcel extends JFrame {
             JOptionPane.WARNING_MESSAGE
         );
 
-        // Si el usuario confirma, eliminar el elemento
         if (opcion == JOptionPane.YES_OPTION) {
+            // Eliminar del modelo visual
             model.remove(index);
+
+            // Eliminar de todos los mapas asociados
             fieldTypeMap.remove(nombreCampo);
             fieldAreasByPage.remove(nombreCampo);
+            spacesOptionByField.remove(nombreCampo);
+            symbolsOptionByField.remove(nombreCampo);
+            itemOptionByField.remove(nombreCampo);
+            textOptionByField.remove(nombreCampo);
+            itemTypeByField.remove(nombreCampo);
+            textTypeByField.remove(nombreCampo);
+
             refreshVisibleSelections();
 
-            // Ajustar la selección tras eliminar
             if (!model.isEmpty()) {
                 int nuevoIndex = Math.min(index, model.getSize() - 1);
                 lstDataList.setSelectedIndex(nuevoIndex);
+            } else {
+                // Sin selección ni campos
+                btnDeleteData.setEnabled(false);
+                btnEditData.setEnabled(false);
+                btnMoveUpData.setEnabled(false);
+                btnMoveDownData.setEnabled(false);
+                btnClearListData.setEnabled(false);
             }
         }
     }//GEN-LAST:event_btnDeleteDataActionPerformed
@@ -1625,11 +1754,8 @@ public class pdfareaextractortoexcel extends JFrame {
         if (!(lm instanceof DefaultListModel)) return;
 
         DefaultListModel<String> model = (DefaultListModel<String>) lm;
-
-        // Si la lista está vacía, no hacemos nada
         if (model.isEmpty()) return;
 
-        // Mostrar confirmación
         int opcion = JOptionPane.showConfirmDialog(
             this,
             "¿Está seguro de que quiere eliminar todos los ítems de la lista?",
@@ -1638,14 +1764,21 @@ public class pdfareaextractortoexcel extends JFrame {
             JOptionPane.WARNING_MESSAGE
         );
 
-        // Si el usuario elige “Sí”, vaciar la lista
         if (opcion == JOptionPane.YES_OPTION) {
             model.clear();
+
+            // Limpiar todos los mapas asociados a los campos
             fieldTypeMap.clear();
             fieldAreasByPage.clear();
+            spacesOptionByField.clear();
+            symbolsOptionByField.clear();
+            itemOptionByField.clear();
+            textOptionByField.clear();
+            itemTypeByField.clear();
+            textTypeByField.clear();
+
             refreshVisibleSelections();
 
-            // Desactivar botones relacionados tras vaciar la lista
             btnDeleteData.setEnabled(false);
             btnEditData.setEnabled(false);
             btnMoveUpData.setEnabled(false);
@@ -1655,7 +1788,6 @@ public class pdfareaextractortoexcel extends JFrame {
     }//GEN-LAST:event_btnClearListDataActionPerformed
 
     private void btnEditDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditDataActionPerformed
-        // Verificar que haya un ítem seleccionado
         int index = lstDataList.getSelectedIndex();
         if (index == -1) return;
 
@@ -1663,27 +1795,22 @@ public class pdfareaextractortoexcel extends JFrame {
         if (!(lm instanceof DefaultListModel)) return;
         DefaultListModel<String> model = (DefaultListModel<String>) lm;
 
-        // Obtener el nombre actual del campo
         String oldName = model.getElementAt(index);
 
-        // Crear el campo de texto con el nombre actual preescrito
         JTextField txtNombre = new JTextField(oldName, 20);
 
-        // Crear el panel simple con etiqueta + campo
         JPanel panel = new JPanel();
         panel.add(new JLabel("Editar nombre del campo:"));
         panel.add(txtNombre);
 
-        // Crear el cuadro de diálogo manualmente para poder dar el foco automático
         JOptionPane optionPane = new JOptionPane(
             panel,
             JOptionPane.PLAIN_MESSAGE,
             JOptionPane.OK_CANCEL_OPTION
         );
 
-       JDialog dialog = optionPane.createDialog(this, "Editar campo");
+        JDialog dialog = optionPane.createDialog(this, "Editar campo");
 
-        // Foco automático en el campo al abrir el diálogo
         dialog.addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
@@ -1692,22 +1819,38 @@ public class pdfareaextractortoexcel extends JFrame {
             }
         });
 
-        // Mostrar el cuadro
         dialog.setVisible(true);
 
-        // Procesar resultado
         Object selectedValue = optionPane.getValue();
         if (selectedValue != null && (int) selectedValue == JOptionPane.OK_OPTION) {
             String newName = txtNombre.getText().trim();
             if (!newName.isEmpty() && !newName.equals(oldName)) {
-                // Actualizar el nombre en la lista
-                model.setElementAt(newName, index);
-                lstDataList.setSelectedIndex(index);
+                // Evitar colisión con otro campo
+                DefaultListModel<String> m = (DefaultListModel<String>) lstDataList.getModel();
+                if (m.contains(newName)) {
+                    JOptionPane.showMessageDialog(this, "Ya existe un campo con ese nombre.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    // Actualizar en la lista
+                    model.setElementAt(newName, index);
+                    lstDataList.setSelectedIndex(index);
 
-                // Actualizar el tipo en el mapa
-                String oldType = fieldTypeMap.getOrDefault(oldName, "UNIQUE");
-                fieldTypeMap.remove(oldName);
-                fieldTypeMap.put(newName, oldType);
+                    // Mover tipo
+                    String oldType = fieldTypeMap.remove(oldName);
+                    if (oldType != null) fieldTypeMap.put(newName, oldType);
+
+                    // Mover opciones por campo
+                    Boolean sp = spacesOptionByField.remove(oldName);
+                    if (sp != null) spacesOptionByField.put(newName, sp);
+
+                    Boolean sy = symbolsOptionByField.remove(oldName);
+                    if (sy != null) symbolsOptionByField.put(newName, sy);
+
+                    // Mover áreas
+                    Map<Integer, Rectangle2D.Double> areas = fieldAreasByPage.remove(oldName);
+                    if (areas != null) fieldAreasByPage.put(newName, areas);
+
+                    refreshVisibleSelections();
+                }
             }
         }
 
@@ -1722,46 +1865,36 @@ public class pdfareaextractortoexcel extends JFrame {
         String current = model.getElementAt(index);
         String previous = model.getElementAt(index - 1);
 
-        // Intercambiar en el modelo
+        // Reordenar solo en el modelo visual
         model.setElementAt(current, index - 1);
         model.setElementAt(previous, index);
 
-        // Intercambiar en el mapa
-        String typeCurrent = fieldTypeMap.get(current);
-        String typePrevious = fieldTypeMap.get(previous);
-
-        fieldTypeMap.put(current, typePrevious);
-        fieldTypeMap.put(previous, typeCurrent);
-
+        // Reaplicar selección y asegurar visibilidad
         lstDataList.setSelectedIndex(index - 1);
+        lstDataList.ensureIndexIsVisible(index - 1);
     }//GEN-LAST:event_btnMoveUpDataActionPerformed
 
     private void btnMoveDownDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveDownDataActionPerformed
         int index = lstDataList.getSelectedIndex();
-        DefaultListModel<String> model = (DefaultListModel<String>) lstDataList.getModel();
+        if (index == -1) return;
 
-        if (index == -1 || index >= model.getSize() - 1) return;
+        DefaultListModel<String> model = (DefaultListModel<String>) lstDataList.getModel();
+        if (index >= model.getSize() - 1) return;
 
         String current = model.getElementAt(index);
         String next = model.getElementAt(index + 1);
 
-        // Intercambiar en el modelo
+        // Reordenar solo en el modelo visual
         model.setElementAt(next, index);
         model.setElementAt(current, index + 1);
 
-        // Intercambiar en el mapa
-        String typeCurrent = fieldTypeMap.get(current);
-        String typeNext = fieldTypeMap.get(next);
-
-        fieldTypeMap.put(current, typeNext);
-        fieldTypeMap.put(next, typeCurrent);
-
+        // Reaplicar selección y asegurar visibilidad
         lstDataList.setSelectedIndex(index + 1);
+        lstDataList.ensureIndexIsVisible(index + 1);
     }//GEN-LAST:event_btnMoveDownDataActionPerformed
 
     private void btnValidateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidateActionPerformed
         try {
-            // === 1. Determinar rango de páginas ===
             int totalPages = pdfDocument.getNumberOfPages();
             int startPage = 1;
             int finishPage = totalPages;
@@ -1779,7 +1912,6 @@ public class pdfareaextractortoexcel extends JFrame {
                     );
                     return;
                 }
-
                 if (startPage < 1 || finishPage > totalPages || startPage > finishPage) {
                     JOptionPane.showMessageDialog(
                         this,
@@ -1791,7 +1923,6 @@ public class pdfareaextractortoexcel extends JFrame {
                 }
             }
 
-            // === 2. Obtener campos de la lista ===
             ArrayList<String> fields = new ArrayList<>();
             ListModel<String> model = lstDataList.getModel();
             for (int i = 0; i < model.getSize(); i++) fields.add(model.getElementAt(i));
@@ -1800,7 +1931,6 @@ public class pdfareaextractortoexcel extends JFrame {
                 return;
             }
 
-            // === 3. Comprobar que hay al menos un área asignada ===
             boolean anyAreaDefined = false;
             for (String f : fields) {
                 Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(f);
@@ -1811,19 +1941,17 @@ public class pdfareaextractortoexcel extends JFrame {
                 return;
             }
 
-            // === 4. Detectar estructura seleccionada ===
-            boolean struct1 = rdbStructure1.isSelected(); // cada dos páginas
-            boolean struct2 = rdbStructure2.isSelected(); // cada página
-            boolean struct3 = rdbStructure3.isSelected(); // campos diferentes por las dos caras
+            boolean struct1 = rdbStructure1.isSelected();
+            boolean struct2 = rdbStructure2.isSelected();
+            boolean struct3 = rdbStructure3.isSelected();
 
             extractedData.clear();
 
-            System.out.println("=== Inicio de la extracción de datos ===");
+            System.out.println("Inicio de la extracción de datos");
             System.out.println("Modo estructura: " + (struct1 ? "Cada dos páginas" : struct2 ? "Cada página" : "Campos diferentes por ambas caras"));
             System.out.println("Rango de páginas: " + startPage + " - " + finishPage);
-            System.out.println("----------------------------------------");
+            System.out.println("--------------------------------------------------");
 
-            // === 5. Conversor de coordenadas relativas a puntos PDF ===
             BiFunction<Rectangle2D.Double, PDPage, Rectangle2D.Double> toPdfPoints =
                 (frac, page) -> {
                     PDRectangle mb = page.getMediaBox();
@@ -1832,15 +1960,15 @@ public class pdfareaextractortoexcel extends JFrame {
                     return new Rectangle2D.Double(frac.x * pw, frac.y * ph, frac.width * pw, frac.height * ph);
                 };
 
-            // === 6. Recorrido principal de páginas ===
             int pageStep = (struct1 || struct3) ? 2 : 1;
 
             for (int p = startPage; p <= finishPage; p += pageStep) {
-                Map<String, String> row = new LinkedHashMap<>();
-                for (String f : fields) row.put(f, ""); // inicializamos vacíos
+                Map<String, String> baseRow = new LinkedHashMap<>();
+                for (String f : fields) baseRow.put(f, "");
 
+                Map<String, List<String>> masterItemsByField = new LinkedHashMap<>();
+                
                 if (struct3) {
-                    // --- Cara delantera ---
                     int frontIdx = p - 1;
                     if (frontIdx < totalPages) {
                         PDPage pageFront = pdfDocument.getPage(frontIdx);
@@ -1857,15 +1985,30 @@ public class pdfareaextractortoexcel extends JFrame {
                         }
 
                         stripperFront.extractRegions(pageFront);
+
                         for (String field : fields) {
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null || !perPage.containsKey(0)) continue;
-                            String text = stripperFront.getTextForRegion(field);
-                            if (text != null) row.put(field, text.trim());
+
+                            String raw = stripperFront.getTextForRegion(field);
+                            String cleaned = stripTrailingLineBreaks(raw);
+
+                            String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
+                            if ("MASTER".equals(type)) {
+                                String[] parts = cleaned.split("\\r?\\n");
+                                List<String> items = new ArrayList<>();
+                                for (String it : parts) {
+                                    String itClean = applyPerFieldOptions(field, it);
+                                    items.add(itClean);
+                                }
+                                masterItemsByField.put(field, items);
+                            } else {
+                                String val = applyPerFieldOptions(field, cleaned);
+                                baseRow.put(field, val);
+                            }
                         }
                     }
 
-                    // --- Cara trasera ---
                     int backLogical = p + 1;
                     int backIdx = backLogical - 1;
                     if (backLogical <= finishPage && backIdx < totalPages) {
@@ -1883,18 +2026,41 @@ public class pdfareaextractortoexcel extends JFrame {
                         }
 
                         stripperBack.extractRegions(pageBack);
+
                         for (String field : fields) {
                             Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                             if (perPage == null || !perPage.containsKey(1)) continue;
-                            String text = stripperBack.getTextForRegion(field);
-                            if (text != null && !text.trim().isEmpty()) {
-                                row.put(field, text.trim());
+
+                            String raw = stripperBack.getTextForRegion(field);
+                            String cleaned = stripTrailingLineBreaks(raw);
+
+                            String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
+                            if ("MASTER".equals(type)) {
+                                String[] parts = cleaned.split("\\r?\\n");
+                                List<String> items = new ArrayList<>();
+                                for (String it : parts) {
+                                    String itClean = applyPerFieldOptions(field, it);
+                                    items.add(itClean);
+                                }
+                                List<String> prev = masterItemsByField.get(field);
+                                if (prev == null) {
+                                    masterItemsByField.put(field, items);
+                                } else {
+                                    prev.addAll(items);
+                                }
+                            } else {
+                                String existing = baseRow.getOrDefault(field, "");
+                                String val = applyPerFieldOptions(field, cleaned);
+                                if (existing == null || existing.isEmpty()) {
+                                    baseRow.put(field, val);
+                                } else if (val != null && !val.isEmpty()) {
+                                    baseRow.put(field, existing + "\n" + val);
+                                }
                             }
                         }
                     }
 
                 } else {
-                    // --- Estructuras 1 y 2 ---
                     int pageIndex = p - 1;
                     if (pageIndex >= totalPages) continue;
                     PDPage page = pdfDocument.getPage(pageIndex);
@@ -1912,30 +2078,69 @@ public class pdfareaextractortoexcel extends JFrame {
                     }
 
                     stripper.extractRegions(page);
+
                     for (String field : fields) {
                         Map<Integer, Rectangle2D.Double> perPage = fieldAreasByPage.get(field);
                         if (perPage == null || !perPage.containsKey(0)) continue;
-                        String text = stripper.getTextForRegion(field);
-                        if (text != null) row.put(field, text.trim());
+
+                        String raw = stripper.getTextForRegion(field);
+                        String cleaned = stripTrailingLineBreaks(raw);
+
+                        String type = fieldTypeMap.getOrDefault(field, "UNIQUE");
+                        if ("MASTER".equals(type)) {
+                            String[] parts = cleaned.split("\\r?\\n");
+                            List<String> items = new ArrayList<>();
+                            for (String it : parts) {
+                                String itClean = applyPerFieldOptions(field, it);
+                                items.add(itClean);
+                            }
+                            masterItemsByField.put(field, items);
+                        } else {
+                            String val = applyPerFieldOptions(field, cleaned);
+                            baseRow.put(field, val);
+                        }
                     }
                 }
 
-                // --- Añadir fila si contiene datos ---
-                boolean anyValue = row.values().stream().anyMatch(v -> v != null && !v.isEmpty());
-                if (anyValue) {
-                    extractedData.add(row);
+                int maxRows = 0;
+                for (List<String> items : masterItemsByField.values()) {
+                    if (items != null && items.size() > maxRows) maxRows = items.size();
+                }
 
-                    StringBuilder line = new StringBuilder();
-                    for (int i = 0; i < fields.size(); i++) {
-                        if (i > 0) line.append(", ");
-                        line.append(row.getOrDefault(fields.get(i), ""));
+                if (maxRows <= 0) {
+                    boolean anyValue = baseRow.values().stream().anyMatch(v -> v != null && !v.isEmpty());
+                    if (anyValue) {
+                        extractedData.add(baseRow);
+                        StringBuilder line = new StringBuilder();
+                        for (int i = 0; i < fields.size(); i++) {
+                            if (i > 0) line.append(", ");
+                            line.append(baseRow.getOrDefault(fields.get(i), ""));
+                        }
+                        System.out.println(line.toString());
                     }
-                    System.out.println(line.toString());
+                } else {
+                    for (int r = 0; r < maxRows; r++) {
+                        Map<String, String> newRow = new LinkedHashMap<>(baseRow);
+                        for (String mf : masterItemsByField.keySet()) {
+                            List<String> items = masterItemsByField.get(mf);
+                            String itemVal = (items != null && r < items.size()) ? items.get(r) : "";
+                            newRow.put(mf, itemVal);
+                        }
+                        boolean anyValue = newRow.values().stream().anyMatch(v -> v != null && !v.isEmpty());
+                        if (anyValue) {
+                            extractedData.add(newRow);
+                            StringBuilder line = new StringBuilder();
+                            for (int i = 0; i < fields.size(); i++) {
+                                if (i > 0) line.append(", ");
+                                line.append(newRow.getOrDefault(fields.get(i), ""));
+                            }
+                            System.out.println(line.toString());
+                        }
+                    }
                 }
             }
 
-            // === 7. Fin de proceso ===
-            System.out.println("=== Fin del recorrido del documento ===");
+            System.out.println("Fin del recorrido del documento");
             JOptionPane.showMessageDialog(this, "La validación y recogida de datos se ha completado correctamente.", "Validación completada", JOptionPane.INFORMATION_MESSAGE);
             btnGenerate.setEnabled(true);
 
@@ -2110,8 +2315,116 @@ public class pdfareaextractortoexcel extends JFrame {
 
         pagePanel.setSelections(visibleSelections);
     }
-
     
+    private static List<String> splitLinesByNewline(String text) {
+        if (text == null) return Collections.emptyList();
+        String[] raw = text.split("\\R");
+        List<String> out = new ArrayList<>();
+        for (String s : raw) {
+            String t = s == null ? "" : s.trim();
+            if (!t.isEmpty()) out.add(t);
+        }
+        return out;
+    }
+    
+    private String removeSpacesKeepNewlines(String s) {
+        if (s == null) return "";
+        String v = s.replace("\r", "");
+        v = v.replace(" ", "");
+        v = v.replace("\u00A0", "");
+        return v;
+    }
+
+    private String keepDigitsAndNewlines(String s) {
+        if (s == null) return "";
+        String v = s.replace("\r", "");
+        v = v.replaceAll("[^0-9\\n]", "");
+        return v;
+    }
+
+    // Aplica opciones según el campo
+    private String applyTextOptions(String fieldName, String s) {
+        if (s == null) return "";
+        String v = s.replace("\r", "");
+
+        boolean spacesOn  = Boolean.TRUE.equals(spacesOptionByField.get(fieldName));
+        boolean symbolsOn = Boolean.TRUE.equals(symbolsOptionByField.get(fieldName));
+
+        if (spacesOn)  v = removeSpacesKeepNewlines(v);
+        if (symbolsOn) v = keepDigitsAndNewlines(v);
+
+        return v;
+    }
+    
+    private String stripTrailingLineBreaks(String s) {
+        if (s == null) return "";
+        int end = s.length();
+        boolean sawLineBreak = false;
+
+        while (end > 0) {
+            char c = s.charAt(end - 1);
+            if (c == '\n' || c == '\r') {
+                sawLineBreak = true;
+                end--;
+                continue;
+            }
+            if (sawLineBreak && (c == ' ' || c == '\t' || c == '\u00A0')) { // espacios, tab y NBSP
+                end--;
+                continue;
+            }
+            // elimina también BOM/ZWSP si quedaran al final
+            if (!sawLineBreak && (c == '\u200B' || c == '\uFEFF')) {
+                end--;
+                continue;
+            }
+            break;
+        }
+        return s.substring(0, end);
+    }
+
+    // Aplica las opciones por campo sin tocar los saltos de línea internos
+    private String applyPerFieldOptions(String field, String text) {
+        if (text == null) return "";
+        Boolean rmSpaces  = spacesOptionByField.get(field);
+        Boolean onlyNums  = symbolsOptionByField.get(field);
+        String out = text;
+        if (Boolean.TRUE.equals(rmSpaces)) {
+            out = out.replace(" ", "");
+        }
+        if (Boolean.TRUE.equals(onlyNums)) {
+            out = out.replaceAll("[^0-9]", "");
+        }
+        return out;
+    }
+    
+    private void updateFieldTypeDependencies() {
+        boolean hasSelection = lstDataList.getSelectedIndex() != -1;
+        boolean isUniqueType = rbdFieldType1.isSelected();
+    
+        // chkItem solo se habilita si hay selección y es tipo UNIQUE
+        chkItem.setEnabled(hasSelection && isUniqueType);
+    
+        // Si chkItem se deshabilita, se deselecciona
+        if (!chkItem.isEnabled()) {
+            chkItem.setSelected(false);
+        }
+    
+        // chkText se habilita si hay selección y chkItem NO está seleccionado
+        chkText.setEnabled(hasSelection && !chkItem.isSelected());
+    
+        // Si chkText se deshabilita, se deselecciona
+        if (!chkText.isEnabled()) {
+            chkText.setSelected(false);
+        }
+    
+        // cmbItem se habilita si chkItem está habilitado y seleccionado
+        cmbItem.setEnabled(chkItem.isEnabled() && chkItem.isSelected());
+    
+        // cmbText se habilita si chkText está habilitado y seleccionado
+        cmbText.setEnabled(chkText.isEnabled() && chkText.isSelected());
+    }
+
+
     /**
      * @param args the command line arguments
      */
