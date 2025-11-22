@@ -3,7 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/pdfareaextractortoexcel.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/app/PDFAreaExtractorApp.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/view/PDFPagePanel.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/ExtractionSettings.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/FieldConfig.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/FieldType.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/ItemType.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/PageScanMode.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/StructureMode.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/model/TextCaseType.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/AreaSelectionManager.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/ExcelExporter.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/ExtractionEngine.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/FieldManager.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/PDFTextProcessor.java</file>
+            <file>file:/C:/Users/Ivan/Desktop/temp/PDF%20area%20extractor%20to%20Excel%20(Java)/PDF-area-extractor-to-Excel-Java/src/pdfareaextractortoexcel/services/MainController.java</file>
         </group>
     </open-files>
 </project-private>

@@ -389,9 +389,6 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Buscar archivo"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSelectorActionPerformed"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txfLink">
                 </Component>
@@ -557,9 +554,6 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="A&#xf1;adir campo"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddDataActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnDeleteData">
                       <Properties>
@@ -568,9 +562,6 @@
                           <Dimension value="[105, 23]"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteDataActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnClearListData">
                       <Properties>
@@ -579,9 +570,6 @@
                           <Dimension value="[105, 23]"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnClearListDataActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnEditData">
                       <Properties>
@@ -590,9 +578,6 @@
                           <Dimension value="[105, 23]"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditDataActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnMoveUpData">
                       <Properties>
@@ -601,9 +586,6 @@
                           <Dimension value="[105, 23]"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveUpDataActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnMoveDownData">
                       <Properties>
@@ -612,9 +594,6 @@
                           <Dimension value="[105, 23]"/>
                         </Property>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveDownDataActionPerformed"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -981,9 +960,6 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Generar Excel"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerateActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnValidate">
                       <Properties>
@@ -992,9 +968,6 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Validar datos"/>
                       </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnValidateActionPerformed"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
