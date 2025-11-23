@@ -634,6 +634,8 @@ public class MainController {
                 }
 
                 refreshVisibleSelectionsForSingleField(selectedFieldName);
+                
+                updateFieldTypeDependencies();
 
             } else {
                 clearFieldOptionsUI();
