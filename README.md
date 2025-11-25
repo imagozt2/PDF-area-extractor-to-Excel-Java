@@ -1,15 +1,27 @@
 # PDF Area Extractor to Excel (Java)
 
-<a href="https://www.youtube.com/watch?v=R5lbnZJC59U" target="_blank">
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=R5lbnZJC59U" target="_blank">
     <img src="https://img.youtube.com/vi/R5lbnZJC59U/maxresdefault.jpg" 
-         alt="Vídeo demostración" width="100%">
-</a>
+         width="100%" />
+  </a>
+</p>
+
 
 ## Componentes de la interfaz
 
-![Interfaz - Parte 1](https://i.postimg.cc/bZr7vMs4/1.png)
-![Interfaz - Parte 2](https://i.postimg.cc/yDxMN5kM/20.png)
-![Interfaz - Parte 3](https://i.postimg.cc/DS09zD8p/51.png)
+<p align="center">
+  <img src="https://i.postimg.cc/bZr7vMs4/1.png" alt="Interfaz parte 1" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://i.postimg.cc/yDxMN5kM/20.png" alt="Interfaz parte 2" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://i.postimg.cc/DS09zD8p/51.png" alt="Interfaz parte 3" width="100%">
+</p>
+
 
 | Nº | Componente en la UI | Variable en código | Descripción |
 |----|----------------------|--------------------|-------------|
