@@ -19,58 +19,60 @@
 </p>
 
 
-| Nº | Componente en la UI | Variable en código | Descripción |
-|----|----------------------|--------------------|-------------|
-| 1  | Cargar archivo       | `lblLoadFile`        | Título de la sección de carga |
-| 2  | Botón “Buscar archivo” | `btnSelector`      | Abre el selector de archivos PDF |
-| 3  | Ruta del archivo     | `txfLink`           | Muestra la ruta del PDF cargado |
-| 4  | Estructura del documento | `lblStructure` | Título de la sección de estructura |
-| 5  | Icono estructura 1 (cara 1) | `imgPage1` | Imagen representativa del modo 1 |
-| 6  | Icono estructura 1 (cara 2) | `imgPage2` | Imagen complementaria del modo 1 |
-| 7  | Icono estructura 2         | `imgPage3` | Imagen representativa del modo 2 |
-| 8  | Icono estructura 3 (cara delantera) | `imgPage4` | Imagen modo 3 cara delantera |
-| 9  | Icono estructura 3 (cara trasera) | `imgPage5` | Imagen modo 3 cara trasera |
-| 10 | Todos los datos cada dos páginas | `rdbStructure1` | RadioButton para estructura 1 |
-| 11 | Todos los datos en cada página | `rdbStructure2` | RadioButton para estructura 2 |
-| 12 | Datos distintos por las dos caras | `rdbStructure3` | RadioButton para estructura 3 |
-| 13 | Páginas a escanear | `lblPagesScanner` | Título sección rango |
-| 14 | Documento completo | `rdbPagesScanner1` | Escaneo completo |
-| 15 | Margen personalizado | `rdbPagesScanner2` | Escaneo por rango |
-| 16 | Iniciar en página | `lblPageStart` | Etiqueta inicio |
-| 17 | Valor inicio página | `txfStart` | Campo inicio |
-| 18 | Finalizar en página | `lblPageEnd` | Etiqueta fin |
-| 19 | Valor fin página | `txfEnd` | Campo fin |
-| 20 | Campos y recopilación de datos | `lblData` | Título sección de campos |
-| 21 | Lista de campos (título) | `lblDataList` | Etiqueta sobre la lista |
-| 22 | Lista de campos | `lstDataList` | Contenedor donde se muestran los campos |
-| 23 | Añadir campo | `btnAddField` | Añade un nuevo campo |
-| 24 | Eliminar campo | `btnDeleteField` | Borra el campo seleccionado |
-| 25 | Borrar lista | `btnClearList` | Elimina todos los campos |
-| 26 | Editar campo | `btnEditField` | Modificar configuración del campo |
-| 27 | Mover arriba | `btnMoveUpField` | Orden de la lista |
-| 28 | Mover abajo | `btnMoveDownField` | Orden descendente |
-| 29 | Tipo de campo | `lblDataFieldType` | Título de sección |
-| 30 | Valor único | `rdbFieldTypeUnique` | Campo simple |
-| 31 | Valor múltiple maestro | `rdbFieldTypeMaster` | Campo que genera varias filas |
-| 32 | Valor múltiple dependiente | `rdbFieldTypeDependent` | Depende de un maestro |
-| 33 | Ubicación y coordenadas | `lblDataUbication` | Título |
-| 34 | Cara | `lblPage` | Etiqueta de cara |
-| 35 | Valor cara | `txfPage` | Cara de asignación |
-| 36 | Eje X | `lblAxisX` | Coordenada X |
-| 37 | Valor X | `txfAxisX` | Coordenada X relativa |
-| 38 | Eje Y | `lblAxisY` | Coordenada Y |
-| 39 | Valor Y | `txfAxisY` | Coordenada Y relativa |
-| 40 | Otras opciones | `lblDataOptions` | Grupo de opciones |
-| 41 | Respectivo campo maestro | `lblMaster` | Etiqueta combo maestro |
-| 42 | Combo maestro | `cmbMaster` | Selección del maestro |
-| 43 | Definir campo sin área | `chkItem` | Campos fijos |
-| 44 | Tipo sin área | `cmbItem` | ID / PAGE / DATE |
-| 45 | Normalizar texto | `chkText` | Activación normalización |
-| 46 | Tipo de normalización | `cmbText` | UPPER / lower / Title |
-| 47 | Eliminar espacios | `chkSpaces` | Limpieza |
-| 48 | Eliminar caracteres no numéricos | `chkSymbols` | Solo dígitos |
-| 49 | Validar datos | `btnValidate` | Recorrido del documento y toma de datos |
-| 50 | Generar Excel | `btnGenerate` | Exporta archivo final |
-| 51 | Cara delantera | `tglPag1` | Alterna cara delantera |
-| 52 | Cara trasera | `tglPag2` | Alterna cara trasera |
-| 53 | Slider de zoom | `sldRightPanel` | Controla zoom del visor PDF |
+## Componentes de la interfaz
+
+| Nº | Nombre del componente | Tipo de componente | Función |
+|----|------------------------|--------------------|---------|
+| 1  | `lblLoadFile` | Label | Informativo. |
+| 2  | `btnSelector` | JButton | Abre el selector de archivos para cargar un PDF. |
+| 3  | `txfLink` | JTextField | Muestra la ruta del archivo PDF cargado. |
+| 4  | `lblStructure` | Label | Informativo. |
+| 5  | `imgPage1` | JLabel (icono) | Complemento gráfico. |
+| 6  | `imgPage2` | JLabel (icono) | Complemento gráfico. |
+| 7  | `imgPage3` | JLabel (icono) | Complemento gráfico. |
+| 8  | `imgPage4` | JLabel (icono) | Complemento gráfico. |
+| 9  | `imgPage5` | JLabel (icono) | Complemento gráfico. |
+| 10 | `rdbStructure1` | JRadioButton | Define el recorrido cada dos caras. |
+| 11 | `rdbStructure2` | JRadioButton | Define el recorrido en cada cara para los mismos datos. |
+| 12 | `rdbStructure3` | JRadioButton | Define el recorrido en cada cara para datos distintos. |
+| 13 | `lblPagesScanner` | Label | Informativo. |
+| 14 | `rdbPagesScanner1` | JRadioButton | Define el recorrido de todas las páginas. |
+| 15 | `rdbPagesScanner2` | JRadioButton | Define el recorrido de un rango de páginas. |
+| 16 | `lblPageStart` | Label | Informativo. |
+| 17 | `txfStart` | JTextField | Guarda el número de la página de inicio del recorrido. |
+| 18 | `lblPageEnd` | Label | Informativo. |
+| 19 | `txfEnd` | JTextField | Guarda el número de la página de inicio del recorrido. |
+| 20 | `lblData` | Label | Informativo. |
+| 21 | `lblDataList` | Label | Informativo. |
+| 22 | `lstDataList` | JList | Lista de campos definidos por el usuario. |
+| 23 | `btnAddField` | JButton | Añade un nuevo campo a la lista. |
+| 24 | `btnDeleteField` | JButton | Elimina el campo seleccionado. |
+| 25 | `btnClearList` | JButton | Borra toda la lista de campos. |
+| 26 | `btnEditField` | JButton | Edita el nombre del campo seleccionado. |
+| 27 | `btnMoveUpField` | JButton | Mueve el campo seleccionado hacia arriba. |
+| 28 | `btnMoveDownField` | JButton | Mueve el campo seleccionado hacia abajo. |
+| 29 | `lblDataFieldType` | Label | Informativo. |
+| 30 | `rdbFieldTypeUnique` | JRadioButton | Define un campo como valor único. |
+| 31 | `rdbFieldTypeMaster` | JRadioButton | Define un campo como valor múltiple maestro. |
+| 32 | `rdbFieldTypeDependent` | JRadioButton | Define un campo como valor múltiple dependiente. |
+| 33 | `lblDataUbication` | Label | Informativo. |
+| 34 | `lblPage` | Label | Informativo. |
+| 35 | `txfPage` | JTextField | Muestra en qué cara de la página se encuentra el área seleccionada. |
+| 36 | `lblAxisX` | Label | Informativo. |
+| 37 | `txfAxisX` | JTextField | Muestra la coordenada X del área seleccionada. |
+| 38 | `lblAxisY` | Label | IInformativo. |
+| 39 | `txfAxisY` | JTextField | Muestra la coordenada Y del área seleccionada. |
+| 40 | `lblDataOptions` | Label | Informativo. |
+| 41 | `lblMaster` | Label | Informativo. |
+| 42 | `cmbMaster` | JComboBox | Permite seleccionar el campo maestro (si el campo es dependiente). |
+| 43 | `chkItem` | JCheckBox | Activa el modo "campo sin área". |
+| 44 | `cmbItem` | JComboBox | Define el tipo de dato del campo sin área (ID, PAGE, DATE). |
+| 45 | `chkText` | JCheckBox | Activa la normalización de texto. |
+| 46 | `cmbText` | JComboBox | Selecciona el tipo de normalización (UPPERCASE, lowercase, Title). |
+| 47 | `chkSpaces` | JCheckBox | Elimina espacios dentro del texto extraído. |
+| 48 | `chkSymbols` | JCheckBox | Elimina caracteres no numéricos del texto. |
+| 49 | `btnValidate` | JButton | Valida la configuración de los campos y recorre el documento para guardar los datos. |
+| 50 | `btnGenerate` | JButton | Genera el archivo Excel con los datos extraídos. |
+| 51 | `tglPag1` | JToggleButton | Selecciona la cara delantera del documento. |
+| 52 | `tglPag2` | JToggleButton | Selecciona la cara trasera del documento. |
+| 53 | `sldRightPanel` | JSlider | Controla el nivel de zoom del visor PDF. |
