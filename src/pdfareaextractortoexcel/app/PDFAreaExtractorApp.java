@@ -92,27 +92,27 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JButton getBtnAddData() {
-        return btnAddData;
+        return btnAddField;
     }
 
     public JButton getBtnDeleteData() {
-        return btnDeleteData;
+        return btnDeleteField;
     }
 
     public JButton getBtnClearListData() {
-        return btnClearListData;
+        return btnClearList;
     }
 
     public JButton getBtnEditData() {
-        return btnEditData;
+        return btnEditField;
     }
 
     public JButton getBtnMoveUpData() {
-        return btnMoveUpData;
+        return btnMoveUpField;
     }
 
     public JButton getBtnMoveDownData() {
-        return btnMoveDownData;
+        return btnMoveDownField;
     }
 
     public JCheckBox getChkItem() {
@@ -160,7 +160,7 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JLabel getLblPageFinish() {
-        return lblPageFinish;
+        return lblPageEnd;
     }
 
     public JLabel getLblData() {
@@ -172,15 +172,15 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JLabel getLblDataFormat1() {
-        return lblDataFormat1;
+        return lblDataFieldType;
     }
 
     public JLabel getLblDataFormat2() {
-        return lblDataFormat2;
+        return lblDataUbication;
     }
 
     public JLabel getLblDataFormat3() {
-        return lblDataFormat3;
+        return lblDataOptions;
     }
 
     public JLabel getLblPage() {
@@ -280,15 +280,15 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JRadioButton getRbdFieldType1() {
-        return rbdFieldType1;
+        return rdbFieldTypeUnique;
     }
 
     public JRadioButton getRbdFieldType2() {
-        return rbdFieldType2;
+        return rdbFieldTypeMaster;
     }
 
     public JRadioButton getRbdFieldType3() {
-        return rbdFieldType3;
+        return rdbFieldTypeDependent;
     }
 
     public JRadioButton getRdbStructure1() {
@@ -304,11 +304,11 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JRadioButton getRbdPagesScanner1() {
-        return rbdPagesScanner1;
+        return rdbPagesScanner1;
     }
 
     public JRadioButton getRbdPagesScanner2() {
-        return rbdPagesScanner2;
+        return rdbPagesScanner2;
     }
     
     public JScrollPane getScrPdfViewer() {
@@ -352,7 +352,7 @@ public class PDFAreaExtractorApp extends JFrame {
     }
 
     public JTextField getTxfFinish() {
-        return txfFinish;
+        return txfEnd;
     }
 
     public JToggleButton getTglPag1() {
@@ -393,19 +393,19 @@ public class PDFAreaExtractorApp extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         lstDataList = new javax.swing.JList<>();
         lblDataList = new javax.swing.JLabel();
-        btnAddData = new javax.swing.JButton();
-        btnDeleteData = new javax.swing.JButton();
-        btnClearListData = new javax.swing.JButton();
-        btnEditData = new javax.swing.JButton();
-        btnMoveUpData = new javax.swing.JButton();
-        btnMoveDownData = new javax.swing.JButton();
+        btnAddField = new javax.swing.JButton();
+        btnDeleteField = new javax.swing.JButton();
+        btnClearList = new javax.swing.JButton();
+        btnEditField = new javax.swing.JButton();
+        btnMoveUpField = new javax.swing.JButton();
+        btnMoveDownField = new javax.swing.JButton();
         pnlDataFormat1 = new javax.swing.JPanel();
-        lblDataFormat1 = new javax.swing.JLabel();
-        rbdFieldType1 = new javax.swing.JRadioButton();
-        rbdFieldType2 = new javax.swing.JRadioButton();
-        rbdFieldType3 = new javax.swing.JRadioButton();
+        lblDataFieldType = new javax.swing.JLabel();
+        rdbFieldTypeUnique = new javax.swing.JRadioButton();
+        rdbFieldTypeMaster = new javax.swing.JRadioButton();
+        rdbFieldTypeDependent = new javax.swing.JRadioButton();
         pnlDataFormat2 = new javax.swing.JPanel();
-        lblDataFormat2 = new javax.swing.JLabel();
+        lblDataUbication = new javax.swing.JLabel();
         lblPage = new javax.swing.JLabel();
         lblAxisX = new javax.swing.JLabel();
         lblAxisY = new javax.swing.JLabel();
@@ -413,7 +413,7 @@ public class PDFAreaExtractorApp extends JFrame {
         txfAxisX = new javax.swing.JTextField();
         txfAxisY = new javax.swing.JTextField();
         pnlDataFormat3 = new javax.swing.JPanel();
-        lblDataFormat3 = new javax.swing.JLabel();
+        lblDataOptions = new javax.swing.JLabel();
         cmbMaster = new javax.swing.JComboBox<>();
         chkItem = new javax.swing.JCheckBox();
         lblMaster = new javax.swing.JLabel();
@@ -426,12 +426,12 @@ public class PDFAreaExtractorApp extends JFrame {
         btnGenerate = new javax.swing.JButton();
         btnValidate = new javax.swing.JButton();
         pnlPagesScanner = new javax.swing.JPanel();
-        rbdPagesScanner1 = new javax.swing.JRadioButton();
-        rbdPagesScanner2 = new javax.swing.JRadioButton();
+        rdbPagesScanner1 = new javax.swing.JRadioButton();
+        rdbPagesScanner2 = new javax.swing.JRadioButton();
         lblPageStart = new javax.swing.JLabel();
-        lblPageFinish = new javax.swing.JLabel();
+        lblPageEnd = new javax.swing.JLabel();
         txfStart = new javax.swing.JTextField();
-        txfFinish = new javax.swing.JTextField();
+        txfEnd = new javax.swing.JTextField();
         lblPagesScanner = new javax.swing.JLabel();
         pnlRight = new javax.swing.JPanel();
         scrPdfViewer = new javax.swing.JScrollPane();
@@ -619,22 +619,22 @@ public class PDFAreaExtractorApp extends JFrame {
         lblDataList.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblDataList.setText("Lista de campos");
 
-        btnAddData.setText("Añadir campo");
+        btnAddField.setText("Añadir campo");
 
-        btnDeleteData.setText("Eliminar campo");
-        btnDeleteData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnDeleteField.setText("Eliminar campo");
+        btnDeleteField.setPreferredSize(new java.awt.Dimension(105, 23));
 
-        btnClearListData.setText("Borrar lista");
-        btnClearListData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnClearList.setText("Borrar lista");
+        btnClearList.setPreferredSize(new java.awt.Dimension(105, 23));
 
-        btnEditData.setText("Editar campo");
-        btnEditData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnEditField.setText("Editar campo");
+        btnEditField.setPreferredSize(new java.awt.Dimension(105, 23));
 
-        btnMoveUpData.setText("Mover arriba");
-        btnMoveUpData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnMoveUpField.setText("Mover arriba");
+        btnMoveUpField.setPreferredSize(new java.awt.Dimension(105, 23));
 
-        btnMoveDownData.setText("Mover abajo");
-        btnMoveDownData.setPreferredSize(new java.awt.Dimension(105, 23));
+        btnMoveDownField.setText("Mover abajo");
+        btnMoveDownField.setPreferredSize(new java.awt.Dimension(105, 23));
 
         javax.swing.GroupLayout pnlDataListLayout = new javax.swing.GroupLayout(pnlDataList);
         pnlDataList.setLayout(pnlDataListLayout);
@@ -647,14 +647,14 @@ public class PDFAreaExtractorApp extends JFrame {
                     .addComponent(lblDataList, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataListLayout.createSequentialGroup()
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                            .addComponent(btnDeleteData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                            .addComponent(btnClearListData, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
+                            .addComponent(btnAddField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(btnDeleteField, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                            .addComponent(btnClearList, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnMoveDownData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                            .addComponent(btnEditData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                            .addComponent(btnMoveUpData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
+                            .addComponent(btnMoveDownField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                            .addComponent(btnEditField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                            .addComponent(btnMoveUpField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnlDataListLayout.setVerticalGroup(
@@ -666,32 +666,32 @@ public class PDFAreaExtractorApp extends JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAddData)
-                    .addComponent(btnEditData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAddField)
+                    .addComponent(btnEditField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDeleteData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMoveUpData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDeleteField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMoveUpField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnClearListData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMoveDownData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnClearList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnMoveDownField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
         );
 
-        pnlDataListLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddData, btnClearListData, btnDeleteData, btnEditData, btnMoveDownData, btnMoveUpData});
+        pnlDataListLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnAddField, btnClearList, btnDeleteField, btnEditField, btnMoveDownField, btnMoveUpField});
 
         pnlDataFormat1.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        lblDataFormat1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblDataFormat1.setText("Tipo de campo");
+        lblDataFieldType.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDataFieldType.setText("Tipo de campo");
 
-        rbdFieldType1.setText("Valor único");
+        rdbFieldTypeUnique.setText("Valor único");
 
-        rbdFieldType2.setText("Valor múltiple maestro");
+        rdbFieldTypeMaster.setText("Valor múltiple maestro");
 
-        rbdFieldType3.setText("Valor múltiple dependiente");
+        rdbFieldTypeDependent.setText("Valor múltiple dependiente");
 
         javax.swing.GroupLayout pnlDataFormat1Layout = new javax.swing.GroupLayout(pnlDataFormat1);
         pnlDataFormat1.setLayout(pnlDataFormat1Layout);
@@ -700,31 +700,31 @@ public class PDFAreaExtractorApp extends JFrame {
             .addGroup(pnlDataFormat1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDataFormat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(rbdFieldType1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbdFieldType2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbdFieldType3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblDataFormat1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rdbFieldTypeUnique, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdbFieldTypeMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdbFieldTypeDependent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblDataFieldType, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDataFormat1Layout.setVerticalGroup(
             pnlDataFormat1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataFormat1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblDataFormat1)
+                .addComponent(lblDataFieldType)
                 .addGap(12, 12, 12)
-                .addComponent(rbdFieldType1)
+                .addComponent(rdbFieldTypeUnique)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rbdFieldType2)
+                .addComponent(rdbFieldTypeMaster)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rbdFieldType3)
+                .addComponent(rdbFieldTypeDependent)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlDataFormat2.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        lblDataFormat2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblDataFormat2.setText("Ubicación y coordenadas");
+        lblDataUbication.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDataUbication.setText("Ubicación y coordenadas");
 
         lblPage.setText("-Cara:");
 
@@ -751,14 +751,14 @@ public class PDFAreaExtractorApp extends JFrame {
                             .addComponent(txfAxisY))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlDataFormat2Layout.createSequentialGroup()
-                        .addComponent(lblDataFormat2, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDataUbication, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7))))
         );
         pnlDataFormat2Layout.setVerticalGroup(
             pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataFormat2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblDataFormat2)
+                .addComponent(lblDataUbication)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataFormat2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfPage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -777,8 +777,8 @@ public class PDFAreaExtractorApp extends JFrame {
         pnlDataFormat3.setBackground(new java.awt.Color(180, 180, 180));
         pnlDataFormat3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        lblDataFormat3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblDataFormat3.setText("Otras opciones");
+        lblDataOptions.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDataOptions.setText("Otras opciones");
 
         cmbMaster.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -803,7 +803,7 @@ public class PDFAreaExtractorApp extends JFrame {
             .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDataFormat3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDataOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                         .addComponent(lblMaster)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -824,7 +824,7 @@ public class PDFAreaExtractorApp extends JFrame {
             pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDataFormat3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblDataFormat3)
+                .addComponent(lblDataOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDataFormat3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMaster)
@@ -911,13 +911,13 @@ public class PDFAreaExtractorApp extends JFrame {
         pnlPagesScanner.setBackground(new java.awt.Color(200, 200, 200));
         pnlPagesScanner.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        rbdPagesScanner1.setText("Documento completo");
+        rdbPagesScanner1.setText("Documento completo");
 
-        rbdPagesScanner2.setText("Margen personalizado");
+        rdbPagesScanner2.setText("Margen personalizado");
 
         lblPageStart.setText("-Iniciar en página:");
 
-        lblPageFinish.setText("-Finalizar en página:");
+        lblPageEnd.setText("-Finalizar en página:");
 
         javax.swing.GroupLayout pnlPagesScannerLayout = new javax.swing.GroupLayout(pnlPagesScanner);
         pnlPagesScanner.setLayout(pnlPagesScannerLayout);
@@ -926,15 +926,15 @@ public class PDFAreaExtractorApp extends JFrame {
             .addGroup(pnlPagesScannerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(rbdPagesScanner2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rbdPagesScanner1)
+                    .addComponent(rdbPagesScanner2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rdbPagesScanner1)
                     .addGroup(pnlPagesScannerLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pnlPagesScannerLayout.createSequentialGroup()
-                                .addComponent(lblPageFinish)
+                                .addComponent(lblPageEnd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txfFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txfEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlPagesScannerLayout.createSequentialGroup()
                                 .addComponent(lblPageStart)
                                 .addGap(18, 18, 18)
@@ -945,17 +945,17 @@ public class PDFAreaExtractorApp extends JFrame {
             pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPagesScannerLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(rbdPagesScanner1)
+                .addComponent(rdbPagesScanner1)
                 .addGap(18, 18, 18)
-                .addComponent(rbdPagesScanner2)
+                .addComponent(rdbPagesScanner2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPageStart)
                     .addComponent(txfStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlPagesScannerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPageFinish)
-                    .addComponent(txfFinish, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblPageEnd)
+                    .addComponent(txfEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1088,13 +1088,13 @@ public class PDFAreaExtractorApp extends JFrame {
  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddData;
-    private javax.swing.JButton btnClearListData;
-    private javax.swing.JButton btnDeleteData;
-    private javax.swing.JButton btnEditData;
+    private javax.swing.JButton btnAddField;
+    private javax.swing.JButton btnClearList;
+    private javax.swing.JButton btnDeleteField;
+    private javax.swing.JButton btnEditField;
     private javax.swing.JButton btnGenerate;
-    private javax.swing.JButton btnMoveDownData;
-    private javax.swing.JButton btnMoveUpData;
+    private javax.swing.JButton btnMoveDownField;
+    private javax.swing.JButton btnMoveUpField;
     private javax.swing.JButton btnSelector;
     private javax.swing.JButton btnValidate;
     private javax.swing.JCheckBox chkItem;
@@ -1113,14 +1113,14 @@ public class PDFAreaExtractorApp extends JFrame {
     private javax.swing.JLabel lblAxisX;
     private javax.swing.JLabel lblAxisY;
     private javax.swing.JLabel lblData;
-    private javax.swing.JLabel lblDataFormat1;
-    private javax.swing.JLabel lblDataFormat2;
-    private javax.swing.JLabel lblDataFormat3;
+    private javax.swing.JLabel lblDataFieldType;
     private javax.swing.JLabel lblDataList;
+    private javax.swing.JLabel lblDataOptions;
+    private javax.swing.JLabel lblDataUbication;
     private javax.swing.JLabel lblLoadFile;
     private javax.swing.JLabel lblMaster;
     private javax.swing.JLabel lblPage;
-    private javax.swing.JLabel lblPageFinish;
+    private javax.swing.JLabel lblPageEnd;
     private javax.swing.JLabel lblPageStart;
     private javax.swing.JLabel lblPagesScanner;
     private javax.swing.JLabel lblStructure;
@@ -1139,11 +1139,11 @@ public class PDFAreaExtractorApp extends JFrame {
     private javax.swing.JPanel pnlStructure2;
     private javax.swing.JPanel pnlStructure3;
     private javax.swing.JPanel pnlValidate;
-    private javax.swing.JRadioButton rbdFieldType1;
-    private javax.swing.JRadioButton rbdFieldType2;
-    private javax.swing.JRadioButton rbdFieldType3;
-    private javax.swing.JRadioButton rbdPagesScanner1;
-    private javax.swing.JRadioButton rbdPagesScanner2;
+    private javax.swing.JRadioButton rdbFieldTypeDependent;
+    private javax.swing.JRadioButton rdbFieldTypeMaster;
+    private javax.swing.JRadioButton rdbFieldTypeUnique;
+    private javax.swing.JRadioButton rdbPagesScanner1;
+    private javax.swing.JRadioButton rdbPagesScanner2;
     private javax.swing.JRadioButton rdbStructure1;
     private javax.swing.JRadioButton rdbStructure2;
     private javax.swing.JRadioButton rdbStructure3;
@@ -1155,7 +1155,7 @@ public class PDFAreaExtractorApp extends JFrame {
     private javax.swing.JToggleButton tglPag2;
     private javax.swing.JTextField txfAxisX;
     private javax.swing.JTextField txfAxisY;
-    private javax.swing.JTextField txfFinish;
+    private javax.swing.JTextField txfEnd;
     private javax.swing.JTextField txfLink;
     private javax.swing.JTextField txfPage;
     private javax.swing.JTextField txfStart;
