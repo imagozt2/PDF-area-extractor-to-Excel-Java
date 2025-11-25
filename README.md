@@ -157,23 +157,23 @@ A continuación se listan todas las librerías externas añadidas al proyecto. C
 
 #### Apache Commons
 
-- **commons-collections4-4.4.jar**  
+- **[commons-collections4-4.4.jar](https://mvnrepository.com/artifact/org.apache.commons/commons-collections4/4.4)**  
   Proporciona colecciones y estructuras de datos avanzadas utilizadas por algunas funciones internas de Apache POI.
 
-- **commons-compress-1.27.1.jar**  
+- **[commons-compress-1.27.1.jar](https://mvnrepository.com/artifact/org.apache.commons/commons-compress/1.27.1)**  
   Gestión de compresión ZIP. Necesario para trabajar con archivos XLSX, ya que estos son contenedores ZIP.
 
 #### Log4j (requerido por dependencias internas)
 
-- **log4j-api-2.17.1.jar**  
+- **[log4j-api-2.17.1.jar](https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api/2.17.1)**  
   API de logging utilizada por POI y otros componentes que generan trazas de ejecución.
 
-- **log4j-core-2.17.1.jar**  
+- **[log4j-core-2.17.1.jar](https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core/2.17.1)**  
   Implementación principal de Log4j. Se usa para registrar mensajes internos y soporte de depuración.
 
 #### Apache PDFBox (procesamiento de PDF)
 
-- **pdfbox-app-3.0.5.jar**  
+- **[pdfbox-app-3.0.5.jar](https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox/3.0.5)**  
   Librería principal para trabajar con archivos PDF.  
   Permite:
   - Cargar el PDF
@@ -183,29 +183,31 @@ A continuación se listan todas las librerías externas añadidas al proyecto. C
 
 #### Apache POI (generación de Excel)
 
-- **poi-5.2.3.jar**  
+- **[poi-5.2.3.jar](https://mvnrepository.com/artifact/org.apache.poi/poi/5.2.3)**  
   Núcleo de Apache POI para manipulación de documentos Microsoft.
 
-- **poi-ooxml-5.2.3.jar**  
+- **[poi-ooxml-5.2.3.jar](https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml/5.2.3)**  
   Soporte para archivos Excel en formato OOXML (.xlsx).  
   Permite crear libros, hojas, filas y celdas.
 
-- **poi-ooxml-full-5.2.3.jar**  
+- **[poi-ooxml-full-5.2.3.jar](https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml-full/5.2.3)**  
   Conjunto extendido de esquemas OOXML.  
   Necesario para asegurar compatibilidad completa con Excel moderno.
 
-- **xmlbeans-5.2.0.jar**  
+- **[xmlbeans-5.2.0.jar](https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans/5.2.0)**  
   Motor de procesamiento XML utilizado por POI  
   (obligatorio para interpretar la estructura interna de los archivos XLSX).
 
-### Instalación del proyecto y generación de un ejecutable
+---
+
+## Instalación del proyecto y generación de un ejecutable
 
 Para compilar, ejecutar o generar un ejecutable, basta con:
 - Disponer de una IDE ("Apache NetBeans IDE 25" preferiblemente)
 - Instalar un JDK ("JDK 24" preferiblemente)
 - Añadir las mismas librerías en *Project → Properties → Libraries*
 
-Tras hacer un "Buidl and Clean", el ejecutable se generaría dentro de la carpeta "dist" del proyecto junto a una carpeta con las librerías. No debe separarse el ejecutable de la carpeta que contiene las librerías. En caso de querer tener el ejecutable en otro lugar (otra carpeta o en el escritorio) conviene copiar el ejecutable y pegarlo en forma de acceso directo donde queramos tenerlo.
+Tras hacerle un "Build and Clean" al proyecto, el ejecutable se generará dentro de la carpeta "dist" del proyecto junto a una carpeta con las librerías. No debe separarse el ejecutable de la carpeta que contiene las librerías. En caso de querer tener el ejecutable en otro lugar (otra carpeta o en el escritorio) conviene copiar el ejecutable y pegarlo en forma de acceso directo donde queramos tenerlo.
 
 ---
 
