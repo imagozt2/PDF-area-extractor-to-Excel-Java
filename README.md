@@ -11,15 +11,15 @@
 ## Componentes de la interfaz
 
 <p align="center">
-  <img src="https://i.postimg.cc/bZr7vMs4/1.png" alt="Interfaz parte 1" width="100%">
+  <img src="https://i.postimg.cc/NjkBdvYG/1.png" alt="Interfaz parte 1" width="100%">
 </p>
 
 <p align="center">
-  <img src="https://i.postimg.cc/yDxMN5kM/20.png" alt="Interfaz parte 2" width="100%">
+  <img src="https://i.postimg.cc/y8ysLCB8/20.png.png" alt="Interfaz parte 2" width="100%">
 </p>
 
 <p align="center">
-  <img src="https://i.postimg.cc/DS09zD8p/51.png" alt="Interfaz parte 3" width="100%">
+  <img src="https://i.postimg.cc/Sxfkgbq4/51.png" alt="Interfaz parte 3" width="100%">
 </p>
 
 
