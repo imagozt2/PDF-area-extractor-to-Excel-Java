@@ -1,11 +1,7 @@
 # PDF Area Extractor to Excel (Java)
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=R5lbnZJC59U" target="_blank">
-    <img src="https://img.youtube.com/vi/R5lbnZJC59U/maxresdefault.jpg" 
-         width="100%" />
-  </a>
-</p>
+[![Vídeo](https://i.postimg.cc/05thV5Lz/image.png)](https://www.youtube.com/watch?v=R5lbnZJC59U)
+
 
 
 ## Componentes de la interfaz
