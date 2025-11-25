@@ -2,11 +2,14 @@
 
 [![Vídeo](https://i.postimg.cc/bYkfwfMH/Diseno-sin-titulo.png)](https://www.youtube.com/watch?v=R5lbnZJC59U)
 
+"PDF Area Extractor to Excel (Java)" es un programa que he creado con el objetivo de automatizar tareas administrativas. Este programa sirve para extraer información de documentos de texto digital (no fotocopias) donde la información se estructura en forma de tablas o siguiendo un formato estandarizado por cada página. Es decir, solo servirá para documentos en los que la información se estructure de la misma manera en cada página, como facturas, formularios, encuestas, documentos bancarios y otros.
+
+Este programa permite al usuario definir una serie de campos en una lista, que darán origen a las columnas del Excel generado. A cada campo de la lista se le puede asignar un área del PDF, y el programa recorrerá el documento guardando en forma de filas los datos ordenados según los campos definidos por el usuario, resultando de una tabla de Excel. Además, el programa permite crear campos con valores incrementales, cosa que facilita la gestión del documento en tareas como el análisis de datos o la importación a bases de datos.
 
 
 ## Componentes de la interfaz
 
-A continuación se muestran unas imágenes de la interfaz con sus componentes enumerados, seguidas de tablas que ofrecen algunos detalles como su nombre, el tipo de componente y su función.
+A continuación se muestra en imágenes la interfaz con sus componentes enumerados, seguidas de tablas que ofrecen algunos detalles como su nombre, el tipo de componente y su función.
 
 <p align="center">
   <img src="https://i.postimg.cc/NjkBdvYG/1.png" alt="Interfaz parte 1" width="100%">
