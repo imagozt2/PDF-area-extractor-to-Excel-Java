@@ -6,20 +6,11 @@
 
 ## Componentes de la interfaz
 
+A continuación se muestran unas imágenes de la interfaz con sus componentes enumerados, seguidas de tablas que ofrecen algunos detalles como su nombre, el tipo de componente y su función.
+
 <p align="center">
   <img src="https://i.postimg.cc/NjkBdvYG/1.png" alt="Interfaz parte 1" width="100%">
 </p>
-
-<p align="center">
-  <img src="https://i.postimg.cc/y8ysLCB8/20.png.png" alt="Interfaz parte 2" width="100%">
-</p>
-
-<p align="center">
-  <img src="https://i.postimg.cc/Sxfkgbq4/51.png" alt="Interfaz parte 3" width="100%">
-</p>
-
-
-## Componentes de la interfaz
 
 | Nº | Nombre del componente | Tipo de componente | Función |
 |----|------------------------|--------------------|---------|
@@ -42,6 +33,13 @@
 | 17 | `txfStart` | JTextField | Guarda el número de la página de inicio del recorrido. |
 | 18 | `lblPageEnd` | Label | Informativo. |
 | 19 | `txfEnd` | JTextField | Guarda el número de la página de inicio del recorrido. |
+
+<p align="center">
+  <img src="https://i.postimg.cc/y8ysLCB8/20.png.png" alt="Interfaz parte 2" width="100%">
+</p>
+
+| Nº | Nombre del componente | Tipo de componente | Función |
+|----|------------------------|--------------------|---------|
 | 20 | `lblData` | Label | Informativo. |
 | 21 | `lblDataList` | Label | Informativo. |
 | 22 | `lstDataList` | JList | Lista de campos definidos por el usuario. |
@@ -73,6 +71,13 @@
 | 48 | `chkSymbols` | JCheckBox | Elimina caracteres no numéricos del texto. |
 | 49 | `btnValidate` | JButton | Valida la configuración de los campos y recorre el documento para guardar los datos. |
 | 50 | `btnGenerate` | JButton | Genera el archivo Excel con los datos extraídos. |
+
+<p align="center">
+  <img src="https://i.postimg.cc/Sxfkgbq4/51.png" alt="Interfaz parte 3" width="100%">
+</p>
+
+| Nº | Nombre del componente | Tipo de componente | Función |
+|----|------------------------|--------------------|---------|
 | 51 | `tglPag1` | JToggleButton | Selecciona la cara delantera del documento. |
 | 52 | `tglPag2` | JToggleButton | Selecciona la cara trasera del documento. |
 | 53 | `sldRightPanel` | JSlider | Controla el nivel de zoom del visor PDF. |
