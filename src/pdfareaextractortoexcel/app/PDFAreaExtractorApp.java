@@ -2,6 +2,8 @@ package pdfareaextractortoexcel.app;
 
 import java.awt.image.BufferedImage;
 import java.awt.EventQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -15,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import pdfareaextractortoexcel.services.MainController;
 import pdfareaextractortoexcel.view.PDFPagePanel;
@@ -1066,21 +1069,20 @@ public class PDFAreaExtractorApp extends JFrame {
     public static void main(String args[]) {
         
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info :
-                    javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         EventQueue.invokeLater(() -> new PDFAreaExtractorApp().setVisible(true));
