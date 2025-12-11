@@ -356,6 +356,8 @@ public class MainController {
                 view.getScrPdfViewer().revalidate();
                 view.getScrPdfViewer().repaint();
 
+                clearFieldsAndSelectionsForNewPdf();
+                
                 updatePdfContext(pdfDocument, pdfPath, pagePanel);
 
                 enableUIAfterPDFLoad();
@@ -1802,5 +1804,33 @@ public class MainController {
         
         extractedData.clear();
         view.getBtnGenerate().setEnabled(false);
+    }
+    
+    private void clearFieldsAndSelectionsForNewPdf() {
+
+        DefaultListModel<String> model = ensureListModel();
+        if (!model.isEmpty()) {
+            model.clear();
+        }
+
+        fieldManager.clear();
+
+        invalidateValidation();
+
+        if (pagePanel != null) {
+            pagePanel.setSelections(new LinkedHashMap<>());
+            pagePanel.setSelectedFields(java.util.Collections.emptySet());
+            pagePanel.repaint();
+        }
+
+        updateMasterComboBoxIfNeeded();
+
+        view.getBtnDeleteData().setEnabled(false);
+        view.getBtnEditData().setEnabled(false);
+        view.getBtnMoveUpData().setEnabled(false);
+        view.getBtnMoveDownData().setEnabled(false);
+        view.getBtnClearListData().setEnabled(false);
+
+        clearFieldOptionsUI();
     }
 }
