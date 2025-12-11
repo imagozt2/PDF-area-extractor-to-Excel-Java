@@ -1075,15 +1075,9 @@ public class PDFAreaExtractorApp extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            Logger.getLogger(PDFAreaExtractorApp.class.getName()).log(Level.WARNING, "Nimbus no disponible.", ex);
+        } 
 
         EventQueue.invokeLater(() -> new PDFAreaExtractorApp().setVisible(true));
     }
